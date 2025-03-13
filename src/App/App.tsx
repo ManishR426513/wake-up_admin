@@ -39,11 +39,11 @@ const App = () => {
     			${colors.amber['500']},
 				${colors.red['500']});`}</style>
 			<div data-component-name='App' className='flex grow flex-col'>
-				<AsideRouter />
+				<AsideRouter />  {/* Side Bar  */}
 				<Wrapper>
-					<HeaderRouter />
-					<ContentRouter />
-					<FooterRouter />
+					<HeaderRouter />   
+					<ContentRouter />  {/* Main Content Of Page  */}
+					{/* <FooterRouter /> */}  {/*Footer */}
 				</Wrapper>
 			</div>
 			<ToastContainer theme={isDarkTheme ? 'dark' : 'light'} hideProgressBar rtl={isRTL} />

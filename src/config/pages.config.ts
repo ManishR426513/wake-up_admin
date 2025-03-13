@@ -20,6 +20,7 @@ export const examplePages = {
 };
 
 export const appPages = {
+
 	aiAppPages: {
 		id: 'aiApp',
 		to: '/ai',
@@ -285,6 +286,56 @@ export const appPages = {
 		icon: 'HeroChatBubbleLeftRight',
 	},
 };
+
+export const wakeupPages = {
+    userPages:{
+		id: 'user',
+		to: '/user',
+		text: 'User',
+		icon: 'HeroUser',
+		subPages: {
+			usersDashboardPage: {
+				id: 'usersDashboardPage',
+				to: '/user/list',
+				text: 'User List',
+				icon: 'HeroQueueList',
+			},
+			// chatPages: {
+			// 	id: 'customerPage',
+			// 	to: '/ai/chat',
+			// 	text: 'Chat Pages',
+			// 	icon: 'HeroChatBubbleLeft',
+			// 	subPages: {
+			// 		photoPage: {
+			// 			id: 'photoPage',
+			// 			to: '/ai/chat/photo',
+			// 			text: 'Photo Editing',
+			// 			icon: 'HeroPhoto',
+			// 		},
+			// 		videoPage: {
+			// 			id: 'videoPage',
+			// 			to: '/ai/chat/video',
+			// 			text: 'Video Generation',
+			// 			icon: 'HeroFilm',
+			// 		},
+			// 		audioPage: {
+			// 			id: 'audioPage',
+			// 			to: '/ai/chat/audio',
+			// 			text: 'Audio Generation',
+			// 			icon: 'HeroMusicalNote',
+			// 		},
+			// 		codePage: {
+			// 			id: 'audioPage',
+			// 			to: '/ai/chat/code',
+			// 			text: 'Code Generation',
+			// 			icon: 'HeroCommandLine',
+			// 		},
+			// 	},
+			// },
+		},
+
+	}
+}
 
 export const componentsPages = {
 	uiPages: {

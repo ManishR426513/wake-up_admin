@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Aside, { AsideBody } from '../../../components/layouts/Aside/Aside';
-import { appPages, componentsPages } from '../../../config/pages.config';
+import { appPages, componentsPages, wakeupPages } from '../../../config/pages.config';
 import Nav, {
 	NavButton,
 	NavCollapse,
@@ -20,10 +20,40 @@ const DefaultAsideTemplate = () => {
 
 	return (
 		<Aside>
-			<AsideHeadPart />
+			<AsideHeadPart /> {/*Logo Side */}
 			<AsideBody>
 				<Nav>
-					<NavItem {...appPages.salesAppPages.subPages.salesDashboardPage} />
+					<NavTitle>WakeUp</NavTitle>
+
+					<NavCollapse
+						text={wakeupPages.userPages.text}
+						to={wakeupPages.userPages.to}
+						icon={wakeupPages.userPages.icon}>
+						<NavItem {...wakeupPages.userPages.subPages.usersDashboardPage} />
+						{/* <NavCollapse
+							text={appPages.salesAppPages.subPages.productPage.text}
+							to={appPages.salesAppPages.subPages.productPage.to}
+							icon={appPages.salesAppPages.subPages.productPage.icon}>
+							<NavItem
+								{...appPages.salesAppPages.subPages.productPage.subPages.listPage}
+							/>
+							<NavItem
+								{...appPages.salesAppPages.subPages.productPage.subPages.editPage}
+							/>
+						</NavCollapse>
+						<NavCollapse
+							text={appPages.salesAppPages.subPages.categoryPage.text}
+							to={appPages.salesAppPages.subPages.categoryPage.to}
+							icon={appPages.salesAppPages.subPages.categoryPage.icon}>
+							<NavItem
+								{...appPages.salesAppPages.subPages.categoryPage.subPages.listPage}
+							/>
+							<NavItem
+								{...appPages.salesAppPages.subPages.categoryPage.subPages.editPage}
+							/>
+						</NavCollapse> */}
+					</NavCollapse>
+					{/* <NavItem {...appPages.salesAppPages.subPages.salesDashboardPage} />
 					<NavItem {...appPages.aiAppPages.subPages.aiDashboardPage}>
 						<Badge
 							variant='outline'
@@ -48,9 +78,9 @@ const DefaultAsideTemplate = () => {
 							className='border-transparent leading-none'>
 							6
 						</Badge>
-					</NavItem>
+					</NavItem> */}
 
-					<NavTitle>Apps</NavTitle>
+					<NavTitle>Appsxcx</NavTitle>
 					<NavCollapse
 						text={appPages.salesAppPages.text}
 						to={appPages.salesAppPages.to}
@@ -368,7 +398,7 @@ const DefaultAsideTemplate = () => {
 					</NavUser>
 				</Nav>
 			</AsideBody>
-			<AsideFooterPart />
+			{/* <AsideFooterPart /> */}
 		</Aside>
 	);
 };

@@ -81,7 +81,7 @@ const CustomerDashboardPage = () => {
 						</DropdownToggle>
 						<DropdownMenu className='!p-0'>
 							<DateRangePicker
-								onChange={(item) =>
+								onChange={(item:any) =>
 									setState({
 										...state,
 										...item,

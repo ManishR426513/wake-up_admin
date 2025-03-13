@@ -1,12 +1,14 @@
 import React, { lazy } from 'react';
 import { RouteProps } from 'react-router-dom';
-import { appPages, authPages, componentsPages, examplePages } from '../config/pages.config';
+import { appPages, authPages, componentsPages, examplePages, wakeupPages } from '../config/pages.config';
 import NotFoundPage from '../pages/NotFound.page';
 import LoginPage from '../pages/Login.page';
 
 /**
  * UI
  */
+
+
 const AlertPage = lazy(() => import('../pages/componentsAndTemplates/ui/AlertPage/Alert.page'));
 const BadgePage = lazy(() => import('../pages/componentsAndTemplates/ui/BadgePage/Badge.page'));
 const ButtonPage = lazy(() => import('../pages/componentsAndTemplates/ui/ButtonPage/Button.page'));
@@ -115,7 +117,6 @@ const CategoryListPage = lazy(
 	() => import('../pages/sales/categories/CategoryListPage/CategoryList.page'),
 );
 const CategoryPage = lazy(() => import('../pages/sales/categories/CategoryPage/Category.page'));
-
 /**
  * CRM
  */
@@ -132,6 +133,8 @@ const RolePage = lazy(() => import('../pages/crm/role/RolePage/Role.page'));
 /**
  * Project
  */
+
+const UserlistPage=lazy(()=>import('../pages/WakeUp/Users/UserList'))
 const ProjectDashboardPage = lazy(
 	() => import('../pages/project/ProjectDashboardPage/ProjectDashboard.page'),
 );
@@ -174,6 +177,12 @@ const contentRoutes: RouteProps[] = [
 	/**
 	 * SALES::BEGIN
 	 */
+
+
+	{
+		path: wakeupPages.userPages.subPages.usersDashboardPage.to,
+		element: <UserlistPage />,
+	},
 	{
 		path: appPages.salesAppPages.subPages.salesDashboardPage.to,
 		element: <SalesDashboardPage />,
