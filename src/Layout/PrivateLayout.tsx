@@ -13,6 +13,7 @@ export default function PrivateLayout({ children }: PrivateLayoutProps) {
       <AppSidebar />
       <SidebarInset>
         <TopBar />
+        
         {children}
       </SidebarInset>
     </SidebarProvider>

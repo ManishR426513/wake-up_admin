@@ -50,6 +50,37 @@ const data = {
   ],
   navMain: [
     {
+      title: "Dashboard",
+      url: "/",
+      icon: Frame,
+    },
+
+    {
+      title: "Users",
+      url: "#",
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: "Users List",
+          url: "/users-list",
+        },
+        // {
+        //   title: "Starred",
+        //   url: "#",
+        // },
+        // {
+        //   title: "Settings",
+        //   url: "#",
+        // },
+      ],
+    },
+
+
+
+
+    
+    {
       title: "Playground",
       url: "#",
       icon: SquareTerminal,
