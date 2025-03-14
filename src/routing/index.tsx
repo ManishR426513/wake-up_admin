@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router";
 import PrivateRoute from "./PrivateRoute";
 import PageNotFound from "@/common/PageNotFound";
 import UserList from "@/pages/Users/UserList";
+import Dashboard from "@/pages/dashboard";
+import Chats from "@/pages/chats";
 
 export default function Routing() {
   return (
@@ -15,7 +17,7 @@ export default function Routing() {
           path="/"
           element={
             <PrivateRoute>
-              <Home />
+              <Dashboard />
             </PrivateRoute>
           }
         />
@@ -29,13 +31,14 @@ export default function Routing() {
         />
 
         <Route
-          path=""
+          path="/chat"
           element={
             <PrivateRoute>
-              <UserList />
+              <Chats />
             </PrivateRoute>
           }
         />
+        
         
 
         {/* <Route path="/" element={<Home />} />
