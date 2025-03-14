@@ -1,3 +1,5 @@
+import { ProfileDropdown } from "@/components/profile-dropdown"
+import { ThemeSwitch } from "@/components/theme-switch"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -34,6 +36,12 @@ export default function TopBar() {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
+
+          <div className='ml-auto flex items-center space-x-4'>
+          {/* <Search /> */}
+          <ThemeSwitch />
+          <ProfileDropdown />
+        </div>
         </header>
    </>
   )
