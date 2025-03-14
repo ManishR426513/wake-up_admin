@@ -22,7 +22,7 @@ export default function Routing() {
           }
         />
         <Route
-          path="/users-list"
+          path="/users"
           element={
             <PrivateRoute>
               <UserList />

@@ -65,7 +65,7 @@ export function NavMain({
                         <a
                           className={`${
                             location.pathname === subItem.url
-                              ? "bg-gray-200"
+                              ? "bg-[#f5f5f5]"
                               : ""
                           }`}
                           href={subItem.url}
