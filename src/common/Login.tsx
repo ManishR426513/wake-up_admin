@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/Button";;
+import { Button } from "@/components/ui/Button";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/Card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { authAxios } from "@/config/config";
 import { toast } from "sonner";
 import { useAuth } from "../context/AuthContext"; // ✅ Corrected import
@@ -29,11 +29,14 @@ export function LoginForm({
 
   const navigate = useNavigate();
 
-  const { handleLogin, } = useAuth(); // ✅ Using context properly
+  const { handleLogin } = useAuth();
 
-
-
-
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      console.log("called");
+      navigate("/");
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,12 +45,12 @@ export function LoginForm({
       .post(`/auth/login`, userdata)
       .then((response) => {
         console.log("rewew", response);
-        const resData=response.data
+        const resData = response.data;
         toast.success(resData.message);
 
-        console.log("eeqweqw",response.data.data.user)
-        handleLogin(response.data.data.user,response.data.data.token)
-        navigate('/')
+        console.log("eeqweqw", response.data.data.user);
+        handleLogin(response.data.data.user, response.data.data.token);
+        navigate("/");
       })
       .catch((error) => {
         console.log("ererw", error);

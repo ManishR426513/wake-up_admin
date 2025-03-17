@@ -10,7 +10,7 @@ interface PrivateRouteProps {
 }
 export default function PrivateRoute({ children }:PrivateRouteProps) {
   //const accessToken = useSelector((state) => state.auth.accessToken);
-  const accessToken="cvsdfdfdsfds"
+  const accessToken=localStorage.getItem("token")
 
   if (!accessToken) {
     return <Navigate to="/login" replace />;
