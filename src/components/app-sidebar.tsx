@@ -7,18 +7,17 @@ import {
   Bot,
   Command,
   Volleyball,
-  Frame,
+
   GalleryVerticalEnd,
-  Map,
+
   ReceiptEuro,
-  PieChart,
+ 
   Settings2,
   SquareTerminal,
   User,
   MessageSquare
 } from "lucide-react"
 
-import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"

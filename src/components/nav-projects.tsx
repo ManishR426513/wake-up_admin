@@ -1,8 +1,8 @@
 import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
+  // Folder,
+  // Forward,
+  // MoreHorizontal,
+  // Trash2,
   type LucideIcon,
 } from "lucide-react"
 
@@ -11,10 +11,10 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuAction,
+  //SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
+ // useSidebar,
 } from "@/components/ui/sidebar"
 import { useLocation } from "react-router-dom"
 
@@ -27,7 +27,7 @@ export function NavProjects({
     icon: LucideIcon
   }[]
 }) {
-  const { isMobile } = useSidebar()
+  // const { isMobile } = useSidebar()
   const location = useLocation();
 
 

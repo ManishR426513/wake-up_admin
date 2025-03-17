@@ -104,15 +104,15 @@ const Category: FC = () => {
     }
   };
 
-  const handleDelete = async (categoryId: string): Promise<void> => {
-    try {
-      await authAxios().delete(`/category/${categoryId}`);
-      await getCategories();
-      setOpenPopover(null);
-    } catch (error) {
-      console.error("Error deleting category:", error);
-    }
-  };
+  // const handleDelete = async (categoryId: string): Promise<void> => {
+  //   try {
+  //     await authAxios().delete(`/category/${categoryId}`);
+  //     await getCategories();
+  //     setOpenPopover(null);
+  //   } catch (error) {
+  //     console.error("Error deleting category:", error);
+  //   }
+  // };
 
   return (
     <div className="p-6">
