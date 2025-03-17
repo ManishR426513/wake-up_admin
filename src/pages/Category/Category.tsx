@@ -1,8 +1,8 @@
-import React, { FC, useState, useEffect } from "react";
+import  { FC, useState, useEffect } from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
+ 
   TableCell,
   TableHead,
   TableHeader,
@@ -17,7 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Edit, Eye, MoreHorizontal, Trash } from "lucide-react";
+import { Edit, MoreHorizontal } from "lucide-react";
 import AddCategoryModal from "../../common/Modal/AddCatgoryModal";
 import DeleteConfirmationModal from "@/common/Modal/DeleteConfirmationModal";
 

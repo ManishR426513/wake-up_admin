@@ -1,5 +1,4 @@
 import { LoginForm } from "@/common/Login";
-import Home from "@/pages/Home/Home";
 import { BrowserRouter as Router, Route, Routes } from "react-router";
 import PrivateRoute from "./PrivateRoute";
 import PageNotFound from "@/common/PageNotFound";

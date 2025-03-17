@@ -29,7 +29,7 @@ export function LoginForm({
 
   const navigate = useNavigate();
 
-  const { handleLogin, user } = useAuth(); // ✅ Using context properly
+  const { handleLogin, } = useAuth(); // ✅ Using context properly
 
 
 

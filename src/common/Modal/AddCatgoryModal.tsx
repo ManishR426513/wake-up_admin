@@ -1,21 +1,20 @@
-import React, { FC, useEffect, useState } from "react";
+import  { FC, useEffect, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
+  
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
-import { CategoryInterface } from "./Category"; // Make sure to import from the correct path
 
 interface AddCategoryModalProps {
   isOpen: boolean;
   isEditMode: boolean;
-  categoryData: CategoryInterface | null;
+  categoryData: any | null;
   onClose: () => void;
   onEdit: (categoryName: string) => Promise<void>;
   onAdd: (categoryName: string) => Promise<void>;
