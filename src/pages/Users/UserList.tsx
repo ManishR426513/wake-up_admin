@@ -176,7 +176,7 @@ const UserList: React.FC = () => {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [allData, setallData] = React.useState<array>([]);
+  const [allData, setallData] = React.useState<any[]>([]);
 
   const table = useReactTable({
     data,
