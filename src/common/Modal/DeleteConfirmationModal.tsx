@@ -13,8 +13,8 @@ import {
 import { Trash } from "lucide-react";
 
 interface DeleteConfirmationModalProps {
-  handleDelete: () => void;
-  handleCancel: () => void;
+  handleDelete?: () => void;
+  handleCancel?: () => void;
 }
 const DeleteConfirmationModal: FC<DeleteConfirmationModalProps> = ({
   handleDelete,

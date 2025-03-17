@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/popover";
 import { Edit, Eye, MoreHorizontal, Trash } from "lucide-react";
 import AddCategoryModal from "../../common/Modal/AddCatgoryModal";
+import DeleteConfirmationModal from "@/common/Modal/DeleteConfirmationModal";
 
 export interface CategoryInterface {
   _id: string;
@@ -169,12 +170,13 @@ const Category: FC = () => {
                             >
                               <Edit className="h-3.5 w-3.5" /> <span>Edit</span>
                             </button>
-                            <button 
+                            {/* <button 
                               className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-red-100"
                               onClick={() => handleDelete(item._id)}
                             >
                               <Trash className="h-3.5 w-3.5 text-red-500" /> <span>Delete</span>
-                            </button>
+                            </button> */}
+                            <DeleteConfirmationModal handleCancel={handleCloseModal}  handleDelete={handleDelete}  />
                           </div>
                         </PopoverContent>
                       </Popover>

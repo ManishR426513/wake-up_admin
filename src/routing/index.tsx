@@ -7,6 +7,7 @@ import UserList from "@/pages/Users/UserList";
 import Dashboard from "@/pages/dashboard";
 import Chats from "@/pages/chats";
 import Category from "@/pages/Category/Category";
+import Plans from "@/pages/Plans/Plans";
 
 export default function Routing() {
   return (
@@ -39,8 +40,16 @@ export default function Routing() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/plan"
+          element={
+            <PrivateRoute>
+              <Plans />
+            </PrivateRoute>
+          }
+        />
 
-<Route
+        <Route
           path="/category"
           element={
             <PrivateRoute>
@@ -48,10 +57,6 @@ export default function Routing() {
             </PrivateRoute>
           }
         />
-
-
-        
-        
 
         {/* <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} /> */}

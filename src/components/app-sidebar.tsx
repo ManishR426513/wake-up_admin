@@ -10,6 +10,7 @@ import {
   Frame,
   GalleryVerticalEnd,
   Map,
+  ReceiptEuro,
   PieChart,
   Settings2,
   SquareTerminal,
@@ -183,9 +184,9 @@ const data = {
       icon: Volleyball,
     },
     {
-      name: "Travel",
-      url: "#",
-      icon: Map,
+      name: "Plans",
+      url: "/plan",
+      icon: ReceiptEuro,
     },
   ],
 }
