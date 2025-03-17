@@ -4,9 +4,9 @@ import PrivateRoute from "./PrivateRoute";
 import PageNotFound from "@/common/PageNotFound";
 import UserList from "@/pages/Users/UserList";
 import Dashboard from "@/pages/dashboard";
-import Chats from "@/pages/chats";
 import Category from "@/pages/Category/Category";
 import Plans from "@/pages/Plans/Plans";
+import Home from "@/pages/Home/Home";
 
 export default function Routing() {
   return (
@@ -35,7 +35,7 @@ export default function Routing() {
           path="/chat"
           element={
             <PrivateRoute>
-              <Chats />
+              <Home />
             </PrivateRoute>
           }
         />
