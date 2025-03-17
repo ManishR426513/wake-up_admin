@@ -6,6 +6,7 @@ import {
   BookOpen,
   Bot,
   Command,
+  Volleyball,
   Frame,
   GalleryVerticalEnd,
   Map,
@@ -177,9 +178,9 @@ const data = {
       icon: User,
     },
     {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
+      name: "Category",
+      url: "/category",
+      icon: Volleyball,
     },
     {
       name: "Travel",

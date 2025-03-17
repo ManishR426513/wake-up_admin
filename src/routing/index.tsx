@@ -6,6 +6,7 @@ import PageNotFound from "@/common/PageNotFound";
 import UserList from "@/pages/Users/UserList";
 import Dashboard from "@/pages/dashboard";
 import Chats from "@/pages/chats";
+import Category from "@/pages/Category/Category";
 
 export default function Routing() {
   return (
@@ -38,6 +39,17 @@ export default function Routing() {
             </PrivateRoute>
           }
         />
+
+<Route
+          path="/category"
+          element={
+            <PrivateRoute>
+              <Category />
+            </PrivateRoute>
+          }
+        />
+
+
         
         
 

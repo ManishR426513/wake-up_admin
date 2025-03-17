@@ -7,7 +7,6 @@ interface MainProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export const Main = ({ fixed, ...props }: MainProps) => {
-  console.log("proplsdasda",fixed)
   return (
     <main
       className={cn(

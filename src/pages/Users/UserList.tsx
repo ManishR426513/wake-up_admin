@@ -36,6 +36,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Main } from "@/components/main";
+import { authAxios } from "@/config/config";
 
 const data: Payment[] = [
   {
@@ -176,6 +177,7 @@ const UserList: React.FC = () => {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [allData, setallData] = React.useState<array>([])
 
   const table = useReactTable({
     data,
@@ -195,6 +197,25 @@ const UserList: React.FC = () => {
       rowSelection,
     },
   });
+
+  const getAllUserDetails = async () => {
+    await authAxios()
+      .get(`/auth/all-users`)
+      .then((response) => {
+       // console.log("response",response.data.data);
+        setallData(response.data.data.allUsers)
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  console.log("akll",allData)
+
+  React.useEffect(() => {
+    getAllUserDetails();
+  }, []);
 
   return (
     <div>
@@ -247,6 +268,8 @@ const UserList: React.FC = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+
+          {/*Table Cotent */}
           <div className="rounded-md border">
             <Table>
               <TableHeader>
@@ -297,6 +320,8 @@ const UserList: React.FC = () => {
               </TableBody>
             </Table>
           </div>
+
+          {/* Table Footer*/}
           <div className="flex items-center justify-end space-x-2 py-4">
             <div className="flex-1 text-sm text-muted-foreground">
               {table.getFilteredSelectedRowModel().rows.length} of{" "}
