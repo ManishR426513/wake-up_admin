@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Main } from "@/components/main";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";;
 import { authAxios } from "@/config/config";
 import { setReportFormatDate } from "@/helper/helper";
 import {
