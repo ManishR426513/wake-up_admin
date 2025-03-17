@@ -17,6 +17,7 @@ import {
  // useSidebar,
 } from "@/components/ui/sidebar"
 import { useLocation } from "react-router-dom"
+import { useTheme } from "@/context/theme-context"
 
 export function NavProjects({
   projects,
@@ -29,7 +30,8 @@ export function NavProjects({
 }) {
   // const { isMobile } = useSidebar()
   const location = useLocation();
-
+  const {theme}=useTheme()
+console.log("theme",theme)
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -40,8 +42,10 @@ export function NavProjects({
             <SidebarMenuButton asChild>
               <a  
                className={`${
-                location.pathname === item?.url
-                  ? "bg-[#f5f5f5]"
+                location.pathname === item?.url 
+                  ? theme === "light" 
+                    ? "bg-[#f5f5f5]" 
+                    : "bg-[#262626]"
                   : ""
               }`}
               href={item.url}>
