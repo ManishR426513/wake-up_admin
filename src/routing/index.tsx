@@ -6,7 +6,6 @@ import UserList from "@/pages/Users/UserList";
 import Dashboard from "@/pages/dashboard";
 import Category from "@/pages/Category/Category";
 import Plans from "@/pages/Plans/Plans";
-import Home from "@/pages/Home/Home";
 import Chats from "@/pages/chats";
 
 export default function Routing() {
