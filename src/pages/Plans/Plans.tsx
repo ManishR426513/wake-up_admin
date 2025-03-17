@@ -24,7 +24,7 @@ const Plans:FC = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices&&invoices.map((invoice) => (
+        {invoices&&invoices.map((invoice:any) => (
           <TableRow key={invoice.invoice}>
             <TableCell className="font-medium">{invoice.invoice}</TableCell>
             <TableCell>{invoice.paymentStatus}</TableCell>

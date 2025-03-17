@@ -176,7 +176,7 @@ const Category: FC = () => {
                             >
                               <Trash className="h-3.5 w-3.5 text-red-500" /> <span>Delete</span>
                             </button> */}
-                            <DeleteConfirmationModal handleCancel={handleCloseModal}  handleDelete={handleDelete}  />
+                            <DeleteConfirmationModal handleCancel={handleCloseModal}    />
                           </div>
                         </PopoverContent>
                       </Popover>
