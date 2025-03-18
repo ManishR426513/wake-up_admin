@@ -314,7 +314,7 @@ export default function Chats() {
                 'absolute inset-0 left-full z-50 hidden w-full flex-1 flex-col justify-center rounded-md border bg-primary-foreground shadow-sm transition-all duration-200 sm:static sm:z-auto sm:flex'
               )}
             >
-              <div className='flex flex-col items-center space-y-6'>
+              {/* <div className='flex flex-col items-center space-y-6'>
                 <div className='flex h-16 w-16 items-center justify-center rounded-full border-2 border-white'>
                   <MessagesSquare className='h-8 w-8' />
                 </div>
@@ -330,7 +330,7 @@ export default function Chats() {
                 >
                   Send message
                 </Button>
-              </div>
+              </div> */}
             </div>
           )}
         </section>

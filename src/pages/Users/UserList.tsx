@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import {
   ColumnDef,
@@ -12,7 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, ChevronDown, Eye, MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -77,7 +76,121 @@ export type Payment = {
   email: string;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+interface userDataInterface {
+  _id: string;
+  fullname: string;
+  username: string;
+  phoneno: string;
+  countryCode: string;
+  email: string;
+  password: string;
+  consent: boolean;
+  profilePic: string;
+  interest: string[];
+  subscriptions: string[];
+  followers: string[];
+  following: string[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  stripeCustomerId: string;
+  bio: string;
+  verificationId: string;
+  role: string;
+}
+
+// export const columns: ColumnDef<Payment>[] = [
+//   {
+//     id: "select",
+//     header: ({ table }) => (
+//       <Checkbox
+//         checked={
+//           table.getIsAllPageRowsSelected() ||
+//           (table.getIsSomePageRowsSelected() && "indeterminate")
+//         }
+//         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+//         aria-label="Select all"
+//       />
+//     ),
+//     cell: ({ row }) => (
+//       <Checkbox
+//         checked={row.getIsSelected()}
+//         onCheckedChange={(value) => row.toggleSelected(!!value)}
+//         aria-label="Select row"
+//       />
+//     ),
+//     enableSorting: false,
+//     enableHiding: false,
+//   },
+//   {
+//     accessorKey: "status",
+//     header: "Status",
+//     cell: ({ row }) => (
+//       <div className="capitalize">{row.getValue("status")}</div>
+//     ),
+//   },
+//   {
+//     accessorKey: "email",
+//     header: ({ column }) => {
+//       return (
+//         <Button
+//           variant="ghost"
+//           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+//         >
+//           Email
+//           <ArrowUpDown />
+//         </Button>
+//       );
+//     },
+//     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+//   },
+//   {
+//     accessorKey: "amount",
+//     header: () => <div className="text-right">Amount</div>,
+//     cell: ({ row }) => {
+//       const amount = parseFloat(row.getValue("amount"));
+
+//       // Format the amount as a dollar amount
+//       const formatted = new Intl.NumberFormat("en-US", {
+//         style: "currency",
+//         currency: "USD",
+//       }).format(amount);
+
+//       return <div className="text-right font-medium">{formatted}</div>;
+//     },
+//   },
+//   {
+//     id: "actions",
+//     enableHiding: false,
+//     cell: ({ row }) => {
+//       const payment = row.original;
+
+//       return (
+//         <DropdownMenu>
+//           <DropdownMenuTrigger asChild>
+//             <Button variant="ghost" className="h-8 w-8 p-0">
+//               <span className="sr-only">Open menu</span>
+//               <MoreHorizontal />
+//             </Button>
+//           </DropdownMenuTrigger>
+//           <DropdownMenuContent align="end">
+//             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+//             <DropdownMenuItem
+//               onClick={() => navigator.clipboard.writeText(payment.id)}
+//             >
+//               Copy payment ID
+//             </DropdownMenuItem>
+//             <DropdownMenuSeparator />
+//             <DropdownMenuItem>View customer</DropdownMenuItem>
+//             <DropdownMenuItem>View payment details</DropdownMenuItem>
+//           </DropdownMenuContent>
+//         </DropdownMenu>
+//       );
+//     },
+//   },
+// ];
+
+export const columns: ColumnDef<userDataInterface>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -101,12 +214,48 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "profilePic",
+    header: "Image",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <>
+        <img
+          src={`${import.meta.env.VITE_IMAGE_VIDEO_URL}${row.getValue(
+            "profilePic"
+          )}`}
+          alt="Profile"
+          className="w-7 h-7 object-cover rounded-full" // You can adjust the class as per your styling
+        />
+      </>
     ),
   },
+  {
+    accessorKey: "fullname",
+    header: "Name",
+    cell: ({ row }) => (
+      <>
+        <div className="capitalize">{row.getValue("fullname")}</div>
+      </>
+    ),
+  },
+  {
+    accessorKey: "interest",
+    header: "Interest",
+    cell: ({ row }) => (
+      <div className="capitalize">
+        <div className="has-tooltip">
+          <span className="tooltip rounded shadow-lg p-1 bg-gray-100 text-black -mt-8">
+            
+            {row.getValue("interest").map((item: string) => (
+              <span key={item}> {item}, </span>
+            ))}
+          </span>
+            <Eye  className="h-4" />
+        </div>
+       
+      </div>
+    ),
+  },
+
   {
     accessorKey: "email",
     header: ({ column }) => {
@@ -123,48 +272,22 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
+    accessorKey: "phoneno",
+    header: "Phone Number",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("phoneno")}</div>
+    ),
   },
   {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    accessorKey: "subscriptions",
+    header: "Subscriptions",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("subscriptions").map((item:string)=>(
+        <>
+        <p> {item?.planId?.planType} </p>
+        </>
+      ))  }</div>
+    ),
   },
 ];
 
@@ -176,10 +299,10 @@ const UserList: React.FC = () => {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [allData, setallData] = React.useState<any[]>([]);
+  const [allUsersData, setallUsersData] = React.useState<any[]>([]);
 
   const table = useReactTable({
-    data,
+    data: allUsersData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -202,14 +325,14 @@ const UserList: React.FC = () => {
       .get(`/auth/all-users`)
       .then((response) => {
         // console.log("response",response.data.data);
-        setallData(response.data.data.allUsers);
+        setallUsersData(response.data.data.allUsers);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  console.log("akll", allData);
+  console.log("akll", allUsersData);
 
   React.useEffect(() => {
     getAllUserDetails();
