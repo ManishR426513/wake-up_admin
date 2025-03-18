@@ -28,7 +28,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { NavMain } from "./nav-main"
+//import { NavMain } from "./nav-main"
 
 // This is sample data.
 const data = {
@@ -200,7 +200,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
        
         <NavProjects projects={data.projects} />
-         <NavMain items={data.navMain} />
+         {/* <NavMain items={data.navMain} /> */}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
