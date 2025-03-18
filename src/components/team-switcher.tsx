@@ -14,27 +14,25 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
+  //useSidebar,
 } from "@/components/ui/sidebar"
 import { useNavigate } from "react-router-dom"
 
-export function TeamSwitcher({
-  teams,
-}: {
+export function TeamSwitcher({}: {
   teams: {
     name: string
     logo: React.ElementType
     plan: string
   }[]
 }) {
-  const { isMobile } = useSidebar()
-  const [activeTeam, setActiveTeam] = React.useState(teams[0])
+ // const { isMobile } = useSidebar()
+  //const [activeTeam, setActiveTeam] = React.useState(teams[0])
 
   const navigate = useNavigate();
 
-  if (!activeTeam) {
-    return null
-  }
+  // if (!activeTeam) {
+  //   return null
+  // }
 
   return (
     <SidebarMenu>
@@ -46,7 +44,7 @@ export function TeamSwitcher({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                <activeTeam.logo className="size-4" />
+                {/* <activeTeam.logo className="size-4" /> */}
               </div>
               <div onClick={()=>navigate("/")}  className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">Wake Up</span>

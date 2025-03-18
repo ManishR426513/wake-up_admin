@@ -249,7 +249,7 @@ export const columns: ColumnDef<userDataInterface>[] = [
         <div className="has-tooltip">
           <span className="tooltip rounded shadow-lg p-1 bg-gray-100 text-black -mt-8">
             
-            {row.getValue("interest").map((item: string) => (
+            {row.getValue<string[]>("interest").map((item: string) => (
               <span key={item}> {item}, </span>
             ))}
           </span>
@@ -285,12 +285,12 @@ export const columns: ColumnDef<userDataInterface>[] = [
   {
     accessorKey: "subscriptions",
     header: "Subscriptions",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("subscriptions").map((item:string)=>(
+    cell: ({ row }: { row: { getValue: (key: string) => Array<{ planId: { planType: string } }> } }) => (
+      <div className="capitalize">{row.getValue("subscriptions").map((item: { planId: { planType: string } }) => (
         <>
         <p> {item?.planId?.planType} </p>
         </>
-      ))  }</div>
+      ))}</div>
     ),
   },
 ];
