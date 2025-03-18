@@ -1,15 +1,14 @@
-import  { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 import {
   Table,
   TableBody,
- 
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Main } from "@/components/main";
-import { Button } from "@/components/ui/Button";;
+import { Button } from "@/components/ui/Button";
 import { authAxios } from "@/config/config";
 import { setReportFormatDate } from "@/helper/helper";
 import {
@@ -20,6 +19,7 @@ import {
 import { Edit, MoreHorizontal } from "lucide-react";
 import AddCategoryModal from "../../common/Modal/AddCatgoryModal";
 import DeleteConfirmationModal from "@/common/Modal/DeleteConfirmationModal";
+import { toast } from "sonner";
 
 export interface CategoryInterface {
   _id: string;
@@ -30,7 +30,6 @@ export interface CategoryInterface {
 
 const Category: FC = () => {
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
-  const [openPopover, setOpenPopover] = useState<string | null>(null);
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     isEditMode: boolean;
@@ -68,7 +67,6 @@ const Category: FC = () => {
       isEditMode: true,
       currentCategory: category,
     });
-    setOpenPopover(null);
   };
 
   const handleCloseModal = (): void => {
@@ -76,18 +74,22 @@ const Category: FC = () => {
       isOpen: false,
       isEditMode: false,
       currentCategory: null,
+
     });
-    setOpenPopover(null);
   };
 
   const handleEdit = async (categoryName: string): Promise<void> => {
     if (!modalState.currentCategory?._id) return;
-    
+
     try {
       const payload = { name: categoryName };
-      await authAxios().put(`/category/${modalState.currentCategory._id}`, payload);
+      const response = await authAxios().put(
+        `/category/${modalState.currentCategory._id}`,
+        payload
+      );
       await getCategories();
       handleCloseModal();
+      toast.success(response.data.message);
     } catch (error) {
       console.error("Error updating category:", error);
     }
@@ -96,35 +98,39 @@ const Category: FC = () => {
   const handleAdd = async (categoryName: string): Promise<void> => {
     try {
       const payload = { name: categoryName };
-      await authAxios().post("/category", payload);
+      const response = await authAxios().post("/category", payload);
       await getCategories();
       handleCloseModal();
+
+      toast.success(response.data.message);
     } catch (error) {
       console.error("Error adding category:", error);
     }
   };
 
-  // const handleDelete = async (categoryId: string): Promise<void> => {
-  //   try {
-  //     await authAxios().delete(`/category/${categoryId}`);
-  //     await getCategories();
-  //     setOpenPopover(null);
-  //   } catch (error) {
-  //     console.error("Error deleting category:", error);
-  //   }
-  // };
+  const handleDelete = async (): Promise<void> => {
+    try {
+      const response =    await authAxios().delete(`/category/${modalState?.currentCategory?._id}`);
+      await getCategories();
+      handleCloseModal();
+
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
+  };
 
   return (
     <div className="p-6">
       <Main>
         <div className="mb-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Category</h1>
+          <h1 className="text-2xl font-bold">Sports Category</h1>
           <Button onClick={handleOpenAddModal}>Add Category</Button>
         </div>
         <div className="overflow-x-auto rounded-lg shadow-lg">
           <Table className="w-full border-collapse text-sm">
             {/* <TableCaption>A list of your recent categories.</TableCaption> */}
-            <TableHeader >
+            <TableHeader>
               <TableRow>
                 <TableHead className="px-4 py-3 text-left">Sno</TableHead>
                 <TableHead className="px-4 py-3 text-left">
@@ -139,10 +145,7 @@ const Category: FC = () => {
             <TableBody>
               {categories.length > 0 ? (
                 categories.map((item, index) => (
-                  <TableRow
-                    key={item._id}
-                    
-                  >
+                  <TableRow key={item._id}>
                     <TableCell className="px-4 py-3 font-medium">
                       {index + 1}
                     </TableCell>
@@ -152,19 +155,18 @@ const Category: FC = () => {
                     </TableCell>
                     <TableCell className="px-4 py-3">
                       <Popover
-                        open={openPopover === item._id}
-                        onOpenChange={(open) =>
-                          setOpenPopover(open ? item._id : null)
-                        }
                       >
                         <PopoverTrigger asChild>
-                          <Button variant="ghost" className="h-7 w-7 p-0">
+                          <Button onClick={()=>setModalState((prev)=>({
+                            ...prev,
+                            currentCategory:item
+                          }))}  variant="ghost" className="h-7 w-7 p-0">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent side="left" className="w-28 p-1">
                           <div className="flex flex-col space-y-1">
-                            <button 
+                            <button
                               className="flex items-center space-x-2 px-2 py-1 rounded-md "
                               onClick={() => handleOpenEditModal(item)}
                             >
@@ -176,7 +178,10 @@ const Category: FC = () => {
                             >
                               <Trash className="h-3.5 w-3.5 text-red-500" /> <span>Delete</span>
                             </button> */}
-                            <DeleteConfirmationModal handleCancel={handleCloseModal}    />
+                            <DeleteConfirmationModal
+                              handleCancel={handleCloseModal}
+                              handleDelete={handleDelete}
+                            />
                           </div>
                         </PopoverContent>
                       </Popover>
