@@ -14,6 +14,7 @@ import { authAxios } from "@/config/config";
 import { toast } from "sonner";
 import { useAuth } from "../context/AuthContext"; // ✅ Corrected import
 import { useNavigate } from "react-router-dom";
+import { useAllContext } from "@/context/AllContext";
 
 export function LoginForm({
   className,
@@ -31,6 +32,9 @@ export function LoginForm({
 
   const { handleLogin } = useAuth();
 
+  const {setloading}  =useAllContext()
+  
+
   useEffect(() => {
     if (localStorage.getItem("token")) {
       console.log("called");
@@ -40,19 +44,20 @@ export function LoginForm({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setloading(true)
     await authAxios()
       .post(`/auth/login`, userdata)
       .then((response) => {
         console.log("rewew", response);
         const resData = response.data;
         toast.success(resData.message);
-
+        setloading(false)
         console.log("eeqweqw", response.data.data.user);
         handleLogin(response.data.data.user, response.data.data.token);
         navigate("/");
       })
       .catch((error) => {
+        setloading(false)
         console.log("ererw", error);
         toast.error(error.response.data.message);
       });

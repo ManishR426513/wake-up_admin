@@ -20,6 +20,7 @@ import { Edit, MoreHorizontal } from "lucide-react";
 import AddCategoryModal from "../../common/Modal/AddCatgoryModal";
 import DeleteConfirmationModal from "@/common/Modal/DeleteConfirmationModal";
 import { toast } from "sonner";
+import { useAllContext } from "@/context/AllContext";
 
 export interface CategoryInterface {
   _id: string;
@@ -29,6 +30,8 @@ export interface CategoryInterface {
 }
 
 const Category: FC = () => {
+    const {setloading}  =useAllContext()
+  
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
@@ -41,12 +44,18 @@ const Category: FC = () => {
   });
 
   const getCategories = async (): Promise<void> => {
-    try {
-      const response = await authAxios().get("/category");
-      setCategories(response.data.data.categories);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
+    setloading(true)
+    await authAxios()
+          .get(`/category`)
+          .then((response) => {
+            setloading(false)
+            setCategories(response.data.data.categories);
+          })
+          .catch((error) => {
+            console.log(error)
+            setloading(false)
+            toast.error(error.response.data.message)
+          });
   };
 
   useEffect(() => {

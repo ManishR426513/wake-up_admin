@@ -39,6 +39,8 @@ import {
 } from "@/components/ui/table";
 import { Main } from "@/components/main";
 import { authAxios } from "@/config/config";
+import { useAllContext } from "@/context/AllContext";
+import { toast } from "sonner";
 
 // const data: Payment[] = [
 //   {
@@ -296,6 +298,8 @@ export const columns: ColumnDef<userDataInterface>[] = [
 ];
 
 const UserList: React.FC = () => {
+    const {setloading}  =useAllContext()
+   
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -325,18 +329,19 @@ const UserList: React.FC = () => {
   });
 
   const getAllUserDetails = async () => {
+    setloading(true)
     await authAxios()
       .get(`/auth/all-users`)
       .then((response) => {
-        // console.log("response",response.data.data);
+        setloading(false)
         setallUsersData(response.data.data.allUsers);
       })
       .catch((error) => {
-        console.log(error);
+        setloading(false)
+        toast.error(error.response.data.message)
       });
   };
 
-  console.log("akll", allUsersData);
 
   React.useEffect(() => {
     getAllUserDetails();
