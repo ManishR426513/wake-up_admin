@@ -1,25 +1,30 @@
-import { FC, useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
+  
   TableCell,
+ 
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { authAxios } from "@/config/config";
 import { Main } from "@/components/main";
 import { Button } from "@/components/ui/Button";
-import { authAxios } from "@/config/config";
 import { setReportFormatDate } from "@/helper/helper";
+import AddPlansModal, {
+  dataContentInterface,
+} from "@/common/Modal/AddPlansModal";
+import { toast } from "sonner";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@radix-ui/react-popover";
 import { Edit, MoreHorizontal } from "lucide-react";
-import AddCategoryModal from "../../common/Modal/AddCatgoryModal";
-import DeleteConfirmationModal from "@/common/Modal/DeleteConfirmationModal";
-
+import { useAllContext } from "@/context/AllContext";
 export interface PlanInterface {
   _id: string;
   planName: string;
@@ -31,99 +36,138 @@ export interface PlanInterface {
   createdAt: string;
 }
 
-const Plan: FC = () => {
-  const [plans, setPlans] = useState<PlanInterface[]>([]);
-  const [openPopover, setOpenPopover] = useState<string | null>(null);
-  const [modalState, setModalState] = useState<{
-    isOpen: boolean;
-    isEditMode: boolean;
-    currentPlan: PlanInterface | null;
-  }>({
-    isOpen: false,
-    isEditMode: false,
-    currentPlan: null,
+export interface ModelInterface {
+  show: boolean;
+  data?: PlanInterface | null;
+  deletemodel: boolean;
+}
+
+const Plans: React.FC = () => {
+    const {setloading}  =useAllContext()
+  
+  const [plans, setplans] = useState<PlanInterface[]>([]);
+  const [showModel, setshowModel] = useState<ModelInterface>({
+    show: false,
+    data: null,
+    deletemodel: false,
   });
 
   const getPlans = async (): Promise<void> => {
+    setloading(true)
     try {
+      setloading(false)
       const response = await authAxios().get("/plan");
       if (response.data?.data?.plans) {
-        setPlans(response.data.data.plans);
+        setplans(response.data.data.plans);
       }
     } catch (error) {
-      console.error("Error fetching plans:", error);
+      setloading(false)
+      
+    }
+  };
+
+  const handleShowmodel = (type: string, data?: PlanInterface) => {
+    if (type == "Add") {
+      setshowModel((prev) => ({
+        ...prev,
+        show: true,
+        data: null,
+        deletemodel: false,
+      }));
+    } else if (type == "Edit") {
+      setshowModel((prev) => ({
+        ...prev,
+        show: true,
+        data: data,
+        deletemodel: false,
+      }));
+    } else {
+      // Handle other cases if needed
+    }
+  };
+
+  const handleAction = (data?: dataContentInterface) => {
+    if (showModel?.data?._id) {
+      
+      // For editing an existing plan
+      const payLoad = {
+        ...data,
+        price: Number(data?.price),
+        currency: "EURO",
+        planType: data?.planName?.toLocaleUpperCase(),
+      };
+
+      setshowModel({
+        show: false,
+        data: null,
+        deletemodel: false,
+      });
+      setloading(true)
+      authAxios()
+        .put(`/plan/${showModel?.data?._id}`, payLoad)
+        .then((response) => {
+          setloading(false)
+          console.log(response)
+          toast.success(response.data.message);
+          getPlans();
+         
+        })
+        .catch((error) => {
+          setloading(false)
+          toast.error(error?.response?.data?.message);
+         
+        });
+    } else {
+      // For adding a new plan
+      // const payLoad = {
+      //   ...data,
+      //   currency: "EURO",
+      //   planType: data?.planName?.toLocaleUpperCase(),
+      // };
+
+      // authAxios()
+      //   .post(`/plan`, payLoad)
+      //   .then((response) => {
+      //     toast.success("Plan added successfully");
+      //     getPlans();
+      //     setshowModel({
+      //       show: false,
+      //       data: null,
+      //       deletemodel: false,
+      //     });
+      //   })
+      //   .catch((error) => {
+      //     toast.error("Failed to add plan");
+      //     console.log(error);
+      //   });
     }
   };
 
   useEffect(() => {
     getPlans();
   }, []);
-
-  const handleOpenAddModal = (): void => {
-    setModalState({
-      isOpen: true,
-      isEditMode: false,
-      currentPlan: null,
-    });
-  };
-
-  const handleOpenEditModal = (plan: PlanInterface): void => {
-    setModalState({
-      isOpen: true,
-      isEditMode: true,
-      currentPlan: plan,
-    });
-    setOpenPopover(null);
-  };
-
-  const handleCloseModal = (): void => {
-    setModalState({
-      isOpen: false,
-      isEditMode: false,
-      currentPlan: null,
-    });
-    setOpenPopover(null);
-  };
-
-  const handleEdit = async (planData: any): Promise<void> => {
-    if (!modalState.currentPlan?._id) return;
-    
-    try {
-      await authAxios().put(`/plan/${modalState.currentPlan._id}`, planData);
-      await getPlans();
-      handleCloseModal();
-    } catch (error) {
-      console.error("Error updating plan:", error);
-    }
-  };
-
-  const handleAdd = async (planData: any): Promise<void> => {
-    try {
-      await authAxios().post("/plan", planData);
-      await getPlans();
-      handleCloseModal();
-    } catch (error) {
-      console.error("Error adding plan:", error);
-    }
-  };
-
+  
   return (
-    <div className="p-6">
+    <div>
       <Main>
-        <div className="mb-4 flex items-center justify-between">
+        {/* <div className="mb-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Plans</h1>
-          <Button onClick={handleOpenAddModal}>Add Plan</Button>
-        </div>
+          <Button onClick={() => handleShowmodel("Add")}>Add Category</Button>
+        </div> */}
         <div className="overflow-x-auto rounded-lg shadow-lg">
           <Table className="w-full border-collapse text-sm">
             <TableHeader>
               <TableRow>
                 <TableHead className="px-4 py-3 text-left">Sno</TableHead>
                 <TableHead className="px-4 py-3 text-left">Plan Type</TableHead>
-                <TableHead className="px-4 py-3 text-left">Description</TableHead>
+                <TableHead className="px-4 py-3 text-left">
+                  Description
+                </TableHead>
                 <TableHead className="px-4 py-3 text-left">Price</TableHead>
                 <TableHead className="px-4 py-3 text-left">Status</TableHead>
-                <TableHead className="px-4 py-3 text-left">Created At</TableHead>
+                <TableHead className="px-4 py-3 text-left">
+                  Created At
+                </TableHead>
                 <TableHead className="px-4 py-3 text-left">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -134,39 +178,54 @@ const Plan: FC = () => {
                     <TableCell className="px-4 py-3 font-medium">
                       {index + 1}
                     </TableCell>
-                    <TableCell className="px-4 py-3">{item.planType}</TableCell>
-                    <TableCell className="px-4 py-3">{item.planDescription}</TableCell>
-                    <TableCell className="px-4 py-3">{item.currency} {item.price}</TableCell>
-                    <TableCell className="px-4 py-3">
+                    <TableCell>{item.planType}</TableCell>
+                    <TableCell>{item.planDescription}</TableCell>
+                    <TableCell>
+                      {item.currency} {item.price}
+                    </TableCell>
+                    <TableCell>
                       {item.isActive ? "Active" : "Inactive"}
                     </TableCell>
-                    <TableCell className="px-4 py-3">
-                      {setReportFormatDate(item.createdAt)}
-                    </TableCell>
-                    <TableCell className="px-4 py-3">
-                      <Popover
-                        open={openPopover === item._id}
-                        onOpenChange={(open) =>
-                          setOpenPopover(open ? item._id : null)
-                        }
-                      >
+                    <TableCell>{setReportFormatDate(item.createdAt)}</TableCell>
+                    <TableCell>
+                      {/* <Popover>
                         <PopoverTrigger asChild>
-                          <Button variant="ghost" className="h-7 w-7 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal size={20} />
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent side="left" className="w-28 p-1">
-                          <div className="flex flex-col space-y-1">
-                            <button 
-                              className="flex items-center space-x-2 px-2 py-1 rounded-md"
-                              onClick={() => handleOpenEditModal(item)}
-                            >
-                              <Edit className="h-3.5 w-3.5" /> <span>Edit</span>
-                            </button>
-                            <DeleteConfirmationModal handleCancel={handleCloseModal} />
-                          </div>
+                        <PopoverContent className="w-32 p-2  shadow-lg rounded-md z-50">
+                          <button
+                            onClick={() => handleShowmodel("Edit", item)}
+                            className="flex items-center gap-2 w-full p-2 rounded-md hover:bg-gray-100"
+                          >
+                            <Edit size={16} /> Edit
+                          </button>
+                         
                         </PopoverContent>
-                      </Popover>
+                      </Popover> */}
+
+<Popover>
+  <PopoverTrigger asChild>
+    <Button variant="ghost" className="h-8 w-8 p-0">
+      <MoreHorizontal size={20} />
+    </Button>
+  </PopoverTrigger>
+  <PopoverContent className="w-40 p-2 shadow-lg rounded-lg bg-white border border-gray-200">
+    <button
+      onClick={() => handleShowmodel("Edit", item)}
+      className="flex items-center gap-2 w-full p-2 rounded-md hover:bg-gray-100 transition-all duration-200"
+    >
+      <Edit size={16} /> Edit
+    </button>
+    {/* Uncomment if needed */}
+    {/* <button
+      className="flex items-center gap-2 w-full p-2 rounded-md hover:bg-gray-100 transition-all duration-200"
+    >
+      <Trash size={16} /> Delete
+    </button> */}
+  </PopoverContent>
+</Popover>
                     </TableCell>
                   </TableRow>
                 ))
@@ -184,19 +243,13 @@ const Plan: FC = () => {
           </Table>
         </div>
       </Main>
-
-      {modalState.isOpen && (
-        <AddCategoryModal
-          isOpen={modalState.isOpen}
-          isEditMode={modalState.isEditMode}
-          categoryData={modalState.currentPlan}
-          onClose={handleCloseModal}
-          onEdit={handleEdit}
-          onAdd={handleAdd}
-        />
-      )}
+      <AddPlansModal
+        showModel={showModel}
+        setshowModel={setshowModel}
+        handleAction={handleAction}
+      />
     </div>
   );
 };
 
-export default Plan;
+export default Plans;

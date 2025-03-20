@@ -8,13 +8,12 @@ import { AllContextProvider } from "./context/AllContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-        <ThemeProvider defaultTheme='light' storageKey='vite-ui-theme'>
-        <AuthProvider>
-      <AllContextProvider>
-      <App />
-      </AllContextProvider>
-    </AuthProvider>
-   
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <AuthProvider>
+        <AllContextProvider>
+          <App />
+        </AllContextProvider>
+      </AuthProvider>
     </ThemeProvider>
   </StrictMode>
 );
