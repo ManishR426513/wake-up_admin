@@ -53,18 +53,35 @@ const Plans: React.FC = () => {
   });
 
   const getPlans = async (): Promise<void> => {
-    setloading(true)
-    try {
-      setloading(false)
-      const response = await authAxios().get("/plan");
-      if (response.data?.data?.plans) {
-        setplans(response.data.data.plans);
-      }
-    } catch (error) {
-      setloading(false)
+    // setloading(true)
+    // try {
+    //   setloading(false)
+    //   const response = await authAxios().get("/plan");
+    //   if (response.data?.data?.plans) {
+    //     setplans(response.data.data.plans);
+    //   }
+    // } catch (error) {
+    //   setloading(false)
       
-    }
+    // }
+    setloading(true)
+    await authAxios()
+          .get(`/plan`)
+          .then((response) => {
+            setloading(false)
+            setplans(response.data.data.plans);
+          })
+          .catch((error) => {
+            console.log(error)
+            setloading(false)
+            toast.error(error.response.data.message)
+          });
   };
+
+
+  useEffect(() => {
+    getPlans();
+  }, []);
 
   const handleShowmodel = (type: string, data?: PlanInterface) => {
     if (type == "Add") {
@@ -143,17 +160,15 @@ const Plans: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    getPlans();
-  }, []);
+  
   
   return (
     <div>
       <Main>
-        {/* <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Plans</h1>
-          <Button onClick={() => handleShowmodel("Add")}>Add Category</Button>
-        </div> */}
+          {/* <Button onClick={() => handleShowmodel("Add")}>Add Category</Button> */}
+        </div>
         <div className="overflow-x-auto rounded-lg shadow-lg">
           <Table className="w-full border-collapse text-sm">
             <TableHeader>

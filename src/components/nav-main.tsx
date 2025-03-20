@@ -40,7 +40,7 @@ export function NavMain({
   console.log("location", location);
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>User</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
