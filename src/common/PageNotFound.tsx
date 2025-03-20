@@ -2,27 +2,19 @@ import { Link } from "react-router";
 
 export default function PageNotFound() {
   return (
-    <main className="grid min-h-full place-items-center px-6 py-24 sm:py-32 lg:px-8">
-      <div className="text-center">
-        <img
-          src="/assets/images/404-img.png"
-          className="mr-[5px] search--icon"
-        />
-        <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          Page not found
-        </h1>
-        <p className="mt-6 text-base leading-7 text-gray-600">
-          Sorry, we couldn’t find the page you’re looking for.
-        </p>
-        <div className="mt-10 flex items-center justify-center gap-x-6">
-        <Link
-  to="/"
-  className="rounded-md bg-black px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
->
-  Go back home
-</Link>
-
+    <main className="flex items-center justify-center min-h-screen  px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+      <div className="text-center space-y-6">
+        <div className="space-y-3">
+          <h1 className="text-6xl font-bold tracking-tighter sm:text-7xl animate-bounce">404</h1>
+          <h3 className="text-gray-500 text-xl">Page Not Found</h3>
         </div>
+        <Link
+          to="/"
+          className="inline-flex h-12 items-center justify-center rounded-md bg-gray-900 px-10 text-lg font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+          //prefetch={false}
+        >
+          Return to Home
+        </Link>
       </div>
     </main>
   );
