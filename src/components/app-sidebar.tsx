@@ -15,12 +15,12 @@ import {
   Settings2,
   SquareTerminal,
   User,
-  MessageSquare
+ // MessageSquare
 } from "lucide-react"
 
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
+import { TeamSwitcher } from "@/components/team-switcher" 
 import {
   Sidebar,
   SidebarContent,
