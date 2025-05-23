@@ -167,11 +167,11 @@ const data = {
       url: "/",
       icon: SquareTerminal,
     },
-    {
-      name: "Chat",
-      url: "/chat",
-      icon: MessageSquare,
-    },
+    // {
+    //   name: "Chat",
+    //   url: "/chat",
+    //   icon: MessageSquare,
+    // },
 
     {
       name: "User",

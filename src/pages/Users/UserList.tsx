@@ -41,6 +41,7 @@ import { Main } from "@/components/main";
 import { authAxios } from "@/config/config";
 import { useAllContext } from "@/context/AllContext";
 import { toast } from "sonner";
+import { handleProfileImage } from "@/helper/helper";
 
 // const data: Payment[] = [
 //   {
@@ -225,9 +226,13 @@ export const columns: ColumnDef<userDataInterface>[] = [
     cell: ({ row }) => (
       <>
         <img
-          src={`${import.meta.env.VITE_IMAGE_VIDEO_URL}${row.getValue(
-            "profilePic"
-          )}`}
+
+          // src={`${import.meta.env.VITE_IMAGE_VIDEO_URL}${row.getValue(
+          //   "profilePic"
+          // )||"../../assets/images/user.png"}`}
+          //../../assets
+         src={handleProfileImage(`${row.getValue("profilePic")}`)}
+
           alt="Profile"
           className="w-7 h-7 object-cover rounded-full" // You can adjust the class as per your styling
         />
