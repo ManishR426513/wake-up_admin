@@ -166,7 +166,9 @@ const Report: React.FC = () => {
     }
   };
   useEffect(()=>{
-setData([])
+if(data){
+  setData(mockData)
+}
   },[])
 
   const getTypeColor = (type: string) => {
