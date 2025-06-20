@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { Search, Filter, AlertTriangle, Shield, MessageSquare, Flag, Eye, EyeOff, Download, RefreshCw } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Search, AlertTriangle, Shield, MessageSquare, Flag, Eye, EyeOff, Download, RefreshCw } from 'lucide-react';
 
 interface UserReport {
   id: string;
@@ -165,6 +165,9 @@ const Report: React.FC = () => {
       default: return 'bg-muted text-muted-foreground border-muted';
     }
   };
+  useEffect(()=>{
+setData([])
+  },[])
 
   const getTypeColor = (type: string) => {
     switch (type) {
