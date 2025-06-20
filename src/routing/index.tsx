@@ -7,6 +7,8 @@ import Dashboard from "@/pages/dashboard";
 import Category from "@/pages/Category/Category";
 import Plans from "@/pages/Plans/Plans";
 import Chats from "@/pages/chats";
+import ChallengePrice from "@/pages/ChallengePrice";
+import Report from "@/pages/Report";
 
 export default function Routing() {
   return (
@@ -53,6 +55,22 @@ export default function Routing() {
           element={
             <PrivateRoute>
               <Category />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/challenge-price"
+          element={
+            <PrivateRoute>
+              <ChallengePrice />
+            </PrivateRoute>
+          }
+        />
+         <Route
+          path="/report"
+          element={
+            <PrivateRoute>
+              <Report />
             </PrivateRoute>
           }
         />

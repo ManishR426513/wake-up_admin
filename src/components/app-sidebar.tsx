@@ -11,6 +11,7 @@ import {
   GalleryVerticalEnd,
 
   ReceiptEuro,
+  TriangleAlert,
  
   Settings2,
   SquareTerminal,
@@ -178,6 +179,11 @@ const data = {
       url: "/users",
       icon: User,
     },
+    //  {
+    //   name: "Challenge Price",
+    //   url: "/challenge",
+    //   icon: User,
+    // },
     {
       name: "Category",
       url: "/category",
@@ -187,6 +193,16 @@ const data = {
       name: "Plans",
       url: "/plan",
       icon: ReceiptEuro,
+    },
+     {
+      name: "Challenge Price",
+      url: "/challenge-price",
+      icon: ReceiptEuro,
+    },
+     {
+      name: "Report",
+      url: "/report",
+      icon: TriangleAlert,
     },
   ],
 }
