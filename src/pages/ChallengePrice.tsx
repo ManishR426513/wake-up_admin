@@ -1,27 +1,27 @@
 import { authAxios } from '@/config/config';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-
-interface PriceRange {
-  min: number;
-  max: number;
-}
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { DollarSign, Loader2 } from 'lucide-react';
 
 const ChallengePrice: React.FC = () => {
-  const [priceRange, setPriceRange] = useState<PriceRange>({ min: 0, max: 100 });
+  const [minPriceText, setMinPriceText] = useState<string>('0');
+  const [maxPriceText, setMaxPriceText] = useState<string>('100');
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = parseInt(e.target.value);
-    if (value < 1) value = 1;
-    if (value > priceRange.max - 2) value = priceRange.max - 2;
-    setPriceRange((prev) => ({ ...prev, min: value }));
-  };
-
-  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = parseInt(e.target.value);
-    if (value <= priceRange.min + 2) value = priceRange.min + 2;
-    setPriceRange((prev) => ({ ...prev, max: value }));
+  const parsePrice = (value: string): number => {
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? 0 : parsed;
   };
 
   const getChallengePrice = async () => {
@@ -29,11 +29,8 @@ const ChallengePrice: React.FC = () => {
     try {
       const response = await authAxios().get('/challenge/price');
       const { minPrice, maxPrice } = response.data.data;
-
-      setPriceRange({
-        min: Math.max(1, minPrice),
-        max: maxPrice,
-      });
+      setMinPriceText(minPrice.toString());
+      setMaxPriceText(maxPrice.toString());
     } catch (err) {
       toast.error('Failed to fetch challenge price range.');
       console.error('Error fetching price:', err);
@@ -42,15 +39,30 @@ const ChallengePrice: React.FC = () => {
     }
   };
 
+  const validatePriceRange = (): string | null => {
+    const min = parsePrice(minPriceText);
+    const max = parsePrice(maxPriceText);
+
+    if (min < 1) return 'Minimum price must be at least $1';
+    if (max > 100) return 'Maximum price must not exceed $100';
+    if (max <= min) return 'Maximum price must be greater than minimum price';
+    if (max - min < 4) return 'Price range should be at least $4';
+    return null;
+  };
+
   const updateChallengePrice = async () => {
+    const error = validatePriceRange();
+    if (error) {
+      toast.error(error);
+      return;
+    }
+
     setLoading(true);
     try {
-      const payload = {
-        minPrice: priceRange.min,
-        maxPrice: priceRange.max,
-      };
-
-      await authAxios().post('/challenge/price', payload);
+      await authAxios().post('/challenge/price', {
+        minPrice: parsePrice(minPriceText),
+        maxPrice: parsePrice(maxPriceText),
+      });
       toast.success('Price range updated successfully!');
     } catch (err) {
       toast.error('Failed to update price range.');
@@ -64,64 +76,86 @@ const ChallengePrice: React.FC = () => {
     getChallengePrice();
   }, []);
 
-  const isValidRange = priceRange.min >= 1 && priceRange.max > priceRange.min + 1;
-
   return (
     <> 
     {
-      priceRange.min>0&&<div className="max-w-4xl w-full sm:w-[80%] md:w-[60%] lg:w-[50%] mx-auto mt-14 p-8 bg-white text-black rounded-2xl shadow-2xl font-sans">
-      <h1 className="text-3xl font-bold text-center mb-10">Set Challenge Price</h1>
+      parseFloat(minPriceText) > 0 && <div className="max-w-2xl mx-auto p-6">
+      <Card>
+        <CardHeader className="space-y-1">
+          <CardTitle className="flex items-center gap-2 text-2xl">
+            <DollarSign className="h-6 w-6" />
+            Set Challenge Price
+          </CardTitle>
+          <CardDescription>
+            Configure the minimum and maximum price range for challenges.
+          </CardDescription>
+        </CardHeader>
 
-      <div className="flex justify-center items-center text-xl font-semibold bg-black text-white py-5 px-7 rounded-xl mb-10 space-x-4">
-        <span>${priceRange.min}</span>
-        <span>—</span>
-        <span>${priceRange.max}</span>
-      </div>
+        <CardContent className="space-y-6">
+          <div className="rounded-lg border bg-muted/50 p-4 text-center">
+            <div className="text-sm text-muted-foreground mb-1">Current Range</div>
+            <div className="text-2xl font-bold">
+              ${parsePrice(minPriceText).toFixed(2)} — ${parsePrice(maxPriceText).toFixed(2)}
+            </div>
+          </div>
 
-      <div className="mb-8">
-        <label className="block mb-2 font-medium text-sm text-gray-700">
-          Minimum Price: ${priceRange.min}
-        </label>
-        <input
-          type="range"
-          min={1}
-          max={100}
-          step={1}
-          value={priceRange.min}
-          onChange={handleMinPriceChange}
-          className="w-full h-2 bg-gray-300 rounded-full cursor-pointer accent-black"
-        />
-      </div>
+          <Separator />
 
-      <div className="mb-10">
-        <label className="block mb-2 font-medium text-sm text-gray-700">
-          Maximum Price: ${priceRange.max}
-        </label>
-        <input
-          type="range"
-          min={1}
-          max={100}
-          step={1}
-          value={priceRange.max}
-          onChange={handleMaxPriceChange}
-          className="w-full h-2 bg-gray-300 rounded-full cursor-pointer accent-black"
-        />
-      </div>
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="min-price">Minimum Price</Label>
+              <div className="relative">
+                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="min-price"
+                  type="text"
+                  value={minPriceText}
+                  onChange={(e) => setMinPriceText(e.target.value)}
+                  className="pl-9"
+                  placeholder="1.00"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">Minimum: $1</p>
+            </div>
 
-      <button
-        onClick={updateChallengePrice}
-        disabled={loading || !isValidRange}
-        className={`w-full py-3 rounded-lg text-sm font-semibold transition-all ${
-          loading || !isValidRange
-            ? 'bg-gray-400 text-white cursor-not-allowed'
-            : 'bg-black text-white hover:bg-neutral-800 active:bg-neutral-700'
-        }`}
-      >
-        {loading ? 'Saving...' : 'Save Price Range'}
-      </button>
+            <div className="space-y-2">
+              <Label htmlFor="max-price">Maximum Price</Label>
+              <div className="relative">
+                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="max-price"
+                  type="text"
+                  value={maxPriceText}
+                  onChange={(e) => setMaxPriceText(e.target.value)}
+                  className="pl-9"
+                  placeholder="100.00"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">Maximum: $100</p>
+            </div>
+          </div>
+
+          <Button
+            onClick={updateChallengePrice}
+            disabled={loading}
+            className="w-full"
+            size="lg"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              'Save Price Range'
+            )}
+          </Button>
+        </CardContent>
+      </Card>
     </div>
     }
     </>
+    
   );
 };
 
