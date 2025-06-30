@@ -14,3 +14,9 @@ export const handleProfileImage = (data: string) => {
     ? `${import.meta.env.VITE_IMAGE_VIDEO_URL}/${data}`
     : require('../assets/images/user.png');
 };
+
+export const handleThumbnail = (data: string) => {
+  return data
+    ? `${import.meta.env.VITE_IMAGE_VIDEO_URL}/${data}`
+    : `${import.meta.env.VITE_IMAGE_VIDEO_URL}/${data}`
+};

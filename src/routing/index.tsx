@@ -8,7 +8,9 @@ import Category from "@/pages/Category/Category";
 import Plans from "@/pages/Plans/Plans";
 import Chats from "@/pages/chats";
 import ChallengePrice from "@/pages/ChallengePrice";
-import Report from "@/pages/Report";
+import Report from "@/pages/Report/Report";
+import DetailedReport from "@/pages/Report/DetailedReport";
+// import Report from "@/pages/Report";
 
 export default function Routing() {
   return (
@@ -71,6 +73,14 @@ export default function Routing() {
           element={
             <PrivateRoute>
               <Report />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/report/:id"
+          element={
+            <PrivateRoute>
+              <DetailedReport />
             </PrivateRoute>
           }
         />
