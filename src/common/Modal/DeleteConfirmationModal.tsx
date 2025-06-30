@@ -1,4 +1,4 @@
-import  { FC } from "react";
+import { FC } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,45 +8,50 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Trash } from "lucide-react";
 
 interface DeleteConfirmationModalProps {
-  handleDelete?: () => void;
-  handleCancel?: () => void;
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title?: string;
+  description?: string;
 }
+
 const DeleteConfirmationModal: FC<DeleteConfirmationModalProps> = ({
-  handleDelete,
-  handleCancel,
+  isOpen,
+  onClose,
+  onConfirm,
+  title = "Are you absolutely sure?",
+  description = "This action cannot be undone. This will permanently delete the item and remove your data from our servers.",
 }) => {
   return (
-   
-      <AlertDialog>
-        <AlertDialogTrigger>
-          {" "}
-          <button className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-red-100">
-            <Trash className="h-3.5 w-3.5 text-red-500" /> <span> Delete </span>
-          </button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>
-              {" "}
-              Continue
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-   
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
+      <AlertDialogContent className="bg-background border border-border">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-foreground">
+            {title}
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-muted-foreground">
+            {description}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel 
+            onClick={onClose}
+            className="bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border"
+          >
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction 
+            onClick={onConfirm}
+            className="bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border"
+          >
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 
