@@ -21,6 +21,7 @@ import AddCategoryModal from "../../common/Modal/AddCatgoryModal";
 import DeleteConfirmationModal from "@/common/Modal/DeleteConfirmationModal";
 import { toast } from "sonner";
 import { useAllContext } from "@/context/AllContext";
+import { useAuth } from "@/context/AuthContext";
 
 export interface CategoryInterface {
   _id: string;
@@ -28,10 +29,10 @@ export interface CategoryInterface {
   description: string;
   createdAt: string;
 }
-
 const Category: FC = () => {
   const { setloading } = useAllContext();
-  
+  const { token } = useAuth();
+   
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
@@ -47,7 +48,7 @@ const Category: FC = () => {
 
   const getCategories = async (): Promise<void> => {
     setloading(true);
-    await authAxios()
+    await authAxios(token)
       .get(`/category`)
       .then((response) => {
         setloading(false);
@@ -61,8 +62,11 @@ const Category: FC = () => {
   };
 
   useEffect(() => {
-    getCategories();
-  }, []);
+    if(token){
+getCategories();
+    }
+   // 
+  }, [token]);
 
   const handleOpenAddModal = (): void => {
     setModalState({
@@ -105,7 +109,7 @@ const Category: FC = () => {
 
     try {
       const payload = { name: categoryName };
-      const response = await authAxios().put(
+      const response = await authAxios(token).put(
         `/category/${modalState.currentCategory._id}`,
         payload
       );
@@ -120,7 +124,7 @@ const Category: FC = () => {
   const handleAdd = async (categoryName: string): Promise<void> => {
     try {
       const payload = { name: categoryName };
-      const response = await authAxios().post("/category", payload);
+      const response = await authAxios(token).post("/category", payload);
       await getCategories();
       handleCloseModal();
 
@@ -132,7 +136,7 @@ const Category: FC = () => {
 
   const handleDelete = async (): Promise<void> => {
     try {
-      const response = await authAxios().delete(
+      const response = await authAxios(token).delete(
         `/category/${modalState?.currentCategory?._id}`
       );
       await getCategories();

@@ -23,6 +23,7 @@ import {
 } from "@radix-ui/react-popover";
 import { Edit, MoreHorizontal } from "lucide-react";
 import { useAllContext } from "@/context/AllContext";
+import { useAuth } from "@/context/AuthContext";
 
 export interface PlanInterface {
   _id: string;
@@ -43,6 +44,7 @@ export interface ModelInterface {
 
 const Plans: React.FC = () => {
   const { setloading } = useAllContext();
+  const { token } = useAuth();
 
   const [plans, setplans] = useState<PlanInterface[]>([]);
   const [showModel, setshowModel] = useState<ModelInterface>({
@@ -54,7 +56,7 @@ const Plans: React.FC = () => {
   const getPlans = async (): Promise<void> => {
     setloading(true);
     try {
-      const response = await authAxios().get("/plan");
+      const response = await authAxios(token).get("/plan");
       setplans(response.data.data.plans);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to fetch plans");
@@ -64,8 +66,11 @@ const Plans: React.FC = () => {
   };
 
   useEffect(() => {
+    if(token){
+
+    
     getPlans();
-  }, []);
+}}, [token]);
 
   const handleShowmodel = (type: string, data?: PlanInterface) => {
     setshowModel({
@@ -87,7 +92,7 @@ const Plans: React.FC = () => {
 
     if (showModel?.data?._id) {
       // Edit
-      authAxios()
+      authAxios(token)
         .put(`/plan/${showModel.data._id}`, payLoad)
         .then((response) => {
           toast.success(response.data.message);
@@ -102,7 +107,7 @@ const Plans: React.FC = () => {
         });
     } else {
       // Add
-      authAxios()
+      authAxios(token)
         .post(`/plan`, payLoad)
         .then(() => {
           toast.success("Plan added successfully");
@@ -123,7 +128,6 @@ const Plans: React.FC = () => {
       <Main>
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Plans</h1>
-          <Button onClick={() => handleShowmodel("Add")}>Add Plan</Button>
         </div>
 
         <div className="overflow-x-auto rounded-lg shadow-lg">

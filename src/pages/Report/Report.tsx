@@ -24,8 +24,11 @@ export interface ReportInterface {
 
 import {  Eye } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 
 const Report: FC = () => {
+        const { token } = useAuth();
+    
     const { setloading } = useAllContext();
 
     const navigation=useNavigate()
@@ -35,7 +38,7 @@ const Report: FC = () => {
 
     const getReports = async () => {
         setloading(true);
-        await authAxios()
+        await authAxios(token)
             .get(`/report`)
             .then((response) => {
                 setloading(false);
@@ -49,8 +52,12 @@ const Report: FC = () => {
     }
 
     useEffect(() => {
+        if(token){
+
+        
         getReports()
-    }, [])
+        }
+    }, [token])
 
     return (
         <div className="p-6">

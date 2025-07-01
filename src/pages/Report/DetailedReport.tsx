@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { Button } from "@/components/ui/Button";
 import { handleProfileImage, handleThumbnail, setReportFormatDate } from '@/helper/helper';
 import { useParams } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 
 // Optional: Badge component for status styling
 const StatusBadge = ({ status }: { status: string }) => {
@@ -39,6 +40,8 @@ export interface ReportInterface {
 }
 
 const DetailedReport: FC = () => {
+    const { token } = useAuth();
+
     const { setloading } = useAllContext();
     const [reports, setreports] = useState<ReportInterface[]>([])
     const { id } = useParams()
@@ -48,7 +51,7 @@ const DetailedReport: FC = () => {
 
     const getReports = async () => {
         setloading(true);
-        await authAxios()
+        await authAxios(token)
             .get(`/report`, {
                 params: {
                     feedId: id
@@ -64,7 +67,7 @@ const DetailedReport: FC = () => {
     }
 
     const DeleteVideo = async () => {
-        await authAxios()
+        await authAxios(token)
             .put(`/report`, { feedId: id })
             .then(() => {
                 toast.success("Video deleted successfully.");
@@ -75,9 +78,11 @@ const DetailedReport: FC = () => {
     }
 
     useEffect(() => {
-        getReports()
-        // eslint-disable-next-line
-    }, [])
+        if (token) {
+            getReports()
+
+        }
+    }, [token])
 
     return (
         <div className="p-6">
@@ -93,9 +98,9 @@ const DetailedReport: FC = () => {
                         <h2 className="text-xl font-semibold text-foreground mb-1">
                             {feedDetails?.title || "Feed Title"}
                         </h2>
-                        <p className="text-muted-foreground text-sm mb-1">
+                        {/* <p className="text-muted-foreground text-sm mb-1">
                             {feedDetails?.description || "No description available."}
-                        </p>
+                        </p> */}
                         <div className="flex gap-2 mt-1">
                             <span className="text-xs text-muted-foreground">Feed ID:</span>
                             <span className="text-xs font-mono">{feedDetails?._id || id}</span>
