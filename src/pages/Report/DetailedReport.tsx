@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { toast } from 'sonner';
 import { Button } from "@/components/ui/Button";
-import { handleProfileImage, handleThumbnail, setReportFormatDate } from '@/helper/helper';
+import {  handleThumbnail, setReportFormatDate } from '@/helper/helper';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 

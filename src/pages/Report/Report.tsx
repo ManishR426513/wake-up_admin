@@ -11,7 +11,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { toast } from 'sonner';
-import { handleProfileImage, handleThumbnail, setReportFormatDate } from '@/helper/helper';
+import {  handleThumbnail, setReportFormatDate } from '@/helper/helper';
 export interface ReportInterface {
     _id: string;
     userId: any;
