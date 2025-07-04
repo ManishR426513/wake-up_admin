@@ -26,6 +26,7 @@ import { useAllContext } from "@/context/AllContext";
 import { useAuth } from "@/context/AuthContext";
 
 export interface PlanInterface {
+  benefits: boolean;
   _id: string;
   planName: string;
   planDescription: string;
@@ -86,6 +87,8 @@ const Plans: React.FC = () => {
       price: Number(data?.price),
       currency: "EURO",
       planType: data?.planName?.toLocaleUpperCase(),
+      benefits:data?.benefits
+
     };
 
     setloading(true);
