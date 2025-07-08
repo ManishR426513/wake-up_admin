@@ -199,6 +199,11 @@ const data = {
       url: "/challenge-price",
       icon: ReceiptEuro,
     },
+    {
+      name: "Shop Price",
+      url: "/shop-price",
+      icon: ReceiptEuro,
+    },
      {
       name: "Report",
       url: "/report",
@@ -216,7 +221,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
        
         <NavProjects projects={data.projects} />
-         {/* <NavMain items={data.navMain} /> */}
+       
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

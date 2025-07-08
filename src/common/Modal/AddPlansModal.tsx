@@ -164,7 +164,7 @@ console.log("showca",showModel.data);
 
               <div className="grid grid-cols-4 items-start gap-4">
                 <Label className="text-right mt-2">
-                  benefits
+                  Features
                 </Label>
                 <div className="col-span-3 space-y-2 max-h-[300px] overflow-y-auto pr-2">
                   {data.benefits?.map((feature, index) => (
@@ -193,7 +193,7 @@ console.log("showca",showModel.data);
                     onClick={addFeature}
                     className="w-full"
                   >
-                    Add Benefits
+                    Add Features
                   </Button>
                 </div>
               </div>

@@ -15,11 +15,12 @@ import { Separator } from '@/components/ui/separator';
 import { DollarSign, Loader2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
-const ChallengePrice: React.FC = () => {
+const ShopPrice: React.FC = () => {
   const { token } = useAuth();
 
   const [minPriceText, setMinPriceText] = useState<string>('0');
   const [maxPriceText, setMaxPriceText] = useState<string>('100');
+  const [id, setid] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
   const parsePrice = (value: string): number => {
@@ -30,10 +31,16 @@ const ChallengePrice: React.FC = () => {
   const getChallengePrice = async () => {
     setLoading(true);
     try {
-      const response = await authAxios(token).get('/challenge/price');
-      const { minPrice, maxPrice } = response.data.data;
+      const response = await authAxios(token).get('/auth/price-range',{
+        params: {
+          type: 'shop'
+        }
+      });
+     
+      const { minPrice, maxPrice,_id } = response.data.data;
       setMinPriceText(minPrice.toString());
       setMaxPriceText(maxPrice.toString());
+      setid(_id)
     } catch (err) {
       toast.error('Failed to fetch challenge price range.');
       console.error('Error fetching price:', err);
@@ -41,6 +48,7 @@ const ChallengePrice: React.FC = () => {
       setLoading(false);
     }
   };
+ 
 
   const validatePriceRange = (): string | null => {
     const min = parsePrice(minPriceText);
@@ -62,9 +70,10 @@ const ChallengePrice: React.FC = () => {
 
     setLoading(true);
     try {
-      await authAxios(token).put('/challenge/price', {
+      await authAxios(token).put(`/auth/price-range/${id}`, {
         minPrice: parsePrice(minPriceText),
         maxPrice: parsePrice(maxPriceText),
+        
       });
       toast.success('Price range updated successfully!');
     } catch (err) {
@@ -89,10 +98,10 @@ const ChallengePrice: React.FC = () => {
           <CardHeader className="space-y-1">
             <CardTitle className="flex items-center gap-2 text-2xl">
               <DollarSign className="h-6 w-6" />
-              Set Challenge Price
+              Set Shop Price
             </CardTitle>
             <CardDescription>
-              Configure the minimum and maximum price range for challenges.
+              Configure the minimum and maximum price range for shop.
             </CardDescription>
           </CardHeader>
 
@@ -164,4 +173,4 @@ const ChallengePrice: React.FC = () => {
   );
 };
 
-export default ChallengePrice;
+export default ShopPrice;
