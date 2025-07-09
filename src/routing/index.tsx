@@ -11,6 +11,7 @@ import ChallengePrice from "@/pages/PriceRange/ChallengePrice";
 import Report from "@/pages/Report/Report";
 import DetailedReport from "@/pages/Report/DetailedReport";
 import ShopPrice from "@/pages/PriceRange/ShopPrice";
+import WakeupTimer from "@/pages/WakeupMessage";
 // import Report from "@/pages/Report";
 
 export default function Routing() {
@@ -24,6 +25,14 @@ export default function Routing() {
           element={
             <PrivateRoute>
               <Dashboard />
+            </PrivateRoute>
+          }
+        />
+         <Route
+          path="/time"
+          element={
+            <PrivateRoute>
+              <WakeupTimer />
             </PrivateRoute>
           }
         />

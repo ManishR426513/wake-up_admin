@@ -16,6 +16,7 @@ import {
   Settings2,
   SquareTerminal,
   User,
+  Timer
  // MessageSquare
 } from "lucide-react"
 
@@ -209,6 +210,11 @@ const data = {
       url: "/report",
       icon: TriangleAlert,
     },
+    {
+      name: "Time",
+      url: "/time",
+      icon: Timer,
+    },
   ],
 }
 
@@ -216,7 +222,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        {/* <TeamSwitcher teams={data.teams} /> */}
       </SidebarHeader>
       <SidebarContent>
        
