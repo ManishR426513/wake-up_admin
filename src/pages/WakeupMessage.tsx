@@ -1,66 +1,173 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { MessageCircle, Clock } from "lucide-react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { authAxios } from "@/config/config";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 export default function WakeupTimer() {
-  const [selectedTime, setSelectedTime] = useState<Date | null>(new Date());
+  const { token } = useAuth();
+
+  const [message, setMessage] = useState("");
+  const [hours, setHours] = useState("");
+  const [minutes, setMinutes] = useState("");
+  const [id, setId] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const validateInputs = () => {
+    const hrs = parseInt(hours, 10);
+    const mins = parseInt(minutes, 10);
+
+    if (!message.trim()) {
+      alert("Please enter a message.");
+      return false;
+    }
+
+    if (isNaN(hrs) || hrs < 0 || hrs > 23) {
+      alert("Please enter a valid hour (0–23)");
+      return false;
+    }
+
+    if (isNaN(mins) || mins < 0 || mins > 59) {
+      alert("Please enter a valid minute (0–59)");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSave = async () => {
+    if (!validateInputs()) return;
+
+    setLoading(true);
+    try {
+      if (id) {
+        await authAxios(token).put(`/auth/price-range/${id}`, {
+          hours: parseInt(hours, 10),
+          minutes: parseInt(minutes, 10),
+          userMessage: message,
+        });
+      } else {
+        await authAxios(token).post(`/auth/price-range`, {
+          type: "WakeupUserTime",
+          hours: parseInt(hours, 10),
+          minutes: parseInt(minutes, 10),
+          message,
+        });
+      }
+      toast.success('Wake-up Time saved successfully');
+
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save settings.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getWakeupUserMessage = async () => {
+    try {
+      const res = await authAxios(token).get(`/auth/price-range`, {
+        params: { type: "WakeupUserTime" },
+      });
+      const data = res.data.data;
+      setId(data._id || "");
+      setMessage(data.userMessage || "");
+      setHours(data.hours?.toString() || "0");
+      setMinutes(data.minutes?.toString() || "0");
+    } catch (err) {
+      console.error("Error fetching wakeup data:", err);
+    }
+  };
+
+  useEffect(() => {
+    getWakeupUserMessage();
+  }, []);
 
   return (
-    <div className="max-w-xl w-full mx-auto mt-20 px-4">
-      <Card className="bg-white/30 dark:bg-black/30 backdrop-blur-md border border-gray-200 dark:border-gray-700 shadow-2xl rounded-2xl">
-        <CardHeader className="text-center py-8">
-          <CardTitle className="text-4xl font-semibold text-gray-800 dark:text-white tracking-tight">
-            Message & Time
+    <div className="max-w-3xl w-full mx-auto mt-20 px-6">
+      <Card className="rounded-2xl shadow-md">
+        <CardHeader className="text-center">
+          <CardTitle className="text-3xl font-semibold">
+            Schedule Wake-up Message
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="space-y-10 px-6 pb-10">
+        <CardContent className="space-y-8 px-6 pb-10">
           {/* Message Input */}
-          <div className="space-y-3">
-            <Label
-              htmlFor="message"
-              className="text-lg font-semibold text-gray-700 dark:text-gray-200"
-            >
+          <div className="space-y-2">
+            <Label htmlFor="message" className="text-base font-medium">
               Custom Message
             </Label>
             <div className="relative">
-              <MessageCircle className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={22} />
+              <MessageCircle className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
               <Input
+                required
                 id="message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type your message..."
-                className="pl-12 pr-4 py-4 text-base h-14 rounded-xl border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-900/80 text-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:outline-none"
+                className="pl-10"
               />
             </div>
           </div>
 
-          {/* Time Input */}
-          <div className="space-y-3">
-            <Label
-              htmlFor="time"
-              className="text-lg font-semibold text-gray-700 dark:text-gray-200"
-            >
-              Select Time
-            </Label>
-            <div className="relative">
-              <Clock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 z-10" size={22} />
-              <DatePicker
-                selected={selectedTime}
-                onChange={(date) => setSelectedTime(date)}
-                showTimeSelect
-                showTimeSelectOnly
-                timeIntervals={15}
-                timeFormat="HH:mm"
-                dateFormat="HH:mm"
-                className="pl-12 pr-4 py-4 w-full text-base h-14 rounded-xl border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-900/80 text-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:outline-none"
-                placeholderText="Select time"
-              />
+          {/* Time Input Section */}
+          <div className="space-y-2">
+            <Label className="text-base font-medium">Select Time</Label>
+            <div className="grid grid-cols-2 gap-6">
+              {/* Hours */}
+              <div className="space-y-1">
+                <Label htmlFor="hours">Hours (0–23)</Label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
+                  <Input
+                    id="hours"
+                    type="number"
+                    value={hours}
+                    onChange={(e) => setHours(e.target.value)}
+                    placeholder="HH"
+                    min={0}
+                    max={23}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+
+              {/* Minutes */}
+              <div className="space-y-1">
+                <Label htmlFor="minutes">Minutes (0–59)</Label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
+                  <Input
+                    id="minutes"
+                    type="number"
+                    value={minutes}
+                    onChange={(e) => setMinutes(e.target.value)}
+                    placeholder="MM"
+                    min={0}
+                    max={59}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
             </div>
+          </div>
+
+          {/* Save Button */}
+          <div className="pt-4">
+            <Button
+              onClick={handleSave}
+              className="w-full text-base"
+              disabled={loading}
+            >
+              {loading ? "Saving..." : "Save"}
+            </Button>
           </div>
         </CardContent>
       </Card>
