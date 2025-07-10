@@ -52,13 +52,6 @@ export default function WakeupTimer() {
           minutes: parseInt(minutes, 10),
           userMessage: message,
         });
-      } else {
-        await authAxios(token).post(`/auth/price-range`, {
-          type: "WakeupUserTime",
-          hours: parseInt(hours, 10),
-          minutes: parseInt(minutes, 10),
-          message,
-        });
       }
       toast.success('Wake-up Time saved successfully');
 

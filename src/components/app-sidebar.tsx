@@ -22,7 +22,7 @@ import {
 
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher" 
+//import { TeamSwitcher } from "@/components/team-switcher" 
 import {
   Sidebar,
   SidebarContent,
