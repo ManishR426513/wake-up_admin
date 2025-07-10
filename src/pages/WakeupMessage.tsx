@@ -145,7 +145,7 @@ export default function WakeupTimer() {
                     placeholder="MM"
                     min={0}
                     max={59}
-                    className="pl-10"
+                    className="pl-10" 
                   />
                 </div>
               </div>
