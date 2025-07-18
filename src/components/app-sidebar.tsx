@@ -12,12 +12,12 @@ import {
 
   ReceiptEuro,
   TriangleAlert,
- 
+
   Settings2,
   SquareTerminal,
   User,
   Timer
- // MessageSquare
+  // MessageSquare
 } from "lucide-react"
 
 import { NavProjects } from "@/components/nav-projects"
@@ -30,6 +30,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { NavMain } from "./nav-main"
 //import { NavMain } from "./nav-main"
 
 // This is sample data.
@@ -58,26 +59,68 @@ const data = {
   ],
   navMain: [
     {
-      title: "Playground",
+      title: "Dashboard",
       url: "#",
       icon: SquareTerminal,
-      isActive: true,
+       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Users",
+          url: "/users",
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "Category",
+          url: "/category",
         },
         {
-          title: "Settings",
-          url: "#",
+          title: "Plans",
+          url: "/plan",
+        },
+        {
+          title: "Wakeup Message",
+          url: "/time",
         },
       ],
     },
-
+    {
+      title: "Challenge",
+      url: "#",
+      icon: User,
+      items: [
+        {
+          title: "Challenges",
+          url: "/challenge",
+        },
+        {
+          title: "Range",
+          url: "/challenge-price",
+        },
+        // {
+        //   title: "Quantum",
+        //   url: "#",
+        // },
+      ],
+    },
+    {
+      title: "Shop",
+      url: "#",
+      icon: User,
+      items: [
+        {
+          title: "Shop",
+          url: "/shop",
+        },
+        {
+          title: "Range",
+          url: "/shop-price",
+        },
+        // {
+        //   title: "Quantum",
+        //   url: "#",
+        // },
+      ],
+    },
+    /*
     {
       title: "Users",
       url: "#",
@@ -162,7 +205,10 @@ const data = {
         },
       ],
     },
+    */
+
   ],
+  /*
   projects: [
     {
       name: "Dashboard",
@@ -216,18 +262,20 @@ const data = {
       icon: Timer,
     },
   ],
+  */
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         {/* <TeamSwitcher teams={data.teams} /> */}
       </SidebarHeader>
       <SidebarContent>
-       
-        <NavProjects projects={data.projects} />
-       
+        <NavMain items={data.navMain} />
+        {/* <NavProjects projects={data.projects} /> */}
+
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
