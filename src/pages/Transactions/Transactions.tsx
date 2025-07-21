@@ -8,7 +8,16 @@ import {
 import { Button } from '@/components/ui/Button';
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
-
+import { Main } from '@/components/main';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { setReportFormatDate } from '@/helper/helper';
 interface TransactionInterface {
     id: string;
     userId: string;
@@ -191,212 +200,172 @@ const Transactions = () => {
     }, 0);
 
     return (
-        <div className="w-full max-w-7xl mx-auto p-6">
-            <div className="mb-6">
-                <h1 className="text-3xl font-bold mb-2">Transaction Dashboard</h1>
-                <p className="text-muted-foreground">Monitor and manage all financial transactions</p>
-            </div>
+        <div >
+            <Main>
+                <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
+                    <div>
+                        <h2 className='text-2xl font-bold tracking-tight'>Transcations</h2>
+                        <p className='text-muted-foreground'>
+                            Here&apos;s a list of your all financial transactions
+                        </p>
+                    </div>
+                </div>
+                <div className="mb-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div className="flex items-center gap-2">
+                            <Filter className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm font-medium text-muted-foreground">Filters</span>
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+                                <label className="text-sm font-medium text-muted-foreground sm:sr-only" htmlFor="statusFilter">
+                                    Status
+                                </label>
+                                <select
+                                    id="statusFilter"
+                                    value={filterStatus}
+                                    onChange={(e) => setFilterStatus(e.target.value)}
+                                    className="w-full sm:w-auto px-3 py-2 border border-border rounded-md text-sm bg-background"
+                                >
+                                    <option value="ALL">All Status</option>
+                                    <option value="SUCCESS">Success</option>
+                                    <option value="PENDING">Pending</option>
+                                    <option value="FAILED">Failed</option>
+                                </select>
+                            </div>
 
-            {/* Filters */}
-            <div className="mb-6 flex flex-wrap gap-4">
-                <div className="flex items-center gap-2">
-                    <Filter className="h-4 w-4" />
-                    <span className="text-sm font-medium">Filters:</span>
-                </div>
-                <select
-                    value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                    className="px-3 py-2 border rounded-md text-sm bg-background"
-                >
-                    <option value="ALL">All Status</option>
-                    <option value="SUCCESS">Success</option>
-                    <option value="PENDING">Pending</option>
-                    <option value="FAILED">Failed</option>
-                </select>
-                <select
-                    value={filterType}
-                    onChange={(e) => setFilterType(e.target.value)}
-                    className="px-3 py-2 border rounded-md text-sm bg-background"
-                >
-                    <option value="ALL">All Types</option>
-                    <option value="SUBSCRIPTION">Subscription</option>
-                    <option value="CHALLENGE">Challenge</option>
-                    <option value="MASTER_CLASS">Master Class</option>
-                    <option value="WITHDRAWAL">Withdrawal</option>
-                    <option value="SHOP">Shop</option>
-                    <option value="TEACHER">Teacher</option>
-                    <option value="OTHER">Other</option>
-                </select>
-                <select
-                    value={filterDirection}
-                    onChange={(e) => setFilterDirection(e.target.value)}
-                    className="px-3 py-2 border rounded-md text-sm bg-background"
-                >
-                    <option value="ALL">All Directions</option>
-                    <option value="INCOMING">Incoming</option>
-                    <option value="OUTGOING">Outgoing</option>
-                </select>
-            </div>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+                                <label className="text-sm font-medium text-muted-foreground sm:sr-only" htmlFor="typeFilter">
+                                    Type
+                                </label>
+                                <select
+                                    id="typeFilter"
+                                    value={filterType}
+                                    onChange={(e) => setFilterType(e.target.value)}
+                                    className="w-full sm:w-auto px-3 py-2 border border-border rounded-md text-sm bg-background"
+                                >
+                                    <option value="ALL">All Types</option>
+                                    <option value="SUBSCRIPTION">Subscription</option>
+                                    <option value="CHALLENGE">Challenge</option>
+                                    <option value="MASTER_CLASS">Master Class</option>
+                                    <option value="WITHDRAWAL">Withdrawal</option>
+                                    <option value="SHOP">Shop</option>
+                                    <option value="TEACHER">Teacher</option>
+                                    <option value="OTHER">Other</option>
+                                </select>
+                            </div>
 
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-card p-4 rounded-lg border shadow-sm">
-                    <h3 className="text-sm font-medium text-muted-foreground">Total Transactions</h3>
-                    <p className="text-2xl font-bold">{filteredTransactions.length}</p>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+                                <label className="text-sm font-medium text-muted-foreground sm:sr-only" htmlFor="directionFilter">
+                                    Direction
+                                </label>
+                                <select
+                                    id="directionFilter"
+                                    value={filterDirection}
+                                    onChange={(e) => setFilterDirection(e.target.value)}
+                                    className="w-full sm:w-auto px-3 py-2 border border-border rounded-md text-sm bg-background"
+                                >
+                                    <option value="ALL">All Directions</option>
+                                    <option value="INCOMING">Incoming</option>
+                                    <option value="OUTGOING">Outgoing</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="bg-card p-4 rounded-lg border shadow-sm">
-                    <h3 className="text-sm font-medium text-muted-foreground">Net Amount</h3>
-                    <p className="text-2xl font-bold">
-                        {formatAmount(totalAmount, 'EUR')}
-                    </p>
-                </div>
-                <div className="bg-card p-4 rounded-lg border shadow-sm">
-                    <h3 className="text-sm font-medium text-muted-foreground">Successful</h3>
-                    <p className="text-2xl font-bold">
-                        {filteredTransactions.filter(t => t.status === 'SUCCESS').length}
-                    </p>
-                </div>
-                <div className="bg-card p-4 rounded-lg border shadow-sm">
-                    <h3 className="text-sm font-medium text-muted-foreground">Pending</h3>
-                    <p className="text-2xl font-bold">
-                        {filteredTransactions.filter(t => t.status === 'PENDING').length}
-                    </p>
-                </div>
-            </div>
+                <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
+                    <Table className="w-full border-collapse text-sm">
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-[100px]">Sno</TableHead>
 
-            <div className="bg-card border rounded-lg overflow-hidden shadow-sm">
-                <table className="w-full">
-                    <caption className="py-4 text-sm text-muted-foreground">
-                        A comprehensive list of all transactions
-                    </caption>
-                    <thead>
-                        <tr className="bg-muted/50">
-                            <th className="w-16 font-semibold text-left px-4 py-3">S.No</th>
-                            <th className="font-semibold text-left px-4 py-3">Transaction ID</th>
-                            <th className="font-semibold text-left px-4 py-3">Type</th>
-                            <th className="font-semibold text-left px-4 py-3">Amount</th>
-                            <th className="font-semibold text-left px-4 py-3">Direction</th>
-                            <th className="font-semibold text-left px-4 py-3">Provider</th>
-                            <th className="font-semibold text-left px-4 py-3">Status</th>
-                            <th className="font-semibold text-left px-4 py-3">Date</th>
-                            <th className="font-semibold text-center px-4 py-3">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredTransactions.map((transaction, index) => (
-                            <tr key={transaction.id} className="border-b hover:bg-muted/50">
-                                <td className="font-medium px-4 py-3">
-                                    {index + 1}
-                                </td>
-                                <td className="px-4 py-3">
-                                    <div className="font-medium text-sm">
-                                        {transaction.id}
-                                    </div>
-                                    {transaction.paymentIntentId && (
-                                        <div className="text-xs text-muted-foreground">
-                                            {transaction.paymentIntentId}
-                                        </div>
-                                    )}
-                                </td>
-                                <td className="px-4 py-3">
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary">
-                                        {transaction.transactionType}
-                                    </span>
-                                </td>
-                                <td className="px-4 py-3 font-medium">
-                                    {formatAmount(transaction.amount, transaction.currency)}
-                                </td>
-                                <td className="px-4 py-3">
-                                    <span className="font-medium">
-                                        {transaction.direction}
-                                    </span>
-                                </td>
-                                <td className="px-4 py-3">
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-muted">
-                                        {transaction.provider}
-                                    </span>
-                                </td>
-                                <td className="px-4 py-3">
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary">
-                                        {transaction.status}
-                                    </span>
-                                </td>
-                                <td className="px-4 py-3 text-sm">
-                                    {formatDate(transaction.createdAt)}
-                                </td>
-                                <td className="text-center px-4 py-3">
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                className="h-7 w-7 p-0 hover:bg-muted"
-                                            >
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent
-                                            side="left"
-                                            className="w-32 p-1 bg-popover border border-border shadow-md"
-                                        >
-                                            <div className="flex flex-col space-y-1">
-                                                <button
-                                                    onClick={() => navigation(`/transaction/${transaction.id}`)}
-                                                    className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
+                                <TableHead>Type</TableHead>
+                                <TableHead> Amount</TableHead>
+                                <TableHead>Direction</TableHead>
+
+                                <TableHead> Provider</TableHead>
+                                <TableHead> Status</TableHead>
+                                <TableHead> Date</TableHead>
+
+                                <TableHead className="text-right"> Actions</TableHead>
+
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {transactions.length > 0 ? (
+                                transactions.map((item, index) => (
+                                    <TableRow key={item._id}>
+                                        <TableCell className="px-4 py-3 font-medium">
+                                            {index + 1}
+                                        </TableCell>
+
+
+                                        <TableCell>  {item.transactionType}</TableCell>
+                                        <TableCell>  {item.amount}</TableCell>
+                                        <TableCell>  {item.direction}</TableCell>
+                                        <TableCell>  {item.provider}</TableCell>
+                                        <TableCell>  {item.status}</TableCell>
+                                        <TableCell>  {setReportFormatDate(item.createdAt)}</TableCell>
+
+
+                                        {/* <TableCell>{setReportFormatDate(item.category)}</TableCell> */}
+                                        <TableCell className="text-right">
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <Button
+                                                        onClick={() =>
+                                                            setModalState((prev) => ({
+                                                                ...prev,
+                                                                currentCategory: item,
+                                                            }))
+                                                        }
+                                                        variant="ghost"
+                                                        className="h-7 w-7 p-0 hover:bg-muted"
+                                                    >
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </PopoverTrigger>
+                                                <PopoverContent
+                                                    side="left"
+                                                    className="w-28 p-1 bg-popover border border-border shadow-md"
                                                 >
-                                                    <Eye className="h-3.5 w-3.5" />
-                                                    <span>View</span>
-                                                </button>
-                                                <button
-                                                    onClick={() => {
-                                                        // Export transaction details
-                                                        const dataStr = JSON.stringify(transaction, null, 2);
-                                                        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-                                                        const exportFileDefaultName = `transaction_${transaction.id}.json`;
-                                                        const linkElement = document.createElement('a');
-                                                        linkElement.setAttribute('href', dataUri);
-                                                        linkElement.setAttribute('download', exportFileDefaultName);
-                                                        linkElement.click();
-                                                    }}
-                                                    className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
-                                                >
-                                                    <Download className="h-3.5 w-3.5" />
-                                                    <span>Export</span>
-                                                </button>
-                                                <button
-                                                    onClick={() => handleOpenDeleteModal(transaction)}
-                                                    className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm text-destructive"
-                                                >
-                                                    <Trash className="h-3.5 w-3.5" />
-                                                    <span>Delete</span>
-                                                </button>
-                                            </div>
-                                        </PopoverContent>
-                                    </Popover>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-
-            {modalState.isDeleteMode && (
-                <DeleteConfirmationModal
-                    isOpen={modalState.isDeleteMode}
-                    onClose={handleCloseModal}
-                    onConfirm={handleDelete}
-                    title="Delete Transaction"
-                    description={`Are you sure you want to delete transaction "${modalState.currentTransaction?.id}"? This action cannot be undone.`}
-                />
-            )}
-
-            <div className="mt-6 flex justify-between items-center text-sm text-muted-foreground">
-                <div>
-                    Showing {filteredTransactions.length} of {transactions.length} transactions
+                                                    <div className="flex flex-col space-y-1">
+                                                        <button
+                                                            // onClick={() => navigation(`/challenge/${item.id}`)}
+                                                            className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
+                                                        >
+                                                            <Eye className="h-3.5 w-3.5" />
+                                                            <span>View</span>
+                                                        </button>
+                                                        {/* <button
+                                                            className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
+                                                            onClick={() => handleOpenDeleteModal(item)}
+                                                        >
+                                                            <Trash className="h-3.5 w-3.5" />
+                                                            <span>Delete</span>
+                                                        </button> */}
+                                                    </div>
+                                                </PopoverContent>
+                                            </Popover>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={7}
+                                        className="px-4 py-3 text-center text-gray-500"
+                                    >
+                                        No Challenges found.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
                 </div>
-                <div>
-                    Total Value: {formatAmount(Math.abs(totalAmount), 'EUR')}
-                </div>
-            </div>
+
+            </Main>
+
         </div>
     );
 };

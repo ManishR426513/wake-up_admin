@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Edit, MoreHorizontal, Plus, Trash } from "lucide-react";
 import AddCategoryModal from "../../common/Modal/AddCatgoryModal";
 import DeleteConfirmationModal from "@/common/Modal/DeleteConfirmationModal";
 import { toast } from "sonner";
@@ -151,10 +151,7 @@ const Category: FC = () => {
   return (
     <div >
       <Main>
-        {/* <div className="mb-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-foreground">Sports Category</h1>
-          <Button onClick={handleOpenAddModal}>Add Category</Button>
-        </div> */}
+       
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Category</h2>
@@ -162,18 +159,23 @@ const Category: FC = () => {
               Here&apos;s a list of your Wakeup Sports
             </p>
           </div>
-
+          <Button className='space-x-1'
+            onClick={handleOpenAddModal}
+          >
+            <span>Add</span>
+            <Plus size={18} />
+          </Button>
         </div>
 
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           <Table className="w-full border-collapse text-sm">
             <TableHeader>
               <TableRow>
-                <TableHead className="px-4 py-3 text-left">Sno</TableHead>
-                <TableHead className="px-4 py-3 text-left">Category Name</TableHead>
-                <TableHead className="px-4 py-3 text-left"> Created At</TableHead>
-                
-                <TableHead className="px-4 py-3 text-left"> Actions</TableHead>
+                <TableHead className="w-[100px]">Sno</TableHead>
+                <TableHead>Category Name</TableHead>
+                <TableHead> Created At</TableHead>
+
+                <TableHead className="text-right"> Actions</TableHead>
 
               </TableRow>
             </TableHeader>
@@ -186,7 +188,7 @@ const Category: FC = () => {
                     </TableCell>
                     <TableCell>  {item.name}</TableCell>
                     <TableCell>{setReportFormatDate(item.createdAt)}</TableCell>
-                    <TableCell>
+                    <TableCell className="text-right">
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button

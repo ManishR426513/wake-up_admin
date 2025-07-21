@@ -6,8 +6,18 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from '@/components/ui/Button';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
+import { Main } from '@/components/main';
+import { setReportFormatDate } from '@/helper/helper';
 interface ChallengeInterface {
     id: number;
     title: string;
@@ -129,131 +139,109 @@ const Challenge = () => {
     };
 
     return (
-        <div className="w-full max-w-6xl mx-auto p-6">
-            <div className="mb-6">
-                <h1 className="text-3xl font-bold mb-2">Challenge Dashboard</h1>
-                <p>Manage and track all your challenges</p>
-            </div>
+        <div >
+            <Main>
 
-            <div className="border rounded-lg overflow-hidden shadow-sm">
-                <table className="w-full">
-                    <caption className="py-4 text-sm">
-                        A comprehensive list of all active challenges
-                    </caption>
-                    <thead>
-                        <tr className="bg-muted">
-                            <th className="w-16 font-semibold text-left px-4 py-3">S.No</th>
-                            <th className="font-semibold text-left px-4 py-3">Title</th>
-                            <th className="font-semibold text-left px-4 py-3">Category</th>
-                            {/* <th className="font-semibold text-left px-4 py-3">Description</th> */}
-                            <th className="font-semibold text-left px-4 py-3">Price</th>
-
-                            <th className="font-semibold text-left px-4 py-3">End Date</th>
-                            <th className="font-semibold text-center px-4 py-3">Participants</th>
-                            <th className="font-semibold text-center px-4 py-3">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {challenges.map((challenge, index) => (
-                            <tr key={challenge.id} className="border-b">
-                                <td className="font-medium px-4 py-3">
-                                    {index + 1}
-                                </td>
-                                <td className="font-medium px-4 py-3">
-                                    {challenge.title}
-                                </td>
-                                <td className="font-medium px-4 py-3">
-                                    {challenge.category}
-                                </td>
-                                <td className="font-medium px-4 py-3">
-                                    {challenge.price || 0}$
-                                </td>
-                                {/* <td className="max-w-xs px-4 py-3">
-                                    <div className="truncate" title={challenge.description}>
-                                        {challenge.description}
-                                    </div>
-                                </td> */}
-                                <td className="px-4 py-3">
-                                    {formatDate(challenge.endDate)}
-                                </td>
-                                <td className="text-center px-4 py-3">
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium">
-                                        {challenge.participants}
-                                    </span>
-                                </td>
-                                <td className="text-center px-4 py-3">
-                                    {/* <div className="flex justify-center">
-                                        <button
-                                            onClick={() => alert(`Viewing details for: ${challenge.title}`)}
-                                            className="p-2 hover:bg-muted rounded-full transition-colors"
-                                            title="View Details"
-                                        >
-                                            <Eye className="h-4 w-4" />
-                                        </button>
-                                    </div> */}
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button
-                                                // onClick={() =>
-                                                //   setModalState((prev) => ({
-                                                //     ...prev,
-                                                //     currentCategory: item,
-                                                //   }))
-                                                // }
-                                                variant="ghost"
-                                                className="h-7 w-7 p-0 hover:bg-muted"
-                                            >
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent
-                                            side="left"
-                                            className="w-28 p-1 bg-popover border border-border shadow-md"
-                                        >
-                                            <div className="flex flex-col space-y-1">
-                                                <button
-                                                    onClick={() => navigation(`/challenge/${challenge.id}`)}
-                                                    className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
-                                                >
-                                                    <Eye className="h-3.5 w-3.5" />
-                                                    <span>View</span>
-                                                </button>
-                                                <button
-                                                    onClick={() => handleOpenDeleteModal(challenge)}
-                                                    className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
-                                                //onClick={() => handleOpenDeleteModal(item)}
-                                                >
-                                                    <Trash className="h-3.5 w-3.5" />
-                                                    <span>Delete</span>
-                                                </button>
-                                            </div>
-                                        </PopoverContent>
-                                    </Popover>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            {modalState.isDeleteMode && (
-                <DeleteConfirmationModal
-                    isOpen={modalState.isDeleteMode}
-                    onClose={handleCloseModal}
-                    onConfirm={handleDelete}
-                    title="Delete Category"
-                    description={`Are you sure you want to delete "${modalState.currentChallenege?.title}"? This action cannot be undone.`}
-                />
-            )}
-
-
-            <div className="mt-6 flex justify-between items-center text-sm">
-                <div>
-                    Showing {challenges.length} challenges
+                <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
+                    <div>
+                        <h2 className='text-2xl font-bold tracking-tight'>Challenges</h2>
+                        <p className='text-muted-foreground'>
+                            Here&apos;s a list of your Wakeup Challneges
+                        </p>
+                    </div>
                 </div>
-                <div>
-                    Total Participants: {challenges.reduce((sum, challenge) => sum + challenge.participants, 0)}
+
+
+                <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
+                    <Table className="w-full border-collapse text-sm">
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-[100px]">Sno</TableHead>
+                                <TableHead>Title</TableHead>
+
+                                <TableHead>Category</TableHead>
+                                <TableHead> Price</TableHead>
+                                <TableHead>End Date</TableHead>
+
+                                <TableHead> Participants</TableHead>
+
+                                <TableHead className="text-right"> Actions</TableHead>
+
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {challenges.length > 0 ? (
+                                challenges.map((item, index) => (
+                                    <TableRow key={item._id}>
+                                        <TableCell className="px-4 py-3 font-medium">
+                                            {index + 1}
+                                        </TableCell>
+                                        <TableCell>  {item.title}</TableCell>
+                                        <TableCell>  {item.category}</TableCell>
+                                        <TableCell>  {item.price}</TableCell>
+                                        <TableCell>  {item.endDate}</TableCell>
+                                        <TableCell>  {item.participants}</TableCell>
+
+
+                                        {/* <TableCell>{setReportFormatDate(item.category)}</TableCell> */}
+                                        <TableCell className="text-right">
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <Button
+                                                        onClick={() =>
+                                                            setModalState((prev) => ({
+                                                                ...prev,
+                                                                currentCategory: item,
+                                                            }))
+                                                        }
+                                                        variant="ghost"
+                                                        className="h-7 w-7 p-0 hover:bg-muted"
+                                                    >
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </PopoverTrigger>
+                                                <PopoverContent
+                                                    side="left"
+                                                    className="w-28 p-1 bg-popover border border-border shadow-md"
+                                                >
+                                                    <div className="flex flex-col space-y-1">
+                                                        <button
+                                                            onClick={() => navigation(`/challenge/${item.id}`)}
+                                                            className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
+                                                        >
+                                                            <Eye className="h-3.5 w-3.5" />
+                                                            <span>View</span>
+                                                        </button>
+                                                        <button
+                                                            className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
+                                                            onClick={() => handleOpenDeleteModal(item)}
+                                                        >
+                                                            <Trash className="h-3.5 w-3.5" />
+                                                            <span>Delete</span>
+                                                        </button>
+                                                    </div>
+                                                </PopoverContent>
+                                            </Popover>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={7}
+                                        className="px-4 py-3 text-center text-gray-500"
+                                    >
+                                        No Challenges found.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
                 </div>
-            </div>
+
+
+
+            </Main>
         </div>
     )
 }

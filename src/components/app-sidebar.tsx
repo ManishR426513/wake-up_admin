@@ -52,7 +52,7 @@ const data = {
       url: "#",
       icon: Swords,
       items: [
-        { title: "Challenges", url: "/challenge" },
+        { title: "Entries", url: "/challenge" },
         { title: "Range", url: "/challenge-price" },
       ],
     },
