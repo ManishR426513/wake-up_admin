@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Edit, Eye, MoreHorizontal, Trash } from 'lucide-react'
+import  { useState } from 'react'
+import {  Eye, MoreHorizontal, Trash } from 'lucide-react'
 import {
     Popover,
     PopoverContent,
@@ -17,7 +17,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
 import { Main } from '@/components/main';
-import { handleThumbnail, setReportFormatDate } from '@/helper/helper';
 interface ChallengeInterface {
     id: number;
     title: string;
@@ -99,13 +98,7 @@ const ChallengeDetails = () => {
     const navigation = useNavigate()
 
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        })
-    }
+ 
 
     const handleOpenDeleteModal = (item: ChallengeInterface): void => {
         setModalState({
@@ -196,7 +189,7 @@ const ChallengeDetails = () => {
                         <TableBody>
                             {challenges.length > 0 ? (
                                 challenges.map((item, index) => (
-                                    <TableRow key={item._id}>
+                                    <TableRow key={item.id}>
                                         <TableCell className="px-4 py-3 font-medium">
                                             {index + 1}
                                         </TableCell>
@@ -263,7 +256,15 @@ const ChallengeDetails = () => {
                     </Table>
                 </div>
 
-
+{modalState.isDeleteMode && (
+                <DeleteConfirmationModal
+                    isOpen={modalState.isDeleteMode}
+                    onClose={handleCloseModal}
+                    onConfirm={handleDelete}
+                    title="Delete Category"
+                    description={`Are you sure you want to delete "${modalState.currentChallenege?.title}"? This action cannot be undone.`}
+                />
+            )}
 
             </Main>
         </div>

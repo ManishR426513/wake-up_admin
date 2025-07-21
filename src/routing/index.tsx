@@ -15,8 +15,8 @@ import WakeupTimer from "@/pages/WakeupMessage";
 import Challenge from "@/pages/Challenges/Challenge";
 import ChallengeDetails from "@/pages/Challenges/ChallengeDetails";
 import Transactions from "@/pages/Transactions/Transactions";
-import Withdrawal from "@/pages/Transactions/withdrawal";
 import Shop from "@/pages/Shop/Shop";
+import WithdrawalRequests from "@/pages/Transactions/Withdrawal";
 // import Report from "@/pages/Report";
 
 export default function Routing() {
@@ -136,7 +136,7 @@ export default function Routing() {
           path="/withdrawal"
           element={
             <PrivateRoute>
-              <Withdrawal />
+              <WithdrawalRequests />
             </PrivateRoute>
           }
         />

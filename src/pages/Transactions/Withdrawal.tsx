@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Edit, Eye, MoreHorizontal, Trash, Download, Filter, CheckCircle, XCircle, Clock, DollarSign } from 'lucide-react'
+import  { useState } from 'react'
+import {  Eye, MoreHorizontal, Trash, Download, Filter, CheckCircle, XCircle, Clock, DollarSign } from 'lucide-react'
 import {
     Popover,
     PopoverContent,
@@ -228,15 +228,7 @@ const WithdrawalRequests = () => {
 
     const navigation = useNavigate();
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    };
+   
 
     const formatAmount = (amount: number, currency: string) => {
         return new Intl.NumberFormat('en-US', {
@@ -263,15 +255,7 @@ const WithdrawalRequests = () => {
         }
     };
 
-    const handleOpenApprovalModal = (request: WithdrawalRequestInterface): void => {
-        setModalState({
-            isOpen: false,
-            isEditMode: false,
-            isDeleteMode: false,
-            isApprovalMode: true,
-            currentRequest: request,
-        });
-    };
+   
 
     const handleOpenDeleteModal = (request: WithdrawalRequestInterface): void => {
         setModalState({
@@ -346,7 +330,7 @@ const WithdrawalRequests = () => {
     });
 
     const totalRequestedAmount = filteredRequests.reduce((sum, request) => sum + request.requestedAmount, 0);
-    const totalFees = filteredRequests.reduce((sum, request) => sum + request.transactionFee, 0);
+   
     const totalNetAmount = filteredRequests.reduce((sum, request) => sum + request.netAmount, 0);
 
     const pendingRequests = filteredRequests.filter(req => req.status === 'PENDING').length;
@@ -602,7 +586,7 @@ const WithdrawalRequests = () => {
                         onClose={handleCloseModal}
                         onConfirm={handleDelete}
                         title="Delete Withdrawal Request"
-                        message={`Are you sure you want to delete withdrawal request ${modalState.currentRequest.id}? This action cannot be undone.`}
+                       // message={`Are you sure you want to delete withdrawal request ${modalState.currentRequest.id}? This action cannot be undone.`}
                     />
                 )}
             </Main>

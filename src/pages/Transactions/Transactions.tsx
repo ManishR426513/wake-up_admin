@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
-import { Edit, Eye, MoreHorizontal, Trash, Download, Filter } from 'lucide-react'
+import  { useState } from 'react'
+import { Eye, MoreHorizontal, Filter } from 'lucide-react'
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from '@/components/ui/Button';
-import { useNavigate } from 'react-router-dom';
-import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
+
 import { Main } from '@/components/main';
 import {
     Table,
@@ -34,17 +33,17 @@ interface TransactionInterface {
 }
 
 const Transactions = () => {
-    const [modalState, setModalState] = useState<{
-        isOpen: boolean;
-        isEditMode: boolean;
-        isDeleteMode: boolean;
-        currentTransaction: TransactionInterface | null;
-    }>({
-        isOpen: false,
-        isDeleteMode: false,
-        isEditMode: false,
-        currentTransaction: null,
-    });
+    // const [modalState, setModalState] = useState<{
+    //     isOpen: boolean;
+    //     isEditMode: boolean;
+    //     isDeleteMode: boolean;
+    //     currentTransaction: TransactionInterface | null;
+    // }>({
+    //     isOpen: false,
+    //     isDeleteMode: false,
+    //     isEditMode: false,
+    //     currentTransaction: null,
+    // });
 
     const [filterStatus, setFilterStatus] = useState<string>('ALL');
     const [filterType, setFilterType] = useState<string>('ALL');
@@ -135,70 +134,18 @@ const Transactions = () => {
         },
     ]);
 
-    const navigation = useNavigate();
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    };
+    
 
-    const formatAmount = (amount: number, currency: string) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: currency,
-        }).format(amount);
-    };
+  
 
-    const handleOpenDeleteModal = (item: TransactionInterface): void => {
-        setModalState({
-            isOpen: false,
-            isEditMode: false,
-            isDeleteMode: true,
-            currentTransaction: item,
-        });
-    };
+   
 
-    const handleCloseModal = (): void => {
-        setModalState({
-            isOpen: false,
-            isEditMode: false,
-            isDeleteMode: false,
-            currentTransaction: null,
-        });
-    };
+  
 
-    const handleDelete = async (): Promise<void> => {
-        handleCloseModal();
-        // API call to delete transaction
-        // try {
-        //     const response = await authAxios(token).delete(
-        //         `/transactions/${modalState?.currentTransaction?.id}`
-        //     );
-        //     await getTransactions();
-        //     toast.success("Transaction deleted successfully");
-        // } catch (error) {
-        //     console.error("Error deleting transaction:", error);
-        // }
-    };
+ 
 
-    const filteredTransactions = transactions.filter(transaction => {
-        const statusMatch = filterStatus === 'ALL' || transaction.status === filterStatus;
-        const typeMatch = filterType === 'ALL' || transaction.transactionType === filterType;
-        const directionMatch = filterDirection === 'ALL' || transaction.direction === filterDirection;
-        return statusMatch && typeMatch && directionMatch;
-    });
-
-    const totalAmount = filteredTransactions.reduce((sum, transaction) => {
-        return transaction.direction === 'INCOMING'
-            ? sum + transaction.amount
-            : sum - transaction.amount;
-    }, 0);
-
+   
     return (
         <div >
             <Main>
@@ -294,7 +241,7 @@ const Transactions = () => {
                         <TableBody>
                             {transactions.length > 0 ? (
                                 transactions.map((item, index) => (
-                                    <TableRow key={item._id}>
+                                    <TableRow key={item.id}>
                                         <TableCell className="px-4 py-3 font-medium">
                                             {index + 1}
                                         </TableCell>
@@ -313,12 +260,12 @@ const Transactions = () => {
                                             <Popover>
                                                 <PopoverTrigger asChild>
                                                     <Button
-                                                        onClick={() =>
-                                                            setModalState((prev) => ({
-                                                                ...prev,
-                                                                currentCategory: item,
-                                                            }))
-                                                        }
+                                                        // onClick={() =>
+                                                        //     setModalState((prev) => ({
+                                                        //         ...prev,
+                                                        //         currentCategory: item,
+                                                        //     }))
+                                                        // }
                                                         variant="ghost"
                                                         className="h-7 w-7 p-0 hover:bg-muted"
                                                     >
@@ -337,13 +284,7 @@ const Transactions = () => {
                                                             <Eye className="h-3.5 w-3.5" />
                                                             <span>View</span>
                                                         </button>
-                                                        {/* <button
-                                                            className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
-                                                            onClick={() => handleOpenDeleteModal(item)}
-                                                        >
-                                                            <Trash className="h-3.5 w-3.5" />
-                                                            <span>Delete</span>
-                                                        </button> */}
+                                                       
                                                     </div>
                                                 </PopoverContent>
                                             </Popover>
