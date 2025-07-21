@@ -1,10 +1,12 @@
 import * as React from "react"
 import {
-
   SquareTerminal,
-
   ShoppingCart,
   Swords,
+  Command,
+  Building,
+  Briefcase,
+  CreditCard,
 } from "lucide-react"
 
 import { NavUser } from "@/components/nav-user"
@@ -16,6 +18,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { NavMain } from "./nav-main"
+import { TeamSwitcher } from "./team-switcher"
 
 const data = {
   user: {
@@ -23,6 +26,23 @@ const data = {
     email: "admin@gmail.com",
     avatar: "/avatars/shadcn.jpg",
   },
+  teams: [
+    {
+      name: "Shadcn Admin",
+      logo: Command,
+      plan: "Vite + ShadcnUI",
+    },
+    {
+      name: "Acme Inc",
+      logo: Building, // Updated from GalleryVerticalEnd
+      plan: "Enterprise",
+    },
+    {
+      name: "Acme Corp.",
+      logo: Briefcase, // Updated from AudioWaveform
+      plan: "Startup",
+    },
+  ],
   navMain: [
     {
       title: "Dashboard",
@@ -42,7 +62,7 @@ const data = {
       url: "#",
       icon: Swords,
       items: [
-        { title: "Entries", url: "/challenge" },
+        { title: "Participants", url: "/challenge" },
         { title: "Range", url: "/challenge-price" },
       ],
     },
@@ -58,11 +78,10 @@ const data = {
     {
       title: "Transactions",
       url: "#",
-      icon: ShoppingCart,
+      icon: CreditCard, // Updated from ShoppingCart
       items: [
         { title: "Payments", url: "/transactions" },
-
-       
+        { title: "Withdrawal Request", url: "/withdrawal" },
       ],
     },
   ],
@@ -71,7 +90,9 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader />
+      <SidebarHeader>
+        <TeamSwitcher teams={data.teams} />
+      </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>

@@ -16,7 +16,7 @@ import {
   SidebarMenuItem,
   //useSidebar,
 } from "@/components/ui/sidebar"
-import { useNavigate } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 
 export function TeamSwitcher({}: {
   teams: {
@@ -39,19 +39,21 @@ export function TeamSwitcher({}: {
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
+            <NavLink to="/"> 
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                {/* <activeTeam.logo className="size-4" /> */}
+              <div className=" text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+               <img src="../../assets/images/app_icon.png" alt="" />
               </div>
               <div onClick={()=>navigate("/")}  className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">Wake Up</span>
                 <span className="truncate text-xs">Enterprises</span>
               </div>
-              <ChevronsUpDown className="ml-auto" />
+              {/* <ChevronsUpDown className="ml-auto" /> */}
             </SidebarMenuButton>
+            </NavLink>
           </DropdownMenuTrigger>
           {/* <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"

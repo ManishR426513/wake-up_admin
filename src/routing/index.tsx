@@ -15,6 +15,8 @@ import WakeupTimer from "@/pages/WakeupMessage";
 import Challenge from "@/pages/Challenges/Challenge";
 import ChallengeDetails from "@/pages/Challenges/ChallengeDetails";
 import Transactions from "@/pages/Transactions/Transactions";
+import Withdrawal from "@/pages/Transactions/withdrawal";
+import Shop from "@/pages/Shop/Shop";
 // import Report from "@/pages/Report";
 
 export default function Routing() {
@@ -89,6 +91,7 @@ export default function Routing() {
             </PrivateRoute>
           }
         />
+        
         <Route
           path="/challenge-price"
           element={
@@ -126,6 +129,22 @@ export default function Routing() {
           element={
             <PrivateRoute>
               <DetailedReport />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/withdrawal"
+          element={
+            <PrivateRoute>
+              <Withdrawal />
+            </PrivateRoute>
+          }
+        />
+          <Route
+          path="/shop"
+          element={
+            <PrivateRoute>
+              <Shop />
             </PrivateRoute>
           }
         />
