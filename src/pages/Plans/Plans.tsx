@@ -67,11 +67,12 @@ const Plans: React.FC = () => {
   };
 
   useEffect(() => {
-    if(token){
+    if (token) {
 
-    
-    getPlans();
-}}, [token]);
+
+      getPlans();
+    }
+  }, [token]);
 
   const handleShowmodel = (type: string, data?: PlanInterface) => {
     setshowModel({
@@ -87,7 +88,7 @@ const Plans: React.FC = () => {
       price: Number(data?.price),
       currency: "EURO",
       planType: data?.planName?.toLocaleUpperCase(),
-      benefits:data?.benefits
+      benefits: data?.benefits
 
     };
 
@@ -129,11 +130,21 @@ const Plans: React.FC = () => {
   return (
     <div>
       <Main>
-        <div className="mb-4 flex items-center justify-between">
+        {/* <div className="mb-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Plans</h1>
+        </div> */}
+        <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
+          <div>
+            <h2 className='text-2xl font-bold tracking-tight'>Plans</h2>
+            <p className='text-muted-foreground'>
+              Here&apos;s a list of your Wakeup Plans
+            </p>
+          </div>
+        
         </div>
 
-        <div className="overflow-x-auto rounded-lg shadow-lg">
+        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
+
           <Table className="w-full border-collapse text-sm">
             <TableHeader>
               <TableRow>
@@ -200,6 +211,7 @@ const Plans: React.FC = () => {
               )}
             </TableBody>
           </Table>
+          
         </div>
       </Main>
 

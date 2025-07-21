@@ -145,25 +145,6 @@ const Transactions = () => {
         }).format(amount);
     };
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'SUCCESS':
-                return 'bg-green-100 text-green-800';
-            case 'PENDING':
-                return 'bg-yellow-100 text-yellow-800';
-            case 'FAILED':
-                return 'bg-red-100 text-red-800';
-            default:
-                return 'bg-gray-100 text-gray-800';
-        }
-    };
-
-    const getDirectionColor = (direction: string) => {
-        return direction === 'INCOMING' 
-            ? 'text-green-600' 
-            : 'text-red-600';
-    };
-
     const handleOpenDeleteModal = (item: TransactionInterface): void => {
         setModalState({
             isOpen: false,
@@ -204,8 +185,8 @@ const Transactions = () => {
     });
 
     const totalAmount = filteredTransactions.reduce((sum, transaction) => {
-        return transaction.direction === 'INCOMING' 
-            ? sum + transaction.amount 
+        return transaction.direction === 'INCOMING'
+            ? sum + transaction.amount
             : sum - transaction.amount;
     }, 0);
 
@@ -213,7 +194,7 @@ const Transactions = () => {
         <div className="w-full max-w-7xl mx-auto p-6">
             <div className="mb-6">
                 <h1 className="text-3xl font-bold mb-2">Transaction Dashboard</h1>
-                <p className="text-gray-600">Monitor and manage all financial transactions</p>
+                <p className="text-muted-foreground">Monitor and manage all financial transactions</p>
             </div>
 
             {/* Filters */}
@@ -225,7 +206,7 @@ const Transactions = () => {
                 <select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
-                    className="px-3 py-2 border rounded-md text-sm"
+                    className="px-3 py-2 border rounded-md text-sm bg-background"
                 >
                     <option value="ALL">All Status</option>
                     <option value="SUCCESS">Success</option>
@@ -235,7 +216,7 @@ const Transactions = () => {
                 <select
                     value={filterType}
                     onChange={(e) => setFilterType(e.target.value)}
-                    className="px-3 py-2 border rounded-md text-sm"
+                    className="px-3 py-2 border rounded-md text-sm bg-background"
                 >
                     <option value="ALL">All Types</option>
                     <option value="SUBSCRIPTION">Subscription</option>
@@ -249,7 +230,7 @@ const Transactions = () => {
                 <select
                     value={filterDirection}
                     onChange={(e) => setFilterDirection(e.target.value)}
-                    className="px-3 py-2 border rounded-md text-sm"
+                    className="px-3 py-2 border rounded-md text-sm bg-background"
                 >
                     <option value="ALL">All Directions</option>
                     <option value="INCOMING">Incoming</option>
@@ -259,37 +240,37 @@ const Transactions = () => {
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-white p-4 rounded-lg border shadow-sm">
-                    <h3 className="text-sm font-medium text-gray-500">Total Transactions</h3>
+                <div className="bg-card p-4 rounded-lg border shadow-sm">
+                    <h3 className="text-sm font-medium text-muted-foreground">Total Transactions</h3>
                     <p className="text-2xl font-bold">{filteredTransactions.length}</p>
                 </div>
-                <div className="bg-white p-4 rounded-lg border shadow-sm">
-                    <h3 className="text-sm font-medium text-gray-500">Net Amount</h3>
-                    <p className={`text-2xl font-bold ${totalAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <div className="bg-card p-4 rounded-lg border shadow-sm">
+                    <h3 className="text-sm font-medium text-muted-foreground">Net Amount</h3>
+                    <p className="text-2xl font-bold">
                         {formatAmount(totalAmount, 'EUR')}
                     </p>
                 </div>
-                <div className="bg-white p-4 rounded-lg border shadow-sm">
-                    <h3 className="text-sm font-medium text-gray-500">Successful</h3>
-                    <p className="text-2xl font-bold text-green-600">
+                <div className="bg-card p-4 rounded-lg border shadow-sm">
+                    <h3 className="text-sm font-medium text-muted-foreground">Successful</h3>
+                    <p className="text-2xl font-bold">
                         {filteredTransactions.filter(t => t.status === 'SUCCESS').length}
                     </p>
                 </div>
-                <div className="bg-white p-4 rounded-lg border shadow-sm">
-                    <h3 className="text-sm font-medium text-gray-500">Pending</h3>
-                    <p className="text-2xl font-bold text-yellow-600">
+                <div className="bg-card p-4 rounded-lg border shadow-sm">
+                    <h3 className="text-sm font-medium text-muted-foreground">Pending</h3>
+                    <p className="text-2xl font-bold">
                         {filteredTransactions.filter(t => t.status === 'PENDING').length}
                     </p>
                 </div>
             </div>
 
-            <div className="bg-white border rounded-lg overflow-hidden shadow-sm">
+            <div className="bg-card border rounded-lg overflow-hidden shadow-sm">
                 <table className="w-full">
-                    <caption className="py-4 text-sm text-gray-600">
+                    <caption className="py-4 text-sm text-muted-foreground">
                         A comprehensive list of all transactions
                     </caption>
                     <thead>
-                        <tr className="bg-gray-50">
+                        <tr className="bg-muted/50">
                             <th className="w-16 font-semibold text-left px-4 py-3">S.No</th>
                             <th className="font-semibold text-left px-4 py-3">Transaction ID</th>
                             <th className="font-semibold text-left px-4 py-3">Type</th>
@@ -303,7 +284,7 @@ const Transactions = () => {
                     </thead>
                     <tbody>
                         {filteredTransactions.map((transaction, index) => (
-                            <tr key={transaction.id} className="border-b hover:bg-gray-50">
+                            <tr key={transaction.id} className="border-b hover:bg-muted/50">
                                 <td className="font-medium px-4 py-3">
                                     {index + 1}
                                 </td>
@@ -312,13 +293,13 @@ const Transactions = () => {
                                         {transaction.id}
                                     </div>
                                     {transaction.paymentIntentId && (
-                                        <div className="text-xs text-gray-500">
+                                        <div className="text-xs text-muted-foreground">
                                             {transaction.paymentIntentId}
                                         </div>
                                     )}
                                 </td>
                                 <td className="px-4 py-3">
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary">
                                         {transaction.transactionType}
                                     </span>
                                 </td>
@@ -326,17 +307,17 @@ const Transactions = () => {
                                     {formatAmount(transaction.amount, transaction.currency)}
                                 </td>
                                 <td className="px-4 py-3">
-                                    <span className={`font-medium ${getDirectionColor(transaction.direction)}`}>
+                                    <span className="font-medium">
                                         {transaction.direction}
                                     </span>
                                 </td>
                                 <td className="px-4 py-3">
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-muted">
                                         {transaction.provider}
                                     </span>
                                 </td>
                                 <td className="px-4 py-3">
-                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(transaction.status)}`}>
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary">
                                         {transaction.status}
                                     </span>
                                 </td>
@@ -369,7 +350,7 @@ const Transactions = () => {
                                                     onClick={() => {
                                                         // Export transaction details
                                                         const dataStr = JSON.stringify(transaction, null, 2);
-                                                        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                                                        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
                                                         const exportFileDefaultName = `transaction_${transaction.id}.json`;
                                                         const linkElement = document.createElement('a');
                                                         linkElement.setAttribute('href', dataUri);
@@ -383,7 +364,7 @@ const Transactions = () => {
                                                 </button>
                                                 <button
                                                     onClick={() => handleOpenDeleteModal(transaction)}
-                                                    className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm text-red-600"
+                                                    className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm text-destructive"
                                                 >
                                                     <Trash className="h-3.5 w-3.5" />
                                                     <span>Delete</span>
@@ -397,7 +378,7 @@ const Transactions = () => {
                     </tbody>
                 </table>
             </div>
-            
+
             {modalState.isDeleteMode && (
                 <DeleteConfirmationModal
                     isOpen={modalState.isDeleteMode}
@@ -408,7 +389,7 @@ const Transactions = () => {
                 />
             )}
 
-            <div className="mt-6 flex justify-between items-center text-sm text-gray-600">
+            <div className="mt-6 flex justify-between items-center text-sm text-muted-foreground">
                 <div>
                     Showing {filteredTransactions.length} of {transactions.length} transactions
                 </div>

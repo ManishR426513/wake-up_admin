@@ -32,7 +32,7 @@ export interface CategoryInterface {
 const Category: FC = () => {
   const { setloading } = useAllContext();
   const { token } = useAuth();
-   
+
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
@@ -62,10 +62,10 @@ const Category: FC = () => {
   };
 
   useEffect(() => {
-    if(token){
-getCategories();
+    if (token) {
+      getCategories();
     }
-   // 
+    // 
   }, [token]);
 
   const handleOpenAddModal = (): void => {
@@ -149,47 +149,44 @@ getCategories();
   };
 
   return (
-    <div className="p-6">
+    <div >
       <Main>
-        <div className="mb-4 flex items-center justify-between">
+        {/* <div className="mb-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-foreground">Sports Category</h1>
           <Button onClick={handleOpenAddModal}>Add Category</Button>
+        </div> */}
+        <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
+          <div>
+            <h2 className='text-2xl font-bold tracking-tight'>Category</h2>
+            <p className='text-muted-foreground'>
+              Here&apos;s a list of your Wakeup Sports
+            </p>
+          </div>
+
         </div>
-        <div className="overflow-x-auto rounded-lg shadow-lg border border-border">
+
+        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           <Table className="w-full border-collapse text-sm">
             <TableHeader>
-              <TableRow className="border-b border-border bg-muted/50">
-                <TableHead className="px-4 py-3 text-left text-muted-foreground font-medium">
-                  Sno
-                </TableHead>
-                <TableHead className="px-4 py-3 text-left text-muted-foreground font-medium">
-                  Category Name
-                </TableHead>
-                <TableHead className="px-4 py-3 text-left text-muted-foreground font-medium">
-                  Created At
-                </TableHead>
-                <TableHead className="px-4 py-3 text-left text-muted-foreground font-medium">
-                  Actions
-                </TableHead>
+              <TableRow>
+                <TableHead className="px-4 py-3 text-left">Sno</TableHead>
+                <TableHead className="px-4 py-3 text-left">Category Name</TableHead>
+                <TableHead className="px-4 py-3 text-left"> Created At</TableHead>
+                
+                <TableHead className="px-4 py-3 text-left"> Actions</TableHead>
+
               </TableRow>
             </TableHeader>
             <TableBody>
               {categories.length > 0 ? (
                 categories.map((item, index) => (
-                  <TableRow 
-                    key={item._id} 
-                    className="border-b border-border hover:bg-muted/30 transition-colors"
-                  >
-                    <TableCell className="px-4 py-3 font-medium text-foreground">
+                  <TableRow key={item._id}>
+                    <TableCell className="px-4 py-3 font-medium">
                       {index + 1}
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-foreground">
-                      {item.name}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-muted-foreground">
-                      {setReportFormatDate(item.createdAt)}
-                    </TableCell>
-                    <TableCell className="px-4 py-3">
+                    <TableCell>  {item.name}</TableCell>
+                    <TableCell>{setReportFormatDate(item.createdAt)}</TableCell>
+                    <TableCell>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
@@ -205,8 +202,8 @@ getCategories();
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent 
-                          side="left" 
+                        <PopoverContent
+                          side="left"
                           className="w-28 p-1 bg-popover border border-border shadow-md"
                         >
                           <div className="flex flex-col space-y-1">
@@ -214,14 +211,14 @@ getCategories();
                               className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
                               onClick={() => handleOpenEditModal(item)}
                             >
-                              <Edit className="h-3.5 w-3.5" /> 
+                              <Edit className="h-3.5 w-3.5" />
                               <span>Edit</span>
                             </button>
                             <button
                               className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
                               onClick={() => handleOpenDeleteModal(item)}
                             >
-                              <Trash className="h-3.5 w-3.5" /> 
+                              <Trash className="h-3.5 w-3.5" />
                               <span>Delete</span>
                             </button>
                           </div>
@@ -233,16 +230,18 @@ getCategories();
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={4}
-                    className="px-4 py-8 text-center text-muted-foreground"
+                    colSpan={7}
+                    className="px-4 py-3 text-center text-gray-500"
                   >
-                    No categories found.
+                    No plans found.
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </div>
+
+
       </Main>
 
       {modalState.isOpen && (
