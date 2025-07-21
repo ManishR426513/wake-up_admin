@@ -1,18 +1,8 @@
 import * as React from "react"
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Volleyball,
-  GalleryVerticalEnd,
-  ReceiptEuro,
-  TriangleAlert,
-  Settings2,
+
   SquareTerminal,
-  User,
-  Timer,
-  BadgePercent,
+
   ShoppingCart,
   Swords,
 } from "lucide-react"
@@ -65,14 +55,14 @@ const data = {
         { title: "Range", url: "/shop-price" },
       ],
     },
-     {
+    {
       title: "Transactions",
       url: "#",
       icon: ShoppingCart,
       items: [
         { title: "Payments", url: "/transactions" },
 
-        // { title: "Range", url: "/shop-price" },
+       
       ],
     },
   ],
