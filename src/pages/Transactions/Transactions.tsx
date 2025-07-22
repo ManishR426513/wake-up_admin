@@ -1,4 +1,4 @@
-import  { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Eye, MoreHorizontal, Filter } from 'lucide-react'
 import {
     Popover,
@@ -17,6 +17,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { setReportFormatDate } from '@/helper/helper';
+import { authAxios } from '@/config/config';
 interface TransactionInterface {
     id: string;
     userId: string;
@@ -31,6 +32,8 @@ interface TransactionInterface {
     createdAt: string;
     updatedAt: string;
 }
+
+
 
 const Transactions = () => {
     // const [modalState, setModalState] = useState<{
@@ -49,103 +52,26 @@ const Transactions = () => {
     const [filterType, setFilterType] = useState<string>('ALL');
     const [filterDirection, setFilterDirection] = useState<string>('ALL');
 
-    const [transactions] = useState<TransactionInterface[]>([
-        {
-            id: '1',
-            userId: 'user123',
-            paymentDetails: { method: 'card', last4: '4242' },
-            paymentIntentId: 'pi_1234567890',
-            amount: 99.99,
-            currency: 'EUR',
-            direction: 'INCOMING',
-            transactionType: 'CHALLENGE',
-            provider: 'STRIPE',
-            status: 'SUCCESS',
-            createdAt: '2025-07-15T10:30:00Z',
-            updatedAt: '2025-07-15T10:30:00Z',
-        },
-        {
-            id: '2',
-            userId: 'user456',
-            paymentDetails: { method: 'bizum', phone: '***6789' },
-            paymentIntentId: 'pi_0987654321',
-            amount: 149.99,
-            currency: 'EUR',
-            direction: 'INCOMING',
-            transactionType: 'SUBSCRIPTION',
-            provider: 'BIZUM',
-            status: 'SUCCESS',
-            createdAt: '2025-07-14T14:20:00Z',
-            updatedAt: '2025-07-14T14:20:00Z',
-        },
-        {
-            id: '3',
-            userId: 'user789',
-            paymentDetails: { method: 'card', last4: '1234' },
-            amount: 250.00,
-            currency: 'EUR',
-            direction: 'OUTGOING',
-            transactionType: 'WITHDRAWAL',
-            provider: 'STRIPE',
-            status: 'PENDING',
-            createdAt: '2025-07-13T09:15:00Z',
-            updatedAt: '2025-07-13T09:15:00Z',
-        },
-        {
-            id: '4',
-            userId: 'user321',
-            paymentDetails: { method: 'card', last4: '5678' },
-            paymentIntentId: 'pi_1122334455',
-            amount: 79.99,
-            currency: 'EUR',
-            direction: 'INCOMING',
-            transactionType: 'MASTER_CLASS',
-            provider: 'STRIPE',
-            status: 'SUCCESS',
-            createdAt: '2025-07-12T16:45:00Z',
-            updatedAt: '2025-07-12T16:45:00Z',
-        },
-        {
-            id: '5',
-            userId: 'user654',
-            paymentDetails: { method: 'card', last4: '9012' },
-            paymentIntentId: 'pi_5566778899',
-            amount: 39.99,
-            currency: 'EUR',
-            direction: 'INCOMING',
-            transactionType: 'SHOP',
-            provider: 'STRIPE',
-            status: 'FAILED',
-            createdAt: '2025-07-11T11:30:00Z',
-            updatedAt: '2025-07-11T11:30:00Z',
-        },
-        {
-            id: '6',
-            userId: 'user987',
-            paymentDetails: { method: 'bizum', phone: '***1234' },
-            amount: 199.99,
-            currency: 'EUR',
-            direction: 'INCOMING',
-            transactionType: 'TEACHER',
-            provider: 'BIZUM',
-            status: 'SUCCESS',
-            createdAt: '2025-07-10T13:20:00Z',
-            updatedAt: '2025-07-10T13:20:00Z',
-        },
+    const [transactions, settransactions] = useState<TransactionInterface[]>([
+
     ]);
 
+    const getAllTranscations = async () => {
+        try {
+            const response = await authAxios().get(`/transaction/history`);
+            console.log("rdfsvsddfs", response.data.data)
+            settransactions(response.data.data.transactions.docs)
+            // settransactions(response.data);
+        } catch (error) {
+            console.error('Error fetching transactions:', error);
+        }
+    }
 
-    
+    useEffect(() => {
+        getAllTranscations()
+    }, [])
 
-  
 
-   
-
-  
-
- 
-
-   
     return (
         <div >
             <Main>
@@ -252,10 +178,10 @@ const Transactions = () => {
                                         <TableCell>  {item.direction}</TableCell>
                                         <TableCell>  {item.provider}</TableCell>
                                         <TableCell>  {item.status}</TableCell>
-                                        <TableCell>  {setReportFormatDate(item.createdAt)}</TableCell>
+                                        <TableCell>  {setReportFormatDate(item.createdAt || '2025-07-03T15:05:16.957+00:00')}</TableCell>
 
 
-                                        {/* <TableCell>{setReportFormatDate(item.category)}</TableCell> */}
+
                                         <TableCell className="text-right">
                                             <Popover>
                                                 <PopoverTrigger asChild>
@@ -284,7 +210,7 @@ const Transactions = () => {
                                                             <Eye className="h-3.5 w-3.5" />
                                                             <span>View</span>
                                                         </button>
-                                                       
+
                                                     </div>
                                                 </PopoverContent>
                                             </Popover>

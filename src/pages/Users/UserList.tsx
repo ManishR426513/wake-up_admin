@@ -14,43 +14,17 @@ import { useAllContext } from "@/context/AllContext";
 import { toast } from "sonner";
 import { handleProfileImage } from "@/helper/helper";
 import PaginationComponent from "@/common/PaginationComponent";
+import { paginationInterface, userDataInterface } from "@/common/allInterface";
 
-interface UserDataInterface {
-  _id: string;
-  fullname: string;
-  username: string;
-  phoneno: string;
-  countryCode: string;
-  email: string;
-  profilePic: string;
-  interest: string[];
-  subscriptions: Array<{
-    planId: {
-      planType: string;
-    };
-  }>;
-  role: string;
-  createdAt: string;
-  isActive?: boolean;
-}
 
-interface PaginationInfo {
-  totalDocs: number;
-  limit: number;
-  totalPages: number;
-  page: number;
-  pagingCounter: number;
-  hasPrevPage: boolean;
-  hasNextPage: boolean;
-  prevPage: number | null;
-  nextPage: number | null;
-}
+
+
 
 const UserList: React.FC = () => {
   const { setloading } = useAllContext();
 
-  const [users, setUsers] = useState<UserDataInterface[]>([]);
-  const [pagination, setPagination] = useState<PaginationInfo>({
+  const [users, setUsers] = useState<userDataInterface[]>([]);
+  const [pagination, setPagination] = useState<paginationInterface>({
     totalDocs: 0,
     limit: 10,
     totalPages: 0,
