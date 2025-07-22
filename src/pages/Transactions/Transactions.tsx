@@ -18,54 +18,77 @@ import {
 } from "@/components/ui/table";
 import { setReportFormatDate } from '@/helper/helper';
 import { authAxios } from '@/config/config';
-interface TransactionInterface {
-    id: string;
-    userId: string;
-    paymentDetails: Record<string, any>;
-    paymentIntentId?: string;
-    amount: number;
-    currency: string;
-    direction: 'INCOMING' | 'OUTGOING';
-    transactionType: 'SUBSCRIPTION' | 'CHALLENGE' | 'MASTER_CLASS' | 'WITHDRAWAL' | 'SHOP' | 'TEACHER' | 'OTHER';
-    provider: 'STRIPE' | 'BIZUM';
-    status: 'PENDING' | 'SUCCESS' | 'FAILED';
-    createdAt: string;
-    updatedAt: string;
-}
+import { paginationInterface, transactionInterface } from '@/common/allInterface';
+import { useAllContext } from '@/context/AllContext';
+import { toast } from 'sonner';
+import PaginationComponent from '@/common/PaginationComponent';
+
 
 
 
 const Transactions = () => {
-    // const [modalState, setModalState] = useState<{
-    //     isOpen: boolean;
-    //     isEditMode: boolean;
-    //     isDeleteMode: boolean;
-    //     currentTransaction: TransactionInterface | null;
-    // }>({
-    //     isOpen: false,
-    //     isDeleteMode: false,
-    //     isEditMode: false,
-    //     currentTransaction: null,
-    // });
+    const { setloading } = useAllContext();
+
+
 
     const [filterStatus, setFilterStatus] = useState<string>('ALL');
     const [filterType, setFilterType] = useState<string>('ALL');
     const [filterDirection, setFilterDirection] = useState<string>('ALL');
 
-    const [transactions, settransactions] = useState<TransactionInterface[]>([
+    const [transactions, settransactions] = useState<transactionInterface[]>([
 
     ]);
 
-    const getAllTranscations = async () => {
+    const [pagination, setPagination] = useState<paginationInterface>({
+        totalDocs: 0,
+        limit: 10,
+        totalPages: 0,
+        page: 1,
+        pagingCounter: 1,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: null,
+        nextPage: null,
+    });
+
+
+    const getAllTranscations = async (page: number = 1, limit: number = 10): Promise<void> => {
+        setloading(true);
         try {
-            const response = await authAxios().get(`/transaction/history`);
-            console.log("rdfsvsddfs", response.data.data)
-            settransactions(response.data.data.transactions.docs)
-            // settransactions(response.data);
-        } catch (error) {
-            console.error('Error fetching transactions:', error);
+            const response = await authAxios().get(`/transaction/history`, {
+                params: {
+                    // status:filterStatus,
+                    // type:filterType,
+                    // direction:filterDirection,
+                    page: page,
+                    limit: limit
+                }
+            });
+            const data = response.data.data.transactions;
+
+
+            settransactions(data.docs)
+
+            setPagination({
+                totalDocs: data.totalDocs,
+                limit: data.limit,
+                totalPages: data.totalPages,
+                page: data.page,
+                pagingCounter: data.pagingCounter,
+                hasPrevPage: data.hasPrevPage,
+                hasNextPage: data.hasNextPage,
+                prevPage: data.prevPage,
+                nextPage: data.nextPage,
+            });
+        } catch (error: any) {
+            toast.error(error?.response?.data?.message);
+        } finally {
+            setloading(false);
         }
     }
+    const handlePageChange = (newPage: number) => {
+        getAllTranscations(newPage, pagination.limit);
+    };
 
     useEffect(() => {
         getAllTranscations()
@@ -165,9 +188,9 @@ const Transactions = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {transactions.length > 0 ? (
+                            {transactions && transactions.length > 0 ? (
                                 transactions.map((item, index) => (
-                                    <TableRow key={item.id}>
+                                    <TableRow key={item._id}>
                                         <TableCell className="px-4 py-3 font-medium">
                                             {index + 1}
                                         </TableCell>
@@ -178,7 +201,7 @@ const Transactions = () => {
                                         <TableCell>  {item.direction}</TableCell>
                                         <TableCell>  {item.provider}</TableCell>
                                         <TableCell>  {item.status}</TableCell>
-                                        <TableCell>  {setReportFormatDate(item.createdAt || '2025-07-03T15:05:16.957+00:00')}</TableCell>
+                                        <TableCell>  {setReportFormatDate(item?.createdAt || '2025-07-03T15:05:16.957+00:00')}</TableCell>
 
 
 
@@ -223,14 +246,22 @@ const Transactions = () => {
                                         colSpan={7}
                                         className="px-4 py-3 text-center text-gray-500"
                                     >
-                                        No Challenges found.
+                                        No Transcations found.
                                     </TableCell>
                                 </TableRow>
                             )}
                         </TableBody>
                     </Table>
                 </div>
-
+                <PaginationComponent
+                    currentPage={pagination.page}
+                    totalPages={pagination.totalPages}
+                    hasNextPage={pagination.hasNextPage}
+                    hasPrevPage={pagination.hasPrevPage}
+                    onPageChange={handlePageChange}
+                    totalDocs={pagination.totalDocs}
+                    limit={pagination.limit}
+                />
             </Main>
 
         </div>

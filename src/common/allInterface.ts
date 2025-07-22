@@ -56,3 +56,31 @@ export interface userDataInterface {
   createdAt: string;
   isActive?: boolean;
 }
+
+export interface transactionInterface {
+  _id: string;
+  userId: {
+    _id: string;
+    fullname: string;
+    username: string;
+    email: string;
+    profilePic: string;
+  };
+  paymentDetails: {
+    id: string;
+    amount: number;
+    currency: string;
+    status: string;
+    metadata: { challengeId: string; userId: string };
+    client_secret?: string;
+    payment_method_types?: string[];
+  };
+  paymentIntentId: string;
+  amount: number;
+  currency: string;
+  direction: "INCOMING" | "OUTGOING";
+  transactionType: string;
+  provider: string;
+  status: string;
+  __v: number;
+}
