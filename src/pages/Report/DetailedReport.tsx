@@ -1,7 +1,11 @@
-import { Main } from '@/components/main';
-import { authAxios } from '@/config/config';
-import { useAllContext } from '@/context/AllContext';
-import { FC, useState, useEffect } from "react";
+import { useEffect, useState, useMemo } from 'react'
+import { Eye, MoreHorizontal, Trash, AlertCircle, CheckCircle } from 'lucide-react'
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { Button } from '@/components/ui/Button'
 import {
     Table,
     TableBody,
@@ -9,155 +13,284 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import { toast } from 'sonner';
-import { Button } from "@/components/ui/Button";
-import {  handleThumbnail, setReportFormatDate } from '@/helper/helper';
-import { useParams } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
+} from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { useNavigate, useParams } from 'react-router-dom'
+import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal'
+import { Main } from '@/components/main'
+import { reportInterface, paginationInterface } from '@/common/allInterface'
+import { useAllContext } from '@/context/AllContext'
+import { authAxios } from '@/config/config'
+import { toast } from 'sonner'
+import { handleThumbnail, setReportFormatDate } from '@/helper/helper'
+import PaginationComponent from '@/common/PaginationComponent'
 
-// Optional: Badge component for status styling
-const StatusBadge = ({ status }: { status: string }) => {
-    let color = "bg-yellow-100 text-yellow-800";
-    if (status === "resolved") color = "bg-green-100 text-green-800";
-    if (status === "pending") color = "bg-orange-100 text-orange-800";
-    if (status === "rejected") color = "bg-red-100 text-red-800";
-    return (
-        <span className={`px-2 py-1 rounded text-xs font-semibold ${color}`}>
-            {status}
-        </span>
-    );
-};
-
-export interface ReportInterface {
-    _id: string;
-    userId: any;
-    feedId: any;
-    createdAt: string;
-    updatedAt: string;
-    status: string;
-    reportType: string;
+interface ModalState {
+    isOpen: boolean
+    isEditMode: boolean
+    isDeleteMode: boolean
+    currentData: reportInterface | null
 }
 
-const DetailedReport: FC = () => {
-    
+const ITEMS_PER_PAGE = 10
 
-    const { setloading } = useAllContext();
-    const [reports, setreports] = useState<ReportInterface[]>([])
-    const { id } = useParams()
+const DetailedReport: React.FC = () => {
+    const { setloading } = useAllContext()
+    const { id } = useParams<{ id: string }>()
+    const navigate = useNavigate()
 
-    // Get feed details from the first report (if available)
-    const feedDetails = reports[0]?.feedId || {};
+    const [modalState, setModalState] = useState<ModalState>({
+        isOpen: false,
+        isDeleteMode: false,
+        isEditMode: false,
+        currentData: null,
+    })
 
-    const getReports = async () => {
-        setloading(true);
-        await authAxios()
-            .get(`/report`, {
+    const [pagination, setPagination] = useState<paginationInterface>({
+        totalDocs: 0,
+        limit: ITEMS_PER_PAGE,
+        totalPages: 0,
+        page: 1,
+        pagingCounter: 1,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: null,
+        nextPage: null,
+    })
+
+    const [reports, setReports] = useState<reportInterface[]>([])
+    const [isResolving, setIsResolving] = useState(false)
+    const [isDeletingVideo, setIsDeletingVideo] = useState(false)
+
+    // Memoized feed details
+    const feedDetails = useMemo(() => reports[0]?.feedId || {}, [reports])
+
+    // Modal handlers
+    const handleOpenDeleteModal = (item: reportInterface): void => {
+        setModalState({
+            isOpen: false,
+            isEditMode: false,
+            isDeleteMode: true,
+            currentData: item,
+        })
+    }
+
+    const handleCloseModal = (): void => {
+        setModalState({
+            isOpen: false,
+            isEditMode: false,
+            isDeleteMode: false,
+            currentData: null,
+        })
+    }
+
+    const handleDelete = async (): Promise<void> => {
+        if (!modalState.currentData?._id) return
+
+        try {
+            setloading(true)
+            const response = await authAxios().delete(`/report/${modalState.currentData._id}`)
+            await getAllReports(pagination.page, pagination.limit)
+            toast.success(response.data.message || 'Report deleted successfully')
+        } catch (error: any) {
+            toast.error(error?.response?.data?.message || 'Failed to delete report')
+        } finally {
+            setloading(false)
+            handleCloseModal()
+        }
+    }
+
+    // API calls
+    const getAllReports = async (page: number = 1, limit: number = ITEMS_PER_PAGE): Promise<void> => {
+        if (!id) return
+
+        setloading(true)
+        try {
+            const response = await authAxios().get('/report', {
                 params: {
+                    page,
+                    limit,
                     feedId: id
                 }
             })
-            .then((response) => {
-                setloading(false);
-                setreports(response.data.data.docs)
-            }).catch((error) => {
-                setloading(false);
-                toast.error(error?.response?.data?.message || "Failed to fetch reports");
+
+            const data = response.data.data
+            setReports(data.docs || [])
+            setPagination({
+                totalDocs: data.totalDocs,
+                limit: data.limit,
+                totalPages: data.totalPages,
+                page: data.page,
+                pagingCounter: data.pagingCounter,
+                hasPrevPage: data.hasPrevPage,
+                hasNextPage: data.hasNextPage,
+                prevPage: data.prevPage,
+                nextPage: data.nextPage,
             })
+        } catch (error: any) {
+            toast.error(error?.response?.data?.message || 'Failed to fetch reports')
+            setReports([])
+        } finally {
+            setloading(false)
+        }
     }
 
-    const DeleteVideo = async () => {
-        await authAxios()
-            .put(`/report`, { feedId: id })
-            .then(() => {
-                toast.success("Video deleted successfully.");
-                getReports();
-            }).catch(() => {
-                toast.error("Failed to delete video.");
-            })
+    const handleDeleteVideo = async (data: boolean): Promise<void> => {
+        console.log("data", data)
+
+        setIsDeletingVideo(true);
+        try {
+            const response = await authAxios().delete(`/report/${id}`, {
+                data: { removeVideo: data, feedId: feedDetails._id },
+            });
+            toast.success(response.data.message || 'Video deleted successfully');
+            navigate('/report');
+        } catch (error: any) {
+            console.log("err",error)
+            toast.error(error?.response?.data?.message || 'Failed to delete video');
+        } finally {
+            setIsDeletingVideo(false);
+        }
+    }
+
+    const handlePageChange = (newPage: number) => {
+        getAllReports(newPage, pagination.limit)
+    }
+
+    // Status badge component
+    const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
+        const variant = status === 'resolved' ? 'default' : 'secondary'
+        const icon = status === 'resolved' ? <CheckCircle className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />
+
+        return (
+            <Badge variant={variant} className="flex items-center gap-1">
+                {icon}
+                {status}
+            </Badge>
+        )
     }
 
     useEffect(() => {
-       
-            getReports()
+        getAllReports()
+    }, [id])
 
-        
-    }, [])
+    if (!id) {
+        return (
+            <Main>
+                <div className="text-center py-8">
+                    <p className="text-muted-foreground">Invalid feed ID</p>
+                </div>
+            </Main>
+        )
+    }
 
     return (
-        <div className="p-6">
-            <Main>
-                {/* Feed Details Card */}
-                <div className="mb-6 flex flex-col md:flex-row items-center gap-6 bg-muted/40 rounded-lg p-5 shadow border border-border">
-                    <img
-                        src={handleThumbnail(feedDetails?.thumbnail)}
-                        alt="Feed Thumbnail"
-                        className="h-24 w-24 rounded-lg object-cover border"
-                    />
-                    <div className="flex-1 w-full">
-                        <h2 className="text-xl font-semibold text-foreground mb-1">
-                            {feedDetails?.title || "Feed Title"}
-                        </h2>
-                        {/* <p className="text-muted-foreground text-sm mb-1">
-                            {feedDetails?.description || "No description available."}
-                        </p> */}
-                        <div className="flex gap-2 mt-1">
-                            <span className="text-xs text-muted-foreground">Feed ID:</span>
-                            <span className="text-xs font-mono">{feedDetails?._id || id}</span>
-                        </div>
-                    </div>
-                    <div className="mt-4 md:mt-0 md:ml-auto">
-                        {reports && reports[0]?.status !== "resolved" && (
-                            <Button onClick={DeleteVideo} variant="destructive">
-                                Delete Video
-                            </Button>
-                        )}
+        <Main>
+            <div className="space-y-6">
+                {/* Header */}
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight">Reports</h1>
+                        <p className="text-muted-foreground">
+                            Here&apos;s a list of your reports for this feed
+                        </p>
                     </div>
                 </div>
 
+                {/* Feed Details Card */}
+                {feedDetails && (
+                    <div className="rounded-lg border bg-card p-6 shadow-sm">
+                        <div className="flex flex-col gap-6 md:flex-row md:items-center">
+                            <div className="shrink-0">
+                                <img
+                                    src={handleThumbnail(feedDetails?.thumbnail)}
+                                    alt="Feed Thumbnail"
+                                    className="h-24 w-24 rounded-lg border object-cover"
+                                />
+                            </div>
+
+                            <div className="flex-1 space-y-2">
+                                <h2 className="text-xl font-semibold">{feedDetails?.title}</h2>
+                                <p className="text-sm text-muted-foreground">
+                                    Feed ID: {id}
+                                </p>
+                            </div>
+
+                            <div className="flex gap-2">
+                                <Button
+                                    onClick={() => handleDeleteVideo(false)}
+                                    disabled={isDeletingVideo}
+                                    variant="default"
+                                    size="sm"
+                                >
+                                    {isDeletingVideo ? 'Resolving...' : 'Mark Resolved'}
+                                </Button>
+                                <Button
+                                    onClick={() => handleDeleteVideo(true)}
+                                    disabled={isDeletingVideo}
+                                    variant="destructive"
+                                    size="sm"
+                                >
+                                    {isDeletingVideo ? 'Deleting...' : 'Delete Video'}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Reports Table */}
-                <div className="overflow-x-auto rounded-lg shadow-lg border border-border bg-background">
-                    <Table className="w-full border-collapse text-sm">
+                <div>
+                    <Table>
                         <TableHeader>
-                            <TableRow className="border-b border-border bg-muted/50">
-                                <TableHead className="px-4 py-3 text-left text-muted-foreground font-medium">Sno</TableHead>
-                                <TableHead className="px-4 py-3 text-left text-muted-foreground font-medium">Username</TableHead>
-                                <TableHead className="px-4 py-3 text-left text-muted-foreground font-medium">Report Type</TableHead>
-                                <TableHead className="px-4 py-3 text-left text-muted-foreground font-medium">Status</TableHead>
-                                <TableHead className="px-4 py-3 text-left text-muted-foreground font-medium">Report Date</TableHead>
+                            <TableRow>
+                                <TableHead className="w-16">S.No</TableHead>
+                                <TableHead>Report Type</TableHead>
+                                <TableHead>Report Date</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {reports.length > 0 ? (
                                 reports.map((item, index) => (
-                                    <TableRow
-                                        key={item._id}
-                                        className="border-b border-border hover:bg-muted/30 transition-colors"
-                                    >
-                                        <TableCell className="px-4 py-3 font-medium text-foreground">{index + 1}</TableCell>
-                                        <TableCell className="px-4 py-3 font-medium text-foreground">{item?.userId?.username}</TableCell>
-                                        <TableCell className="px-4 py-3 text-foreground">{item?.reportType}</TableCell>
-                                        <TableCell className="px-4 py-3">
-                                            <StatusBadge status={item?.status} />
+                                    <TableRow key={item._id}>
+                                        <TableCell className="font-medium">
+                                            {(pagination.page - 1) * pagination.limit + index + 1}
                                         </TableCell>
-                                        <TableCell className="px-4 py-3 text-foreground">{setReportFormatDate(item.createdAt)}</TableCell>
+                                        <TableCell className="font-medium">
+                                            {item?.reportType || 'Unknown'}
+                                        </TableCell>
+                                        <TableCell>
+                                            {setReportFormatDate(item.createdAt)}
+                                        </TableCell>
                                     </TableRow>
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell
-                                        colSpan={5}
-                                        className="px-4 py-8 text-center text-muted-foreground"
-                                    >
-                                        No Reports Found
+                                    <TableCell colSpan={5} className="h-24 text-center">
+                                        <div className="flex flex-col items-center justify-center space-y-2">
+                                            <AlertCircle className="h-8 w-8 text-muted-foreground" />
+                                            <p className="text-muted-foreground">No reports found</p>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             )}
                         </TableBody>
                     </Table>
                 </div>
-            </Main>
-        </div>
+
+                {/* Pagination */}
+                {reports.length > 0 && (
+                    <PaginationComponent
+                        currentPage={pagination.page}
+                        totalPages={pagination.totalPages}
+                        hasNextPage={pagination.hasNextPage}
+                        hasPrevPage={pagination.hasPrevPage}
+                        onPageChange={handlePageChange}
+                        totalDocs={pagination.totalDocs}
+                        limit={pagination.limit}
+                    />
+                )}
+            </div>
+        </Main>
     )
 }
 
