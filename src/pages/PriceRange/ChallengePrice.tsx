@@ -16,7 +16,7 @@ import { DollarSign, Loader2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 const ChallengePrice: React.FC = () => {
-  const { token } = useAuth();
+  
 
   const [minPriceText, setMinPriceText] = useState<string>('0');
   const [maxPriceText, setMaxPriceText] = useState<string>('100');
@@ -31,7 +31,7 @@ const ChallengePrice: React.FC = () => {
   const getChallengePrice = async () => {
     setLoading(true);
     try {
-      const response = await authAxios(token).get('/auth/price-range',{
+      const response = await authAxios().get('/auth/price-range',{
         params: {
           type: 'challenge'
         }
@@ -70,7 +70,7 @@ const ChallengePrice: React.FC = () => {
 
     setLoading(true);
     try {
-      await authAxios(token).put(`/auth/price-range/${id}`, {
+      await authAxios().put(`/auth/price-range/${id}`, {
         minPrice: parsePrice(minPriceText),
         maxPrice: parsePrice(maxPriceText),
         
@@ -85,11 +85,11 @@ const ChallengePrice: React.FC = () => {
   };
 
   useEffect(() => {
-    if (token) {
+   
       getChallengePrice();
-    }
+    
 
-  }, [token]);
+  }, []);
 
   return (
     <>

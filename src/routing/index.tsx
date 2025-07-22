@@ -33,7 +33,7 @@ export default function Routing() {
             </PrivateRoute>
           }
         />
-         <Route
+        <Route
           path="/time"
           element={
             <PrivateRoute>
@@ -91,7 +91,7 @@ export default function Routing() {
             </PrivateRoute>
           }
         />
-        
+
         <Route
           path="/challenge-price"
           element={
@@ -100,7 +100,7 @@ export default function Routing() {
             </PrivateRoute>
           }
         />
-         <Route
+        <Route
           path="/shop-price"
           element={
             <PrivateRoute>
@@ -108,7 +108,7 @@ export default function Routing() {
             </PrivateRoute>
           }
         />
-         <Route
+        <Route
           path="/report"
           element={
             <PrivateRoute>
@@ -116,7 +116,7 @@ export default function Routing() {
             </PrivateRoute>
           }
         />
-         <Route
+        <Route
           path="/transactions"
           element={
             <PrivateRoute>
@@ -140,7 +140,7 @@ export default function Routing() {
             </PrivateRoute>
           }
         />
-          <Route
+        <Route
           path="/shop"
           element={
             <PrivateRoute>

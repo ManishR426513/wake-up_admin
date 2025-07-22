@@ -40,7 +40,7 @@ export interface ReportInterface {
 }
 
 const DetailedReport: FC = () => {
-    const { token } = useAuth();
+    
 
     const { setloading } = useAllContext();
     const [reports, setreports] = useState<ReportInterface[]>([])
@@ -51,7 +51,7 @@ const DetailedReport: FC = () => {
 
     const getReports = async () => {
         setloading(true);
-        await authAxios(token)
+        await authAxios()
             .get(`/report`, {
                 params: {
                     feedId: id
@@ -67,7 +67,7 @@ const DetailedReport: FC = () => {
     }
 
     const DeleteVideo = async () => {
-        await authAxios(token)
+        await authAxios()
             .put(`/report`, { feedId: id })
             .then(() => {
                 toast.success("Video deleted successfully.");
@@ -78,11 +78,11 @@ const DetailedReport: FC = () => {
     }
 
     useEffect(() => {
-        if (token) {
+       
             getReports()
 
-        }
-    }, [token])
+        
+    }, [])
 
     return (
         <div className="p-6">

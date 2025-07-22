@@ -23,7 +23,7 @@ import {
 } from "@radix-ui/react-popover";
 import { Edit, MoreHorizontal } from "lucide-react";
 import { useAllContext } from "@/context/AllContext";
-import { useAuth } from "@/context/AuthContext";
+
 
 export interface PlanInterface {
   benefits: boolean;
@@ -45,7 +45,7 @@ export interface ModelInterface {
 
 const Plans: React.FC = () => {
   const { setloading } = useAllContext();
-  const { token } = useAuth();
+
 
   const [plans, setplans] = useState<PlanInterface[]>([]);
   const [showModel, setshowModel] = useState<ModelInterface>({
@@ -57,7 +57,7 @@ const Plans: React.FC = () => {
   const getPlans = async (): Promise<void> => {
     setloading(true);
     try {
-      const response = await authAxios(token).get("/plan");
+      const response = await authAxios().get("/plan");
       setplans(response.data.data.plans);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to fetch plans");
@@ -67,12 +67,12 @@ const Plans: React.FC = () => {
   };
 
   useEffect(() => {
-    if (token) {
 
 
-      getPlans();
-    }
-  }, [token]);
+
+    getPlans();
+
+  }, []);
 
   const handleShowmodel = (type: string, data?: PlanInterface) => {
     setshowModel({
@@ -96,7 +96,7 @@ const Plans: React.FC = () => {
 
     if (showModel?.data?._id) {
       // Edit
-      authAxios(token)
+      authAxios()
         .put(`/plan/${showModel.data._id}`, payLoad)
         .then((response) => {
           toast.success(response.data.message);
@@ -111,7 +111,7 @@ const Plans: React.FC = () => {
         });
     } else {
       // Add
-      authAxios(token)
+      authAxios()
         .post(`/plan`, payLoad)
         .then(() => {
           toast.success("Plan added successfully");
@@ -140,7 +140,7 @@ const Plans: React.FC = () => {
               Here&apos;s a list of your Wakeup Plans
             </p>
           </div>
-        
+
         </div>
 
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
@@ -211,7 +211,7 @@ const Plans: React.FC = () => {
               )}
             </TableBody>
           </Table>
-          
+
         </div>
       </Main>
 

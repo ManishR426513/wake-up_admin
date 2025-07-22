@@ -7,11 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { MessageCircle, Clock } from "lucide-react";
 import { authAxios } from "@/config/config";
-import { useAuth } from "@/context/AuthContext";
+
 import { toast } from "sonner";
 
 export default function WakeupTimer() {
-  const { token } = useAuth();
+  
 
   const [message, setMessage] = useState("");
   const [hours, setHours] = useState("");
@@ -47,7 +47,7 @@ export default function WakeupTimer() {
     setLoading(true);
     try {
       if (id) {
-        await authAxios(token).put(`/auth/price-range/${id}`, {
+        await authAxios().put(`/auth/price-range/${id}`, {
           hours: parseInt(hours, 10),
           minutes: parseInt(minutes, 10),
           userMessage: message,
@@ -65,7 +65,7 @@ export default function WakeupTimer() {
 
   const getWakeupUserMessage = async () => {
     try {
-      const res = await authAxios(token).get(`/auth/price-range`, {
+      const res = await authAxios().get(`/auth/price-range`, {
         params: { type: "WakeupUserTime" },
       });
       const data = res.data.data;

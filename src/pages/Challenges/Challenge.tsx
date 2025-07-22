@@ -120,7 +120,7 @@ const Challenge = () => {
     const handleDelete = async (): Promise<void> => {
         handleCloseModal();
         // try {
-        //   const response = await authAxios(token).delete(
+        //   const response = await authAxios().delete(
         //     `/category/${modalState?.currentCategory?._id}`
         //   );
         //   await getCategories();

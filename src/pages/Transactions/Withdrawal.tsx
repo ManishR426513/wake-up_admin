@@ -282,7 +282,7 @@ const WithdrawalRequests = () => {
         console.log('Approving request:', modalState.currentRequest?.id);
         handleCloseModal();
         // try {
-        //     const response = await authAxios(token).patch(
+        //     const response = await authAxios().patch(
         //         `/withdrawal-requests/${modalState?.currentRequest?.id}/approve`
         //     );
         //     await getWithdrawalRequests();
@@ -297,7 +297,7 @@ const WithdrawalRequests = () => {
         console.log('Rejecting request:', modalState.currentRequest?.id);
         handleCloseModal();
         // try {
-        //     const response = await authAxios(token).patch(
+        //     const response = await authAxios().patch(
         //         `/withdrawal-requests/${modalState?.currentRequest?.id}/reject`
         //     );
         //     await getWithdrawalRequests();
@@ -311,7 +311,7 @@ const WithdrawalRequests = () => {
         handleCloseModal();
         // API call to delete withdrawal request
         // try {
-        //     const response = await authAxios(token).delete(
+        //     const response = await authAxios().delete(
         //         `/withdrawal-requests/${modalState?.currentRequest?.id}`
         //     );
         //     await getWithdrawalRequests();

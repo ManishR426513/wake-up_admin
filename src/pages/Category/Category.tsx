@@ -21,7 +21,7 @@ import AddCategoryModal from "../../common/Modal/AddCatgoryModal";
 import DeleteConfirmationModal from "@/common/Modal/DeleteConfirmationModal";
 import { toast } from "sonner";
 import { useAllContext } from "@/context/AllContext";
-import { useAuth } from "@/context/AuthContext";
+
 
 export interface CategoryInterface {
   _id: string;
@@ -31,7 +31,7 @@ export interface CategoryInterface {
 }
 const Category: FC = () => {
   const { setloading } = useAllContext();
-  const { token } = useAuth();
+  
 
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
   const [modalState, setModalState] = useState<{
@@ -48,7 +48,7 @@ const Category: FC = () => {
 
   const getCategories = async (): Promise<void> => {
     setloading(true);
-    await authAxios(token)
+    await authAxios()
       .get(`/category`)
       .then((response) => {
         setloading(false);
@@ -62,11 +62,11 @@ const Category: FC = () => {
   };
 
   useEffect(() => {
-    if (token) {
+    
       getCategories();
-    }
+    
     // 
-  }, [token]);
+  }, []);
 
   const handleOpenAddModal = (): void => {
     setModalState({
@@ -109,7 +109,7 @@ const Category: FC = () => {
 
     try {
       const payload = { name: categoryName };
-      const response = await authAxios(token).put(
+      const response = await authAxios().put(
         `/category/${modalState.currentCategory._id}`,
         payload
       );
@@ -124,7 +124,7 @@ const Category: FC = () => {
   const handleAdd = async (categoryName: string): Promise<void> => {
     try {
       const payload = { name: categoryName };
-      const response = await authAxios(token).post("/category", payload);
+      const response = await authAxios().post("/category", payload);
       await getCategories();
       handleCloseModal();
 
@@ -136,7 +136,7 @@ const Category: FC = () => {
 
   const handleDelete = async (): Promise<void> => {
     try {
-      const response = await authAxios(token).delete(
+      const response = await authAxios().delete(
         `/category/${modalState?.currentCategory?._id}`
       );
       await getCategories();

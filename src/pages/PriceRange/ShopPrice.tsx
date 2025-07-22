@@ -13,10 +13,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { DollarSign, Loader2 } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
 
 const ShopPrice: React.FC = () => {
-  const { token } = useAuth();
+  
 
   const [minPriceText, setMinPriceText] = useState<string>('0');
   const [maxPriceText, setMaxPriceText] = useState<string>('100');
@@ -31,7 +30,7 @@ const ShopPrice: React.FC = () => {
   const getChallengePrice = async () => {
     setLoading(true);
     try {
-      const response = await authAxios(token).get('/auth/price-range',{
+      const response = await authAxios().get('/auth/price-range',{
         params: {
           type: 'shop'
         }
@@ -70,7 +69,7 @@ const ShopPrice: React.FC = () => {
 
     setLoading(true);
     try {
-      await authAxios(token).put(`/auth/price-range/${id}`, {
+      await authAxios().put(`/auth/price-range/${id}`, {
         minPrice: parsePrice(minPriceText),
         maxPrice: parsePrice(maxPriceText),
         
@@ -85,11 +84,11 @@ const ShopPrice: React.FC = () => {
   };
 
   useEffect(() => {
-    if (token) {
+    
       getChallengePrice();
-    }
+    
 
-  }, [token]);
+  }, []);
 
   return (
     <>

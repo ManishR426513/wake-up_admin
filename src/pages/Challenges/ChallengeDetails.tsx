@@ -1,5 +1,5 @@
-import  { useState } from 'react'
-import {  Eye, MoreHorizontal, Trash } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Eye, MoreHorizontal, Trash } from 'lucide-react'
 import {
     Popover,
     PopoverContent,
@@ -17,6 +17,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
 import { Main } from '@/components/main';
+import { authAxios } from '@/config/config';
+import { toast } from 'sonner';
 interface ChallengeInterface {
     id: number;
     title: string;
@@ -38,7 +40,7 @@ const ChallengeDetails = () => {
         isEditMode: false,
         currentChallenege: null,
     });
-    const [challenges] = useState([
+    const [challenges, setchallenges] = useState([
         {
             id: 1,
             title: "React Component Challenge",
@@ -98,7 +100,7 @@ const ChallengeDetails = () => {
     const navigation = useNavigate()
 
 
- 
+
 
     const handleOpenDeleteModal = (item: ChallengeInterface): void => {
         setModalState({
@@ -119,7 +121,7 @@ const ChallengeDetails = () => {
     const handleDelete = async (): Promise<void> => {
         handleCloseModal();
         // try {
-        //   const response = await authAxios(token).delete(
+        //   const response = await authAxios().delete(
         //     `/category/${modalState?.currentCategory?._id}`
         //   );
         //   await getCategories();
@@ -130,6 +132,27 @@ const ChallengeDetails = () => {
         //   console.error("Error deleting category:", error);
         // }
     };
+
+
+    const getAllChallenges = async () => {
+        await authAxios()
+            .get(`/challenge`)
+            .then((response) => {
+                console.log("redwf", response)
+                // setloading(false);
+                //setChallenges(response.data.data.challenges);
+            })
+            .catch((error) => {
+                console.log(error);
+                //setloading(false);
+                toast.error(error.response.data.message);
+            });
+    }
+
+
+    useEffect(() => {
+        getAllChallenges()
+    }, [])
 
     return (
         <div >
@@ -145,7 +168,7 @@ const ChallengeDetails = () => {
                 </div>
                 <div className="mb-6 flex flex-col md:flex-row items-center gap-6 bg-muted/40 rounded-lg p-5 shadow border border-border">
                     <img
-                       // src={handleThumbnail('https://plus.unsplash.com/premium_photo-1752155109947-539988d49e5d?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')}
+                        // src={handleThumbnail('https://plus.unsplash.com/premium_photo-1752155109947-539988d49e5d?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')}
                         src='https://plus.unsplash.com/premium_photo-1752155109947-539988d49e5d?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
                         alt="Feed Thumbnail"
                         className="h-24 w-24 rounded-lg object-cover border"
@@ -158,12 +181,12 @@ const ChallengeDetails = () => {
                         <p className="text-muted-foreground text-sm mb-1">
                             {challenges[0]?.description || "No description available."}
                         </p>
-                        
+
                     </div>
                     <div className="mt-4 md:mt-0 md:ml-auto">
 
                         <Button variant="destructive">
-                            Delete 
+                            Delete
                         </Button>
 
                     </div>
@@ -256,15 +279,15 @@ const ChallengeDetails = () => {
                     </Table>
                 </div>
 
-{modalState.isDeleteMode && (
-                <DeleteConfirmationModal
-                    isOpen={modalState.isDeleteMode}
-                    onClose={handleCloseModal}
-                    onConfirm={handleDelete}
-                    title="Delete Category"
-                    description={`Are you sure you want to delete "${modalState.currentChallenege?.title}"? This action cannot be undone.`}
-                />
-            )}
+                {modalState.isDeleteMode && (
+                    <DeleteConfirmationModal
+                        isOpen={modalState.isDeleteMode}
+                        onClose={handleCloseModal}
+                        onConfirm={handleDelete}
+                        title="Delete Category"
+                        description={`Are you sure you want to delete "${modalState.currentChallenege?.title}"? This action cannot be undone.`}
+                    />
+                )}
 
             </Main>
         </div>
