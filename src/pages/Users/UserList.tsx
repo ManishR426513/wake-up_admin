@@ -13,6 +13,7 @@ import { useAllContext } from "@/context/AllContext";
 
 import { toast } from "sonner";
 import { handleProfileImage } from "@/helper/helper";
+import PaginationComponent from "@/common/PaginationComponent";
 
 interface UserDataInterface {
   _id: string;
@@ -33,17 +34,53 @@ interface UserDataInterface {
   isActive?: boolean;
 }
 
+interface PaginationInfo {
+  totalDocs: number;
+  limit: number;
+  totalPages: number;
+  page: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: number | null;
+  nextPage: number | null;
+}
+
 const UserList: React.FC = () => {
   const { setloading } = useAllContext();
-  
 
   const [users, setUsers] = useState<UserDataInterface[]>([]);
+  const [pagination, setPagination] = useState<PaginationInfo>({
+    totalDocs: 0,
+    limit: 10,
+    totalPages: 0,
+    page: 1,
+    pagingCounter: 1,
+    hasPrevPage: false,
+    hasNextPage: false,
+    prevPage: null,
+    nextPage: null,
+  });
 
-  const getUsers = async (): Promise<void> => {
+  const getUsers = async (page: number = 1, limit: number = 10): Promise<void> => {
     setloading(true);
     try {
-      const response = await authAxios().get("/auth/all-users");
-      setUsers(response.data.data.allUsers);
+      const response = await authAxios().get(`/auth/all-users?page=${page}&limit=${limit}`);
+      const data = response.data.data;
+
+      console.log("re", response)
+      setUsers(data.docs);
+      setPagination({
+        totalDocs: data.totalDocs,
+        limit: data.limit,
+        totalPages: data.totalPages,
+        page: data.page,
+        pagingCounter: data.pagingCounter,
+        hasPrevPage: data.hasPrevPage,
+        hasNextPage: data.hasNextPage,
+        prevPage: data.prevPage,
+        nextPage: data.nextPage,
+      });
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to fetch users");
     } finally {
@@ -51,13 +88,13 @@ const UserList: React.FC = () => {
     }
   };
 
+  const handlePageChange = (newPage: number) => {
+    getUsers(newPage, pagination.limit);
+  };
+
   useEffect(() => {
-    
-      getUsers();
-    
+    getUsers();
   }, []);
-
-
 
   return (
     <div>
@@ -70,6 +107,7 @@ const UserList: React.FC = () => {
             </p>
           </div>
         </div>
+
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           <Table className="w-full border-collapse text-sm">
             <TableHeader>
@@ -84,57 +122,77 @@ const UserList: React.FC = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.length > 0 ? (
-                users.map((user, index) => (
-                  <TableRow key={user._id}>
-                    <TableCell className="px-4 py-3 font-medium">{index + 1} </TableCell>
-                    <TableCell>
-                      <img
-                        src={handleProfileImage(user.profilePic)}
-                        alt="Profile"
-                        className="w-8 h-8 rounded-full object-cover"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium capitalize">{user.fullname}</div>
-                        <div className="text-sm text-muted-foreground">@{user.username}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="lowercase">{user.email}</TableCell>
-                    <TableCell>
-                      +{user.countryCode} {user.phoneno}
-                    </TableCell>
-                    <TableCell>
-                      {user.interest.length > 0
-                        ? user.interest.join(", ")
-                        : "No interests"}
-                    </TableCell>
-                    <TableCell>
-                      {user.subscriptions.length > 0 ? (
-                        user.subscriptions.map((subscription, idx) => (
-                          <div key={idx}>
-                            {subscription?.planId?.planType}
-                          </div>
-                        ))
-                      ) : (
-                        <span className="text-muted-foreground">Basic</span>
-                      )}
-                    </TableCell>
+              {users && users.length > 0 ? (
+                users.map((user, index) => {
+                  // Calculate the actual serial number based on pagination
+                  const serialNumber = (pagination.page - 1) * pagination.limit + index + 1;
 
-                  </TableRow>
-                ))
+                  return (
+                    <TableRow key={user._id}>
+                      <TableCell className="px-4 py-3 font-medium">
+                        {serialNumber}
+                      </TableCell>
+                      <TableCell>
+                        <img
+                          src={handleProfileImage(user.profilePic)}
+                          alt="Profile"
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium capitalize">{user.fullname}</div>
+                          <div className="text-sm text-muted-foreground">@{user.username}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="lowercase">{user.email}</TableCell>
+                      <TableCell>
+                        +{user.countryCode} {user.phoneno}
+                      </TableCell>
+                      <TableCell>
+                        {user.interest.length > 0
+                          ? user.interest.join(", ")
+                          : "No interests"}
+                      </TableCell>
+                      <TableCell>
+                        {user.subscriptions.length > 0 ? (
+                          user.subscriptions.map((subscription, idx) => (
+                            <div key={idx}>
+                              {subscription?.planId?.planType}
+                            </div>
+                          ))
+                        ) : (
+                          <span className="text-muted-foreground">Basic</span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                     No users found
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
+
           </Table>
+
+          {/* Pagination Component */}
+
         </div>
+        <PaginationComponent
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          hasNextPage={pagination.hasNextPage}
+          hasPrevPage={pagination.hasPrevPage}
+          onPageChange={handlePageChange}
+          totalDocs={pagination.totalDocs}
+          limit={pagination.limit}
+        />
       </Main>
+
     </div>
   );
 };

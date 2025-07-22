@@ -1,5 +1,5 @@
-import  { useState } from 'react'
-import {  Eye, MoreHorizontal, Trash } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Eye, MoreHorizontal, Trash, RefreshCw } from 'lucide-react'
 import {
     Popover,
     PopoverContent,
@@ -17,177 +17,248 @@ import {
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
 import { Main } from '@/components/main';
-//import { setReportFormatDate } from '@/helper/helper';
+import { authAxios } from '@/config/config';
+import { toast } from 'sonner';
+
 interface ChallengeInterface {
-    id: number;
+    _id: string;
     title: string;
     description: string;
-    endDate: string;
-    participants: number;
-    price: string;
-    category: string;
+    duration: string;
+    price: number;
+    category: {
+        _id: string;
+        name: string;
+    };
+    userId: {
+        _id: string;
+        fullname: string;
+        username: string;
+        email: string;
+        profilePic: string;
+    };
+    status: 'RUNNING' | 'COMPLETED' | 'CANCELLED';
+    type: 'PUBLIC' | 'PRIVATE';
+    winners: any[];
+    createdAt: string;
+    updatedAt: string;
+    stats: {
+        participantsCount: number;
+        totalRevenue: number;
+    };
 }
+
+interface ApiResponse {
+    success: boolean;
+    message: string;
+    data: {
+        docs: ChallengeInterface[];
+        totalDocs: number;
+        limit: number;
+        totalPages: number;
+        page: number;
+        pagingCounter: number;
+        hasPrevPage: boolean;
+        hasNextPage: boolean;
+        prevPage: number | null;
+        nextPage: number | null;
+    };
+}
+
 const Challenge = () => {
     const [modalState, setModalState] = useState<{
         isOpen: boolean;
         isEditMode: boolean;
         isDeleteMode: boolean;
-        currentChallenege: ChallengeInterface | null;
+        currentChallenge: ChallengeInterface | null;
     }>({
         isOpen: false,
         isDeleteMode: false,
         isEditMode: false,
-        currentChallenege: null,
+        currentChallenge: null,
     });
-    const [challenges] = useState([
-        {
-            id: 1,
-            title: "React Component Challenge",
-            description: "Build a responsive dashboard component using React and modern CSS",
-            endDate: "2025-08-15",
-            participants: 45,
-            price: "$100",
-            category: "Frontend",
-        },
-        {
-            id: 2,
-            title: "Algorithm Optimization",
-            description: "Optimize sorting algorithms for large datasets and improve performance",
-            endDate: "2025-08-22",
-            participants: 32,
-            price: "$150",
-            category: "Algorithms",
-        },
-        {
-            id: 3,
-            title: "UI/UX Design Sprint",
-            description: "Create an intuitive user interface for a mobile banking application",
-            endDate: "2025-08-28",
-            participants: 28,
-            price: "$120",
-            category: "Design",
-        },
-        {
-            id: 4,
-            title: "Database Schema Design",
-            description: "Design efficient database schema for an e-commerce platform",
-            endDate: "2025-09-05",
-            participants: 19,
-            price: "$130",
-            category: "Backend",
-        },
-        {
-            id: 5,
-            title: "API Integration Challenge",
-            description: "Integrate multiple third-party APIs and handle error scenarios",
-            endDate: "2025-09-12",
-            participants: 37,
-            price: "$140",
-            category: "Integration",
-        },
-        {
-            id: 6,
-            title: "Machine Learning Model",
-            description: "Develop a predictive model for customer behavior analysis",
-            endDate: "2025-09-18",
-            participants: 24,
-            price: "$200",
-            category: "Machine Learning",
-        },
-    ]);
 
-    const navigation = useNavigate()
+    const [challenges, setChallenges] = useState<ChallengeInterface[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [pagination, setPagination] = useState({
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalDocs: 0,
+        hasNextPage: false,
+        hasPrevPage: false
+    });
 
-
-  
+    const navigation = useNavigate();
 
     const handleOpenDeleteModal = (item: ChallengeInterface): void => {
         setModalState({
             isOpen: false,
             isEditMode: false,
             isDeleteMode: true,
-            currentChallenege: item,
+            currentChallenge: item,
         });
     };
+
     const handleCloseModal = (): void => {
         setModalState({
             isOpen: false,
             isEditMode: false,
             isDeleteMode: false,
-            currentChallenege: null,
+            currentChallenge: null,
         });
     };
-    const handleDelete = async (): Promise<void> => {
-        handleCloseModal();
-        // try {
-        //   const response = await authAxios().delete(
-        //     `/category/${modalState?.currentCategory?._id}`
-        //   );
-        //   await getCategories();
-        //   handleCloseModal();
 
-        //   toast.success(response.data.message);
-        // } catch (error) {
-        //   console.error("Error deleting category:", error);
-        // }
+    const handleDelete = async (): Promise<void> => {
+        if (!modalState.currentChallenge) return;
+
+        try {
+            setLoading(true);
+            const response = await authAxios().delete(
+                `/challenge/${modalState.currentChallenge._id}`
+            );
+
+            await getAllChallenges();
+            handleCloseModal();
+            toast.success(response.data.message || "Challenge deleted successfully");
+        } catch (error: any) {
+            console.error("Error deleting challenge:", error);
+            toast.error(error?.response?.data?.message || "Failed to delete challenge");
+        } finally {
+            setLoading(false);
+        }
     };
 
-    return (
-        <div >
-            <Main>
+    const getAllChallenges = async (page: number = 1): Promise<void> => {
+        try {
+            setLoading(true);
+            const response = await authAxios().get<ApiResponse>('/challenge', {
+                params: {
+                    type: "PUBLIC",
+                    status: "RUNNING",
+                    page,
+                    limit: pagination.limit
+                }
+            });
 
+            console.log("Fetched challenges:", response.data);
+
+            if (response.data?.success && response.data?.data?.docs) {
+                setChallenges(response.data.data.docs);
+                setPagination({
+                    page: response.data.data.page,
+                    limit: response.data.data.limit,
+                    totalPages: response.data.data.totalPages,
+                    totalDocs: response.data.data.totalDocs,
+                    hasNextPage: response.data.data.hasNextPage,
+                    hasPrevPage: response.data.data.hasPrevPage
+                });
+            } else {
+                setChallenges([]);
+                toast.error("No challenges found");
+            }
+        } catch (error: any) {
+            console.error("Error fetching challenges:", error);
+            setChallenges([]);
+            toast.error(error?.response?.data?.message || "Failed to fetch challenges");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handlePageChange = (newPage: number): void => {
+        if (newPage >= 1 && newPage <= pagination.totalPages) {
+            getAllChallenges(newPage);
+        }
+    };
+
+    const formatDate = (dateString: string): string => {
+        try {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        } catch {
+            return 'Invalid Date';
+        }
+    };
+
+    const formatPrice = (price: number): string => {
+        return `$${price}`;
+    };
+
+
+
+    useEffect(() => {
+        getAllChallenges();
+    }, []);
+
+    return (
+        <div>
+            <Main>
                 <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
                     <div>
                         <h2 className='text-2xl font-bold tracking-tight'>Challenges</h2>
                         <p className='text-muted-foreground'>
-                            Here&apos;s a list of your Wakeup Challneges
+                            Here&apos;s a list of your Wakeup Challenges 
+                            {/* ({pagination.totalDocs} total) */}
                         </p>
                     </div>
-                </div>
 
+                </div>
 
                 <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
                     <Table className="w-full border-collapse text-sm">
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="w-[100px]">Sno</TableHead>
+                                <TableHead className="w-[60px]">Sno</TableHead>
                                 <TableHead>Title</TableHead>
-
                                 <TableHead>Category</TableHead>
-                                <TableHead> Price</TableHead>
+                                <TableHead>Price</TableHead>
                                 <TableHead>End Date</TableHead>
-
-                                <TableHead> Participants</TableHead>
-
-                                <TableHead className="text-right"> Actions</TableHead>
-
+                                <TableHead>Participants</TableHead>
+                                <TableHead>Revenue</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {challenges.length > 0 ? (
+                            {loading ? (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={9}
+                                        className="px-4 py-8 text-center text-gray-500"
+                                    >
+                                        <RefreshCw className="h-4 w-4 animate-spin mx-auto mb-2" />
+                                        Loading challenges...
+                                    </TableCell>
+                                </TableRow>
+                            ) : challenges.length > 0 ? (
                                 challenges.map((item, index) => (
-                                    <TableRow key={item.id}>
+                                    <TableRow key={item._id}>
                                         <TableCell className="px-4 py-3 font-medium">
-                                            {index + 1}
+                                            {(pagination.page - 1) * pagination.limit + index + 1}
                                         </TableCell>
-                                        <TableCell>  {item.title}</TableCell>
-                                        <TableCell>  {item.category}</TableCell>
-                                        <TableCell>  {item.price}</TableCell>
-                                        <TableCell>  {item.endDate}</TableCell>
-                                        <TableCell>  {item.participants}</TableCell>
+                                        <TableCell>
+                                            <div>
+                                                <div className="font-medium">{item.title}</div>
+                                                <div className="text-xs text-gray-500 truncate max-w-[200px]">
+                                                    {item.description}
+                                                </div>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>{item.category.name}</TableCell>
+                                        <TableCell>{formatPrice(item.price)}</TableCell>
+                                        <TableCell>{formatDate(item.duration)}</TableCell>
+                                        <TableCell>{item.stats.participantsCount}</TableCell>
+                                        <TableCell>{formatPrice(item.stats.totalRevenue)}</TableCell>
 
-
-                                        {/* <TableCell>{setReportFormatDate(item.category)}</TableCell> */}
+                                        <TableCell>{item.status}</TableCell>
                                         <TableCell className="text-right">
                                             <Popover>
                                                 <PopoverTrigger asChild>
                                                     <Button
-                                                        onClick={() =>
-                                                            setModalState((prev) => ({
-                                                                ...prev,
-                                                                currentCategory: item,
-                                                            }))
-                                                        }
                                                         variant="ghost"
                                                         className="h-7 w-7 p-0 hover:bg-muted"
                                                     >
@@ -200,7 +271,7 @@ const Challenge = () => {
                                                 >
                                                     <div className="flex flex-col space-y-1">
                                                         <button
-                                                            onClick={() => navigation(`/challenge/${item.id}`)}
+                                                            onClick={() => navigation(`/challenge/${item._id}`)}
                                                             className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
                                                         >
                                                             <Eye className="h-3.5 w-3.5" />
@@ -209,6 +280,7 @@ const Challenge = () => {
                                                         <button
                                                             className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
                                                             onClick={() => handleOpenDeleteModal(item)}
+                                                            disabled={loading}
                                                         >
                                                             <Trash className="h-3.5 w-3.5" />
                                                             <span>Delete</span>
@@ -222,10 +294,10 @@ const Challenge = () => {
                             ) : (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={7}
-                                        className="px-4 py-3 text-center text-gray-500"
+                                        colSpan={9}
+                                        className="px-4 py-8 text-center text-gray-500"
                                     >
-                                        No Challenges found.
+                                        No challenges found. Try refreshing or check your filters.
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -233,19 +305,63 @@ const Challenge = () => {
                     </Table>
                 </div>
 
+                {/* Pagination */}
+                {pagination.totalPages > 1 && (
+                    <div className="flex items-center justify-between px-2 py-4">
+                        <div className="text-sm text-muted-foreground">
+                            Showing {(pagination.page - 1) * pagination.limit + 1} to{' '}
+                            {Math.min(pagination.page * pagination.limit, pagination.totalDocs)} of{' '}
+                            {pagination.totalDocs} results
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handlePageChange(pagination.page - 1)}
+                                disabled={!pagination.hasPrevPage || loading}
+                            >
+                                Previous
+                            </Button>
+                            <div className="flex items-center space-x-1">
+                                {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                                    const pageNumber = i + 1;
+                                    return (
+                                        <Button
+                                            key={pageNumber}
+                                            variant={pagination.page === pageNumber ? "default" : "outline"}
+                                            size="sm"
+                                            onClick={() => handlePageChange(pageNumber)}
+                                            disabled={loading}
+                                        >
+                                            {pageNumber}
+                                        </Button>
+                                    );
+                                })}
+                            </div>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handlePageChange(pagination.page + 1)}
+                                disabled={!pagination.hasNextPage || loading}
+                            >
+                                Next
+                            </Button>
+                        </div>
+                    </div>
+                )}
 
-           {modalState.isDeleteMode && (
-                <DeleteConfirmationModal
-                    isOpen={modalState.isDeleteMode}
-                    onClose={handleCloseModal}
-                    onConfirm={handleDelete}
-                    title="Delete Category"
-                    description={`Are you sure you want to delete "${modalState.currentChallenege?.title}"? This action cannot be undone.`}
-                />
-            )}
+                {modalState.isDeleteMode && (
+                    <DeleteConfirmationModal
+                        isOpen={modalState.isDeleteMode}
+                        onClose={handleCloseModal}
+                        onConfirm={handleDelete}
+                        title="Delete Challenge"
+                        description={`Are you sure you want to delete "${modalState.currentChallenge?.title}"? This action cannot be undone.`}
+                    />
+                )}
             </Main>
         </div>
-    )
-}
+    );
+};
 
-export default Challenge
+export default Challenge;

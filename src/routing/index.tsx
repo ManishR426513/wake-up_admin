@@ -49,6 +49,14 @@ export default function Routing() {
             </PrivateRoute>
           }
         />
+         <Route
+          path="/feed"
+          element={
+            <PrivateRoute>
+              <Challenge />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/challenge/:id"
           element={
