@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Eye, MoreHorizontal, Trash } from 'lucide-react'
+import { Eye, MoreHorizontal, } from 'lucide-react'
 import {
     Popover,
     PopoverContent,
@@ -55,14 +55,7 @@ const Report = () => {
 
 
 
-    const handleOpenDeleteModal = (item: reportInterface): void => {
-        setModalState({
-            isOpen: false,
-            isEditMode: false,
-            isDeleteMode: true,
-            currentData: item,
-        });
-    };
+   
     const handleCloseModal = (): void => {
         setModalState({
             isOpen: false,

@@ -13,7 +13,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { DollarSign, Loader2 } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
 
 const ChallengePrice: React.FC = () => {
   

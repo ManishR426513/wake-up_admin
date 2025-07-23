@@ -31,7 +31,7 @@ const Challenge = () => {
         isOpen: boolean;
         isEditMode: boolean;
         isDeleteMode: boolean;
-        currentChallenege: ChallengeInterface | null;
+        currentChallenege: challengeInterface | null;
     }>({
         isOpen: false,
         isDeleteMode: false,

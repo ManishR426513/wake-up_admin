@@ -1,10 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
-import { Eye, MoreHorizontal, Trash, AlertCircle, CheckCircle } from 'lucide-react'
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
+import {  AlertCircle } from 'lucide-react'
+
 import { Button } from '@/components/ui/Button'
 import {
     Table,
@@ -14,9 +10,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
 import { useNavigate, useParams } from 'react-router-dom'
-import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal'
 import { Main } from '@/components/main'
 import { reportInterface, paginationInterface } from '@/common/allInterface'
 import { useAllContext } from '@/context/AllContext'
@@ -25,12 +19,7 @@ import { toast } from 'sonner'
 import { handleThumbnail, setReportFormatDate } from '@/helper/helper'
 import PaginationComponent from '@/common/PaginationComponent'
 
-interface ModalState {
-    isOpen: boolean
-    isEditMode: boolean
-    isDeleteMode: boolean
-    currentData: reportInterface | null
-}
+
 
 const ITEMS_PER_PAGE = 10
 
@@ -39,12 +28,7 @@ const DetailedReport: React.FC = () => {
     const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
 
-    const [modalState, setModalState] = useState<ModalState>({
-        isOpen: false,
-        isDeleteMode: false,
-        isEditMode: false,
-        currentData: null,
-    })
+   
 
     const [pagination, setPagination] = useState<paginationInterface>({
         totalDocs: 0,
@@ -59,46 +43,17 @@ const DetailedReport: React.FC = () => {
     })
 
     const [reports, setReports] = useState<reportInterface[]>([])
-    const [isResolving, setIsResolving] = useState(false)
     const [isDeletingVideo, setIsDeletingVideo] = useState(false)
 
     // Memoized feed details
     const feedDetails = useMemo(() => reports[0]?.feedId || {}, [reports])
 
     // Modal handlers
-    const handleOpenDeleteModal = (item: reportInterface): void => {
-        setModalState({
-            isOpen: false,
-            isEditMode: false,
-            isDeleteMode: true,
-            currentData: item,
-        })
-    }
+    
 
-    const handleCloseModal = (): void => {
-        setModalState({
-            isOpen: false,
-            isEditMode: false,
-            isDeleteMode: false,
-            currentData: null,
-        })
-    }
+   
 
-    const handleDelete = async (): Promise<void> => {
-        if (!modalState.currentData?._id) return
-
-        try {
-            setloading(true)
-            const response = await authAxios().delete(`/report/${modalState.currentData._id}`)
-            await getAllReports(pagination.page, pagination.limit)
-            toast.success(response.data.message || 'Report deleted successfully')
-        } catch (error: any) {
-            toast.error(error?.response?.data?.message || 'Failed to delete report')
-        } finally {
-            setloading(false)
-            handleCloseModal()
-        }
-    }
+   
 
     // API calls
     const getAllReports = async (page: number = 1, limit: number = ITEMS_PER_PAGE): Promise<void> => {
@@ -158,17 +113,7 @@ const DetailedReport: React.FC = () => {
     }
 
     // Status badge component
-    const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
-        const variant = status === 'resolved' ? 'default' : 'secondary'
-        const icon = status === 'resolved' ? <CheckCircle className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />
-
-        return (
-            <Badge variant={variant} className="flex items-center gap-1">
-                {icon}
-                {status}
-            </Badge>
-        )
-    }
+    
 
     useEffect(() => {
         getAllReports()

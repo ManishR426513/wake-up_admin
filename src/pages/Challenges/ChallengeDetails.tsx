@@ -231,10 +231,11 @@ const ChallengeDetails = () => {
                 
                 <div className="mb-6 flex flex-col md:flex-row items-center gap-6 bg-muted/40 rounded-lg p-5 shadow border border-border">
                     <img
-                        src={!challengeData?.userId?.profilePic 
-                            ? `https://your-base-url/${challengeData.userId.profilePic}` 
-                            : 'https://plus.unsplash.com/premium_photo-1752155109947-539988d49e5d?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-                        }
+                    src='https://plus.unsplash.com/premium_photo-1752624906994-d94727d34c9b?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                        // src={!challengeData?.userId?.profilePic 
+                        //     ? `https://your-base-url/${challengeData.userId.profilePic}` 
+                        //     : 'https://plus.unsplash.com/premium_photo-1752155109947-539988d49e5d?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                        // }
                         alt="Challenge Thumbnail"
                         className="h-24 w-24 rounded-lg object-cover border"
                     />

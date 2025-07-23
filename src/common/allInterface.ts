@@ -83,6 +83,7 @@ export interface transactionInterface {
   provider: string;
   status: string;
   __v: number;
+  createdAt?:string
 }
 
 export interface reportInterface {
