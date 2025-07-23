@@ -27,11 +27,11 @@ export const AllContextProvider: FC<AllContextProviderProps> = ({ children }) =>
 
   return (
     <AllContext.Provider value={{ loading, setloading }}>
-      {/* {loading && (
+      {loading && (
          <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
        <LoaderIcon className="animate-spin" size={60} />
        </div>
-      )} */}
+      )}
       {children}
     </AllContext.Provider>
   );

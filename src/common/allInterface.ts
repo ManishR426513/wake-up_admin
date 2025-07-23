@@ -169,3 +169,36 @@ export interface mediaViewerProps {
   };
   setviewMedia: (state: { open: boolean; media: mediaItem[] }) => void;
 }
+
+export interface feedInterface{
+ _id: string;
+  userId: {
+    _id: string;
+    username: string;
+    profilePic: string;
+  };
+  title: string;
+  media: {
+    url: string;
+    mediaType: "IMAGE" | "VIDEO";
+    mimetype: string;
+    _id: string;
+  }[];
+  thumbnail: string;
+  feedType: "FEED" | string; // You can replace string with other types like "STORY", "AD", etc. if known
+  category: {
+    _id: string;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+  likesCount: number;
+  commentsCount: number;
+  sharesCount: number;
+  views: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}

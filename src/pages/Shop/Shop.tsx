@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 import { handleThumbnail, setReportFormatDate } from '@/helper/helper';
 import { authAxios } from '@/config/config';
-import { paginationInterface, shopInterface, transactionInterface } from '@/common/allInterface';
+import { paginationInterface, shopInterface, } from '@/common/allInterface';
 import { useAllContext } from '@/context/AllContext';
 import { toast } from 'sonner';
 import PaginationComponent from '@/common/PaginationComponent';

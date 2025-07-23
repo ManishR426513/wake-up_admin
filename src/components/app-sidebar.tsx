@@ -7,6 +7,7 @@ import {
   Building,
   Briefcase,
   CreditCard,
+  Newspaper,
 } from "lucide-react"
 
 import { NavUser } from "@/components/nav-user"
@@ -55,6 +56,15 @@ const data = {
         { title: "Plans", url: "/plan" },
         { title: "Wakeup Message", url: "/time" },
         { title: "Report", url: "/report" },
+      ],
+    },
+     {
+      title: "Feed",
+      url: "#",
+      icon: Newspaper,
+      items: [
+        { title: "Content", url: "/feed" },
+       
       ],
     },
     {

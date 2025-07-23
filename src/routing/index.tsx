@@ -17,6 +17,7 @@ import ChallengeDetails from "@/pages/Challenges/ChallengeDetails";
 import Transactions from "@/pages/Transactions/Transactions";
 import Shop from "@/pages/Shop/Shop";
 import WithdrawalRequests from "@/pages/Transactions/Withdrawal";
+import Feed from "@/pages/Feeds/Feed";
 // import Report from "@/pages/Report";
 
 export default function Routing() {
@@ -53,7 +54,7 @@ export default function Routing() {
           path="/feed"
           element={
             <PrivateRoute>
-              <Challenge />
+              <Feed />
             </PrivateRoute>
           }
         />
