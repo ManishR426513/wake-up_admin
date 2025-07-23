@@ -17,7 +17,6 @@ import {
   //useSidebar,
 } from "@/components/ui/sidebar"
 import { NavLink, useNavigate } from "react-router-dom"
-import { handleProfileImage, handleThumbnail } from "@/helper/helper"
 
 export function TeamSwitcher({}: {
   teams: {
