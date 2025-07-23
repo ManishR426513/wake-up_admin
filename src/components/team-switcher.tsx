@@ -48,8 +48,8 @@ export function TeamSwitcher({}: {
                <img src={`${import.meta.env.VITE_IMAGE_VIDEO_URL}/${'app-icon.png'}`} alt="" />
               </div>
               <div onClick={()=>navigate("/")}  className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">Wake Up</span>
-                <span className="truncate text-xs">Enterprises</span>
+                <span className="truncate font-medium">Wake Cup</span>
+                {/* <span className="truncate text-xs">Enterprises</span> */}
               </div>
               {/* <ChevronsUpDown className="ml-auto" /> */}
             </SidebarMenuButton>

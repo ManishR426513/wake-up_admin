@@ -246,7 +246,7 @@ const Transactions = () => {
                                         colSpan={7}
                                         className="px-4 py-3 text-center text-gray-500"
                                     >
-                                        No Transcations found.
+                                        No Results
                                     </TableCell>
                                 </TableRow>
                             )}

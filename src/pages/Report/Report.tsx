@@ -23,6 +23,7 @@ import { authAxios } from '@/config/config';
 import { toast } from 'sonner';
 import { handleThumbnail, setReportFormatDate } from '@/helper/helper';
 import PaginationComponent from '@/common/PaginationComponent';
+import { MediaViewer } from '@/common/MediaViewer';
 const Report = () => {
     const { setloading } = useAllContext();
 
@@ -37,6 +38,13 @@ const Report = () => {
         isEditMode: false,
         currentData: null,
     });
+     const [viewMedia, setviewMedia] = useState<{
+  open: boolean;
+  media: any[]; // Replace `any` with a proper media type if available
+}>({
+  open: false,
+  media: [],
+});
     const [pagination, setPagination] = useState<paginationInterface>({
         totalDocs: 0,
         limit: 10,
@@ -78,7 +86,7 @@ const Report = () => {
         //   console.error("Error deleting category:", error);
         // }
     };
-    const getAllReports = async (page: number = 1, limit: number = 2): Promise<void> => {
+    const getAllReports = async (page: number = 1, limit: number = 10): Promise<void> => {
         setloading(true);
         try {
             const response = await authAxios().get(`/report`, {
@@ -162,7 +170,13 @@ const Report = () => {
                                         <TableCell className="px-4 py-3 font-medium">
                                             {item?.reportType}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell
+                                         onClick={()=>setviewMedia((prev)=>({
+                      ...prev,
+                      media:item?.feedId?.media,
+                      open:!viewMedia.open
+                     }))}
+                     >
                                             <img
                                                 src={handleThumbnail(item?.feedId?.thumbnail)}
                                                 alt="Thumbnail"
@@ -218,14 +232,16 @@ const Report = () => {
                                         colSpan={7}
                                         className="px-4 py-3 text-center text-gray-500"
                                     >
-                                        No reports found.
+                                        No Results
                                     </TableCell>
                                 </TableRow>
                             )}
                         </TableBody>
                     </Table>
                 </div>
-
+ {
+          viewMedia.open&& <MediaViewer viewMedia={viewMedia} setviewMedia={setviewMedia}  />
+        }
                 <PaginationComponent
                     currentPage={pagination.page}
                     totalPages={pagination.totalPages}

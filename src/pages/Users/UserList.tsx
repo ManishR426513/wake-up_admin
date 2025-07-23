@@ -15,7 +15,13 @@ import { toast } from "sonner";
 import { handleProfileImage } from "@/helper/helper";
 import PaginationComponent from "@/common/PaginationComponent";
 import { paginationInterface, userDataInterface } from "@/common/allInterface";
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Eye } from "lucide-react";
 
 
 
@@ -124,9 +130,18 @@ const UserList: React.FC = () => {
                         +{user.countryCode} {user.phoneno}
                       </TableCell>
                       <TableCell>
-                        {user.interest.length > 0
-                          ? user.interest.join(", ")
-                          : "No interests"}
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Eye className="ml-3 w-4 h-4" />
+                            </TooltipTrigger>
+                            {user.interest.length > 0 && (
+                              <TooltipContent>
+                                <p>{user.interest.join(", ")}</p>
+                              </TooltipContent>
+                            )}
+                          </Tooltip>
+                        </TooltipProvider>
                       </TableCell>
                       <TableCell>
                         {user.subscriptions.length > 0 ? (
@@ -145,7 +160,7 @@ const UserList: React.FC = () => {
               ) : (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
-                    No users found
+                  No Results
                   </TableCell>
                 </TableRow>
               )}

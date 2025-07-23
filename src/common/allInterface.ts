@@ -122,3 +122,50 @@ export interface reportInterface {
   updatedAt: string;
   __v: number;
 }
+
+export interface shopInterface{
+   _id: string;
+  userId: {
+    _id: string;
+    username: string;
+    profilePic: string;
+  };
+ media: any[];
+
+  thumbnail: string;
+  feedType: "SHOP";
+  likesCount: number;
+  commentsCount: number;
+  sharesCount: number;
+  views: number;
+  isActive: boolean;
+  shop: {
+    _id: string;
+    title: string;
+    userId: string;
+    description: string;
+    link: string;
+    price: number | null;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  isDeleted: boolean;
+}
+export interface mediaItem {
+  url: string;
+  mediaType: "IMAGE" | "VIDEO";
+  mimetype: string;
+  _id: string;
+}
+
+export interface mediaViewerProps {
+  viewMedia: {
+    open: boolean;
+    media: mediaItem[];
+  };
+  setviewMedia: (state: { open: boolean; media: mediaItem[] }) => void;
+}

@@ -213,7 +213,7 @@ const DetailedReport: React.FC = () => {
                                     <TableCell colSpan={5} className="h-24 text-center">
                                         <div className="flex flex-col items-center justify-center space-y-2">
                                             <AlertCircle className="h-8 w-8 text-muted-foreground" />
-                                            <p className="text-muted-foreground">No reports found</p>
+                                            <p className="text-muted-foreground"> No Results</p>
                                         </div>
                                     </TableCell>
                                 </TableRow>

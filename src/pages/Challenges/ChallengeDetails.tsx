@@ -346,7 +346,7 @@ const ChallengeDetails = () => {
                                         colSpan={10}
                                         className="px-4 py-3 text-center text-gray-500"
                                     >
-                                        No participants found.
+                                        No Results
                                     </TableCell>
                                 </TableRow>
                             )}
