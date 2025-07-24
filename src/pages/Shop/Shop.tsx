@@ -45,7 +45,7 @@ const Shop = () => {
   });
 
 
-  const [filterStatus, setFilterStatus] = useState<string>('ALL');
+  const [filterStatus, setFilterStatus] = useState<string>('');
   // const [filterType, setFilterType] = useState<string>('ALL');
   // const [filterDirection, setFilterDirection] = useState<string>('ALL');
   const [viewMedia, setviewMedia] = useState<{
