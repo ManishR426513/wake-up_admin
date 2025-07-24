@@ -38,13 +38,13 @@ const Report = () => {
         isEditMode: false,
         currentData: null,
     });
-     const [viewMedia, setviewMedia] = useState<{
-  open: boolean;
-  media: any[]; // Replace `any` with a proper media type if available
-}>({
-  open: false,
-  media: [],
-});
+    const [viewMedia, setviewMedia] = useState<{
+        open: boolean;
+        media: any[]; // Replace `any` with a proper media type if available
+    }>({
+        open: false,
+        media: [],
+    });
     const [pagination, setPagination] = useState<paginationInterface>({
         totalDocs: 0,
         limit: 10,
@@ -63,7 +63,7 @@ const Report = () => {
 
 
 
-   
+
     const handleCloseModal = (): void => {
         setModalState({
             isOpen: false,
@@ -167,23 +167,23 @@ const Report = () => {
                                         <TableCell className="px-4 py-3 font-medium">
                                             {(pagination.page - 1) * pagination.limit + index + 1}
                                         </TableCell>
-                                        <TableCell className="px-4 py-3 font-medium">
+                                        <TableCell className="px-4 py-3 font-medium capitalize">
                                             {item?.reportType}
                                         </TableCell>
                                         <TableCell
-                                         onClick={()=>setviewMedia((prev)=>({
-                      ...prev,
-                      media:item?.feedId?.media,
-                      open:!viewMedia.open
-                     }))}
-                     >
+                                            onClick={() => setviewMedia((prev) => ({
+                                                ...prev,
+                                                media: item?.feedId?.media,
+                                                open: !viewMedia.open
+                                            }))}
+                                        >
                                             <img
                                                 src={handleThumbnail(item?.feedId?.thumbnail)}
                                                 alt="Thumbnail"
                                                 style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "8px" }}
                                             />
                                         </TableCell>
-                                        <TableCell>{item.status}</TableCell>
+                                        <TableCell >{item.status}</TableCell>
                                         <TableCell>{setReportFormatDate(item.createdAt)}</TableCell>
                                         <TableCell className="text-right">
                                             <Popover>
@@ -239,9 +239,9 @@ const Report = () => {
                         </TableBody>
                     </Table>
                 </div>
- {
-          viewMedia.open&& <MediaViewer viewMedia={viewMedia} setviewMedia={setviewMedia}  />
-        }
+                {
+                    viewMedia.open && <MediaViewer viewMedia={viewMedia} setviewMedia={setviewMedia} />
+                }
                 <PaginationComponent
                     currentPage={pagination.page}
                     totalPages={pagination.totalPages}

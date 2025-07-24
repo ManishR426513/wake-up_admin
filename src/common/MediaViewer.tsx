@@ -29,7 +29,8 @@ export function MediaViewer({ viewMedia, setviewMedia }: mediaViewerProps) {
                     key={index}
                     className="flex justify-center items-center"
                   >
-                    <div className="max-h-[60vh] w-full flex justify-center items-center">
+
+                    <div className="max-h-[60vh] w-full flex justify-center items-center relative">
                       {item.mediaType === "IMAGE" ? (
                         <img
                           src={handleMedia(item.url)}
@@ -43,17 +44,34 @@ export function MediaViewer({ viewMedia, setviewMedia }: mediaViewerProps) {
                           className="max-h-[60vh] w-full rounded-md"
                         />
                       ) : null}
+
+                      {/* Index shown at the bottom center */}
+                      {
+                        viewMedia.media.length > 1 &&
+                        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-background/70 text-foreground text-xs px-2 py-1 rounded">
+                          {index + 1} / {viewMedia.media.length}
+                        </div>
+                      }
+
                     </div>
                   </CarouselItem>
                 ))}
               </CarouselContent>
 
-              <div className="absolute top-1/2 left-0 transform -translate-y-1/2 z-10">
-                <CarouselPrevious />
-              </div>
-              <div className="absolute top-1/2 right-0 transform -translate-y-1/2 z-10">
-                <CarouselNext />
-              </div>
+              {
+                viewMedia.media.length > 1 && (
+                  <>
+                    <div className="absolute top-1/2 left-0 transform -translate-y-1/2 z-10">
+                      <CarouselPrevious />
+                    </div>
+                    <div className="absolute top-1/2 right-0 transform -translate-y-1/2 z-10">
+                      <CarouselNext />
+                    </div></>
+
+                )
+              }
+
+
             </Carousel>
           </div>
         ) : (

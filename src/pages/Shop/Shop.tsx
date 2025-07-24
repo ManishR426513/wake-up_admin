@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Eye, MoreHorizontal, Filter } from 'lucide-react'
+import {  MoreHorizontal, Filter, Trash2, EyeIcon } from 'lucide-react'
 import {
   Popover,
   PopoverContent,
@@ -16,13 +16,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { handleThumbnail, setReportFormatDate } from '@/helper/helper';
+import { handleLink, handleThumbnail, setReportFormatDate } from '@/helper/helper';
 import { authAxios } from '@/config/config';
-import { paginationInterface, shopInterface, } from '@/common/allInterface';
+import { modalInterface, paginationInterface, shopInterface, } from '@/common/allInterface';
 import { useAllContext } from '@/context/AllContext';
 import { toast } from 'sonner';
 import PaginationComponent from '@/common/PaginationComponent';
 import { MediaViewer } from '@/common/MediaViewer';
+import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
 
 
 
@@ -30,23 +31,43 @@ import { MediaViewer } from '@/common/MediaViewer';
 const Shop = () => {
   const { setloading } = useAllContext();
 
+  const [modalState, setmodalState] = useState<
+    // {
+    //   isOpen: boolean;
+    //   isDeleteMode: boolean;
+    //   data: feedInterface | null;
+    // }
+    modalInterface
+  >({
+    isOpen: false,
+    isDeleteMode: false,
+    data: null,
+  });
 
 
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
-  const [filterType, setFilterType] = useState<string>('ALL');
-  const [filterDirection, setFilterDirection] = useState<string>('ALL');
- const [viewMedia, setviewMedia] = useState<{
-  open: boolean;
-  media: any[]; // Replace `any` with a proper media type if available
-}>({
-  open: false,
-  media: [],
-});
+  // const [filterType, setFilterType] = useState<string>('ALL');
+  // const [filterDirection, setFilterDirection] = useState<string>('ALL');
+  const [viewMedia, setviewMedia] = useState<{
+    open: boolean;
+    media: any[]; // Replace `any` with a proper media type if available
+  }>({
+    open: false,
+    media: [],
+  });
 
 
   const [shops, setshops] = useState<shopInterface[]>([
 
   ]);
+
+  const handleCloseModal = () => {
+    setmodalState((prev) => ({
+      ...prev,
+      isDeleteMode: false,
+      data: null
+    }))
+  }
 
   const [pagination, setPagination] = useState<paginationInterface>({
     totalDocs: 0,
@@ -61,14 +82,12 @@ const Shop = () => {
   });
 
 
-  const getAllTranscations = async (page: number = 1, limit: number = 10): Promise<void> => {
+  const getAllShops = async (page: number = 1, limit: number = 10): Promise<void> => {
     setloading(true);
     try {
       const response = await authAxios().get(`/shop`, {
         params: {
-          // status:filterStatus,
-          // type:filterType,
-          // direction:filterDirection,
+          isDeleted:filterStatus,
           page: page,
           limit: limit
         }
@@ -77,7 +96,7 @@ const Shop = () => {
 
       console.log("fvddaa", data)
       setshops(data.docs)
-      // setshops(data.docs)
+
 
       setPagination({
         totalDocs: data.totalDocs,
@@ -96,13 +115,27 @@ const Shop = () => {
       setloading(false);
     }
   }
+  console.log("modal", modalState)
+
+  const handleDelete = async (): Promise<void> => {
+    try {
+      const response = await authAxios().put(`/shop/${modalState?.data?._id}`, { isDeleted: !modalState?.data?.isDeleted, });
+
+      await getAllShops()
+      handleCloseModal();
+
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
+  }
   const handlePageChange = (newPage: number) => {
-    getAllTranscations(newPage, pagination.limit);
+    getAllShops(newPage, pagination.limit);
   };
 
   useEffect(() => {
-    getAllTranscations()
-  }, [])
+    getAllShops()
+  }, [filterStatus])
 
 
   return (
@@ -110,9 +143,9 @@ const Shop = () => {
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Transcations</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>Shop</h2>
             <p className='text-muted-foreground'>
-              Here&apos;s a list of your all financial shops
+              Here&apos;s a list of your all  Shops
             </p>
           </div>
         </div>
@@ -133,14 +166,13 @@ const Shop = () => {
                   onChange={(e) => setFilterStatus(e.target.value)}
                   className="w-full sm:w-auto px-3 py-2 border border-border rounded-md text-sm bg-background"
                 >
-                  <option value="ALL">All Status</option>
-                  <option value="SUCCESS">Success</option>
-                  <option value="PENDING">Pending</option>
-                  <option value="FAILED">Failed</option>
+                  <option value="">All</option>
+                  <option value="false">Active</option>
+                  <option value="true">Not Active</option>
                 </select>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+              {/* <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
                 <label className="text-sm font-medium text-muted-foreground sm:sr-only" htmlFor="typeFilter">
                   Type
                 </label>
@@ -175,7 +207,7 @@ const Shop = () => {
                   <option value="INCOMING">Incoming</option>
                   <option value="OUTGOING">Outgoing</option>
                 </select>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -190,7 +222,7 @@ const Shop = () => {
                 <TableHead>link</TableHead>
 
                 <TableHead> Media</TableHead>
-                <TableHead> Active</TableHead>
+                {/* <TableHead> Active</TableHead> */}
                 <TableHead> Date</TableHead>
 
                 <TableHead className="text-right"> Actions</TableHead>
@@ -204,19 +236,20 @@ const Shop = () => {
                     <TableCell className="px-4 py-3 font-medium">
                       {index + 1}
                     </TableCell>
-
-
                     <TableCell>  {item?.shop?.title}</TableCell>
                     <TableCell>  {item?.shop?.description}</TableCell>
-                    <TableCell>  {item?.shop.link}</TableCell>
-                    <TableCell 
-                     onClick={()=>setviewMedia((prev)=>({
-                      ...prev,
-                      media:item.media,
-                      open:!viewMedia.open
-                     }))}
+                    <TableCell onClick={() => window.open(handleLink(item?.shop?.link), '_blank')}>
+                      <EyeIcon />
+                    </TableCell>
+
+                    <TableCell
+                      onClick={() => setviewMedia((prev) => ({
+                        ...prev,
+                        media: item.media,
+                        open: !viewMedia.open
+                      }))}
                     ><img src={handleThumbnail(item?.thumbnail)} width={50} height={50} />   </TableCell>
-                    <TableCell>  {item.isActive ? 'True' : 'False'}</TableCell>
+                    {/* <TableCell>  {item.isActive ? 'True' : 'False'}</TableCell> */}
                     <TableCell>  {setReportFormatDate(item?.createdAt)}</TableCell>
 
 
@@ -225,12 +258,7 @@ const Shop = () => {
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
-                            // onClick={() =>
-                            //     setModalState((prev) => ({
-                            //         ...prev,
-                            //         currentCategory: item,
-                            //     }))
-                            // }
+
                             variant="ghost"
                             className="h-7 w-7 p-0 hover:bg-muted"
                           >
@@ -241,7 +269,7 @@ const Shop = () => {
                           side="left"
                           className="w-28 p-1 bg-popover border border-border shadow-md"
                         >
-                          <div className="flex flex-col space-y-1">
+                          {/* <div className="flex flex-col space-y-1">
                             <button
                               // onClick={() => navigation(`/challenge/${item.id}`)}
                               className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
@@ -250,7 +278,40 @@ const Shop = () => {
                               <span>View</span>
                             </button>
 
+                          </div> */}
+                          <div className="flex flex-col space-y-1">
+                            {item.isDeleted ? (
+                              <button
+                                onClick={() =>
+                                  setmodalState((prev: any) => ({
+                                    ...prev,
+                                    isDeleteMode: true,
+                                    data: item,
+                                  }))
+                                }
+                                className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                                <span>Recover</span>
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() =>
+                                  setmodalState((prev: any) => ({
+                                    ...prev,
+                                    isDeleteMode: true,
+                                    data: item,
+                                  }))
+                                }
+                                className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                                <span>Delete</span>
+                              </button>
+                            )}
+
                           </div>
+
                         </PopoverContent>
                       </Popover>
                     </TableCell>
@@ -270,7 +331,7 @@ const Shop = () => {
           </Table>
         </div>
         {
-          viewMedia.open&& <MediaViewer viewMedia={viewMedia} setviewMedia={setviewMedia}  />
+          viewMedia.open && <MediaViewer viewMedia={viewMedia} setviewMedia={setviewMedia} />
         }
         <PaginationComponent
           currentPage={pagination.page}
@@ -281,6 +342,18 @@ const Shop = () => {
           totalDocs={pagination.totalDocs}
           limit={pagination.limit}
         />
+        {modalState.isDeleteMode && (
+          <DeleteConfirmationModal
+
+            isOpen={modalState.isDeleteMode}
+            onClose={handleCloseModal}
+            onConfirm={handleDelete}
+            title={`${modalState?.data?.isDeleted ? "Recover" : "Delete"} Shop`}
+
+            description={`Are you sure you want to delete ${modalState.data?.shop?.title}? This action cannot be undone.`}
+            recover={modalState?.data?.isDeleted}
+          />
+        )}
       </Main>
 
     </div>

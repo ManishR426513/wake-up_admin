@@ -55,7 +55,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel></SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
           const isOpen = openGroups.includes(item.title)

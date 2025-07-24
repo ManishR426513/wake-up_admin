@@ -26,3 +26,7 @@ export const handleMedia = (data: string) => {
     ? `${import.meta.env.VITE_IMAGE_VIDEO_URL}/${data}`
     : `${import.meta.env.VITE_IMAGE_VIDEO_URL}/${data}`
 };
+
+export const handleLink=(data:string)=>{
+ return data.includes("https://") ? data : `https://${data}`
+}

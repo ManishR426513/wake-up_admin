@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react'
-import { Eye, MoreHorizontal, Filter } from 'lucide-react'
+import { useEffect, useState } from "react";
+import {  MoreHorizontal, Filter, Trash2 } from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Button } from '@/components/ui/Button';
+import { Button } from "@/components/ui/Button";
 
-import { Main } from '@/components/main';
+import { Main } from "@/components/main";
 import {
   Table,
   TableBody,
@@ -16,25 +16,33 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { handleThumbnail, setReportFormatDate } from '@/helper/helper';
-import { authAxios } from '@/config/config';
-import { paginationInterface, feedInterface, } from '@/common/allInterface';
-import { useAllContext } from '@/context/AllContext';
-import { toast } from 'sonner';
-import PaginationComponent from '@/common/PaginationComponent';
-import { MediaViewer } from '@/common/MediaViewer';
-
-
-
+import { handleThumbnail, setReportFormatDate } from "@/helper/helper";
+import { authAxios } from "@/config/config";
+import { paginationInterface, feedInterface, modalInterface } from "@/common/allInterface";
+import { useAllContext } from "@/context/AllContext";
+import { toast } from "sonner";
+import PaginationComponent from "@/common/PaginationComponent";
+import { MediaViewer } from "@/common/MediaViewer";
+import DeleteConfirmationModal from "@/common/Modal/DeleteConfirmationModal";
 
 const Feed = () => {
   const { setloading } = useAllContext();
+  const [modalState, setmodalState] = useState<
+  // {
+  //   isOpen: boolean;
+  //   isDeleteMode: boolean;
+  //   data: feedInterface | null;
+  // }
+  modalInterface
+  >({
+    isOpen: false,
+    isDeleteMode: false,
+    data: null,
+  });
 
-
-
-  const [filterStatus, setFilterStatus] = useState<string>('ALL');
-  const [filterType, setFilterType] = useState<string>('ALL');
-  const [filterDirection, setFilterDirection] = useState<string>('ALL');
+  const [filterStatus, setFilterStatus] = useState<string>("");
+  // const [filterType, setFilterType] = useState<string>("ALL");
+  // const [filterDirection, setFilterDirection] = useState<string>("ALL");
   const [viewMedia, setviewMedia] = useState<{
     open: boolean;
     media: any[]; // Replace `any` with a proper media type if available
@@ -43,10 +51,7 @@ const Feed = () => {
     media: [],
   });
 
-
-  const [shops, setshops] = useState<feedInterface[]>([
-
-  ]);
+  const [feed, setfeed] = useState<feedInterface[]>([]);
 
   const [pagination, setPagination] = useState<paginationInterface>({
     totalDocs: 0,
@@ -60,26 +65,25 @@ const Feed = () => {
     nextPage: null,
   });
 
-
-  const getAllFeeds = async (page: number = 1, limit: number = 10): Promise<void> => {
+  const getAllFeeds = async (
+    page: number = 1,
+    limit: number = 10
+  ): Promise<void> => {
     setloading(true);
     try {
       const response = await authAxios().get(`/feed`, {
         params: {
-          // status:filterStatus,
-          // type:filterType,
-          // direction:filterDirection,
           feedType: "FEED",
           page: page,
           limit: limit,
-
-        }
+          isDeleted:filterStatus
+        },
       });
       const data = response.data.data;
 
-      console.log("fvddaa", data)
-      setshops(data.docs)
-      // setshops(data.docs)
+      console.log("fvddaa", data);
+      setfeed(data.docs);
+      // setfeed(data.docs)
 
       setPagination({
         totalDocs: data.totalDocs,
@@ -97,23 +101,44 @@ const Feed = () => {
     } finally {
       setloading(false);
     }
-  }
+  };
   const handlePageChange = (newPage: number) => {
     getAllFeeds(newPage, pagination.limit);
   };
 
-  useEffect(() => {
-    getAllFeeds()
-  }, [])
+  const handleCloseModal = () => {
+    setmodalState((prev) => ({
+      ...prev,
+      isDeleteMode: false,
+      data: null
+    }))
+  }
 
+
+  const handleDelete = async (): Promise<void> => {
+    try {
+      const response = await authAxios().put(`/feed/${modalState?.data?._id}`, { isDeleted: !modalState?.data?.isDeleted, });
+
+      await getAllFeeds()
+      handleCloseModal();
+
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
+  }
+
+  useEffect(() => {
+    getAllFeeds();
+  }, [filterStatus]);
 
   return (
-    <div >
+    <div>
       <Main>
-        <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
+        <div className="mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4">
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Feeds</h2>
-            <p className='text-muted-foreground'>
+            <h2 className="text-2xl font-bold tracking-tight">Feeds</h2>
+            <p className="text-muted-foreground">
               Here&apos;s a list of your all feeds
             </p>
           </div>
@@ -122,28 +147,31 @@ const Feed = () => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium text-muted-foreground">Filters</span>
+              <span className="text-sm font-medium text-muted-foreground">
+                Filters
+              </span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
-                <label className="text-sm font-medium text-muted-foreground sm:sr-only" htmlFor="statusFilter">
-                  Status
-                </label>
+               
                 <select
                   id="statusFilter"
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
                   className="w-full sm:w-auto px-3 py-2 border border-border rounded-md text-sm bg-background"
                 >
-                  <option value="ALL">All Status</option>
-                  <option value="SUCCESS">Success</option>
-                  <option value="PENDING">Pending</option>
-                  <option value="FAILED">Failed</option>
+                  <option value="">All</option>
+                  <option value="false">Active</option>
+                  <option value="true">Not Active</option>
+                 
                 </select>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
-                <label className="text-sm font-medium text-muted-foreground sm:sr-only" htmlFor="typeFilter">
+              {/* <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+                <label
+                  className="text-sm font-medium text-muted-foreground sm:sr-only"
+                  htmlFor="typeFilter"
+                >
                   Type
                 </label>
                 <select
@@ -164,7 +192,10 @@ const Feed = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
-                <label className="text-sm font-medium text-muted-foreground sm:sr-only" htmlFor="directionFilter">
+                <label
+                  className="text-sm font-medium text-muted-foreground sm:sr-only"
+                  htmlFor="directionFilter"
+                >
                   Direction
                 </label>
                 <select
@@ -177,11 +208,11 @@ const Feed = () => {
                   <option value="INCOMING">Incoming</option>
                   <option value="OUTGOING">Outgoing</option>
                 </select>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
-        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
+        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
           <Table className="w-full border-collapse text-sm">
             <TableHeader>
               <TableRow>
@@ -192,42 +223,48 @@ const Feed = () => {
                 <TableHead>Views</TableHead>
 
                 <TableHead> Media</TableHead>
-                <TableHead> Active</TableHead>
+                {/* <TableHead> Deleted</TableHead> */}
                 <TableHead> Date</TableHead>
 
                 <TableHead className="text-right"> Actions</TableHead>
-
               </TableRow>
             </TableHeader>
             <TableBody>
-              {shops && shops.length > 0 ? (
-                shops.map((item, index) => (
+              {feed && feed.length > 0 ? (
+                feed.map((item, index) => (
                   <TableRow key={item._id}>
                     <TableCell className="px-4 py-3 font-medium">
                       {index + 1}
                     </TableCell>
 
-
-                    <TableCell>  {item?.title}</TableCell>
-                    <TableCell>  {item?.category?.name}</TableCell>
-                    <TableCell>  {item?.views}</TableCell>
+                    <TableCell> {item?.title}</TableCell>
+                    <TableCell> {item?.category?.name}</TableCell>
+                    <TableCell> {item?.views}</TableCell>
                     <TableCell
-                      onClick={() => setviewMedia((prev) => ({
-                        ...prev,
-                        media: item.media,
-                        open: !viewMedia.open
-                      }))}
-                    ><img src={handleThumbnail(item?.thumbnail)} width={50} height={50} />   </TableCell>
-                    <TableCell>  {item.isActive ? 'True' : 'False'}</TableCell>
-                    <TableCell>  {setReportFormatDate(item?.createdAt)}</TableCell>
-
-
+                      onClick={() =>
+                        setviewMedia((prev) => ({
+                          ...prev,
+                          media: item.media,
+                          open: !viewMedia.open,
+                        }))
+                      }
+                    >
+                      <img
+                        src={handleThumbnail(item?.thumbnail)}
+                        width={50}
+                        height={50}
+                      />{" "}
+                    </TableCell>
+                    {/* <TableCell> {item.isDeleted ? "True" : "False"}</TableCell> */}
+                    <TableCell>
+                      {" "}
+                      {setReportFormatDate(item?.createdAt)}
+                    </TableCell>
 
                     <TableCell className="text-right">
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
-                           
                             variant="ghost"
                             className="h-7 w-7 p-0 hover:bg-muted"
                           >
@@ -239,13 +276,36 @@ const Feed = () => {
                           className="w-28 p-1 bg-popover border border-border shadow-md"
                         >
                           <div className="flex flex-col space-y-1">
-                            <button
-                              // onClick={() => navigation(`/challenge/${item.id}`)}
-                              className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
-                            >
-                              <Eye className="h-3.5 w-3.5" />
-                              <span>View</span>
-                            </button>
+                            {item.isDeleted ? (
+                              <button
+                                onClick={() =>
+                                  setmodalState((prev: any) => ({
+                                    ...prev,
+                                    isDeleteMode: true,
+                                    data: item,
+                                  }))
+                                }
+                                className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                                <span>Recover</span>
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() =>
+                                  setmodalState((prev: any) => ({
+                                    ...prev,
+                                    isDeleteMode: true,
+                                    data: item,
+                                  }))
+                                }
+                                className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                                <span>Delete</span>
+                              </button>
+                            )}
+
 
                           </div>
                         </PopoverContent>
@@ -266,9 +326,21 @@ const Feed = () => {
             </TableBody>
           </Table>
         </div>
-        {
-          viewMedia.open && <MediaViewer viewMedia={viewMedia} setviewMedia={setviewMedia} />
-        }
+        {viewMedia.open && (
+          <MediaViewer viewMedia={viewMedia} setviewMedia={setviewMedia} />
+        )}
+        {modalState.isDeleteMode && (
+          <DeleteConfirmationModal
+
+            isOpen={modalState.isDeleteMode}
+            onClose={handleCloseModal}
+            onConfirm={handleDelete}
+            title={`${modalState?.data?.isDeleted ? "Recover" : "Delete"} Feed`}
+
+            description={`Are you sure you want to delete ${modalState.data?.title}? This action cannot be undone.`}
+            recover={modalState?.data?.isDeleted}
+          />
+        )}
         <PaginationComponent
           currentPage={pagination.page}
           totalPages={pagination.totalPages}
@@ -279,7 +351,6 @@ const Feed = () => {
           limit={pagination.limit}
         />
       </Main>
-
     </div>
   );
 };

@@ -198,7 +198,15 @@ export interface feedInterface{
   sharesCount: number;
   views: number;
   isActive: boolean;
+  isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
   __v: number;
+}
+
+export interface modalInterface{
+    isOpen?: false,
+    isDeleteMode?: false,
+    isEditMode?: false,
+    data?:any
 }

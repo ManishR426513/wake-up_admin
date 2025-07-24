@@ -14,16 +14,20 @@ interface DeleteConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+ 
   title?: string;
   description?: string;
+   recover?: boolean;
 }
 
 const DeleteConfirmationModal: FC<DeleteConfirmationModalProps> = ({
   isOpen,
   onClose,
+ 
   onConfirm,
   title = "Are you absolutely sure?",
   description = "This action cannot be undone. This will permanently delete the item and remove your data from our servers.",
+   recover,
 }) => {
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
@@ -47,7 +51,7 @@ const DeleteConfirmationModal: FC<DeleteConfirmationModalProps> = ({
             onClick={onConfirm}
             className="bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border"
           >
-            Delete
+           {recover ? "Recover" : "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
