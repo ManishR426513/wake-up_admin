@@ -127,7 +127,7 @@ const DetailedReport: React.FC = () => {
                                 className="h-20 w-20 rounded-md border object-cover"
                             />
                             <div className="flex-1 space-y-1">
-                                <h2 className="text-lg font-medium">{feedDetails?.title}</h2>
+                                <h2 className="text-lg font-medium">{feedDetails?.title||feedDetails?.shop?.title}</h2>
                                 <p className="text-sm text-muted-foreground">Feed ID: {id}</p>
                             </div>
                             <div className="flex gap-2">
