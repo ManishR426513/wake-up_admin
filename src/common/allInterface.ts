@@ -239,5 +239,6 @@ export interface modalInterface{
     isOpen?: false,
     isDeleteMode?: false,
     isEditMode?: false,
-    data?:any
+    data?:any,
+    type?:string
 }

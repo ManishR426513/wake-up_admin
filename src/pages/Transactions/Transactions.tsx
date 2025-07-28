@@ -16,7 +16,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { setReportFormatDate } from '@/helper/helper';
+import { handlePrice, setReportFormatDate } from '@/helper/helper';
 import { authAxios } from '@/config/config';
 import { paginationInterface, transactionInterface } from '@/common/allInterface';
 import { useAllContext } from '@/context/AllContext';
@@ -31,9 +31,9 @@ const Transactions = () => {
 
 
 
-    const [filterStatus, setFilterStatus] = useState<string>('ALL');
-    const [filterType, setFilterType] = useState<string>('ALL');
-    const [filterDirection, setFilterDirection] = useState<string>('ALL');
+    const [filterStatus, setFilterStatus] = useState<string>('');
+    const [filterType, setFilterType] = useState<string>('');
+    const [filterDirection, setFilterDirection] = useState<string>('');
 
     const [transactions, settransactions] = useState<transactionInterface[]>([
 
@@ -57,9 +57,9 @@ const Transactions = () => {
         try {
             const response = await authAxios().get(`/transaction/history`, {
                 params: {
-                    // status:filterStatus,
-                    // type:filterType,
-                    // direction:filterDirection,
+                    status:filterStatus,
+                    type:filterType,
+                    direction:filterDirection,
                     page: page,
                     limit: limit
                 }
@@ -92,7 +92,7 @@ const Transactions = () => {
 
     useEffect(() => {
         getAllTranscations()
-    }, [])
+    }, [filterStatus, filterType, filterDirection])
 
 
     return (
@@ -123,10 +123,10 @@ const Transactions = () => {
                                     onChange={(e) => setFilterStatus(e.target.value)}
                                     className="w-full sm:w-auto px-3 py-2 border border-border rounded-md text-sm bg-background"
                                 >
-                                    <option value="ALL">All Status</option>
+                                    <option value=""> Status</option>
                                     <option value="SUCCESS">Success</option>
                                     <option value="PENDING">Pending</option>
-                                    <option value="FAILED">Failed</option>
+                                  
                                 </select>
                             </div>
 
@@ -140,7 +140,7 @@ const Transactions = () => {
                                     onChange={(e) => setFilterType(e.target.value)}
                                     className="w-full sm:w-auto px-3 py-2 border border-border rounded-md text-sm bg-background"
                                 >
-                                    <option value="ALL">All Types</option>
+                                    <option value=""> Types</option>
                                     <option value="SUBSCRIPTION">Subscription</option>
                                     <option value="CHALLENGE">Challenge</option>
                                     <option value="MASTER_CLASS">Master Class</option>
@@ -161,7 +161,7 @@ const Transactions = () => {
                                     onChange={(e) => setFilterDirection(e.target.value)}
                                     className="w-full sm:w-auto px-3 py-2 border border-border rounded-md text-sm bg-background"
                                 >
-                                    <option value="ALL">All Directions</option>
+                                    <option value="ALL"> Directions</option>
                                     <option value="INCOMING">Incoming</option>
                                     <option value="OUTGOING">Outgoing</option>
                                 </select>
@@ -183,7 +183,7 @@ const Transactions = () => {
                                 <TableHead> Status</TableHead>
                                 <TableHead> Date</TableHead>
 
-                                <TableHead className="text-right"> Actions</TableHead>
+                                {/* <TableHead className="text-right"> Actions</TableHead> */}
 
                             </TableRow>
                         </TableHeader>
@@ -197,15 +197,15 @@ const Transactions = () => {
 
 
                                         <TableCell>  {item.transactionType}</TableCell>
-                                        <TableCell>  {item.amount}</TableCell>
+                                        <TableCell>  {handlePrice(item.amount)}</TableCell>
                                         <TableCell>  {item.direction}</TableCell>
                                         <TableCell>  {item.provider}</TableCell>
                                         <TableCell>  {item.status}</TableCell>
-                                        <TableCell>  {setReportFormatDate(item?.createdAt || '2025-07-03T15:05:16.957+00:00')}</TableCell>
+                                        <TableCell>  {setReportFormatDate(item?.createdAt || '')}</TableCell>
 
 
 
-                                        <TableCell className="text-right">
+                                        {/* <TableCell className="text-right">
                                             <Popover>
                                                 <PopoverTrigger asChild>
                                                     <Button
@@ -237,7 +237,7 @@ const Transactions = () => {
                                                     </div>
                                                 </PopoverContent>
                                             </Popover>
-                                        </TableCell>
+                                        </TableCell> */}
                                     </TableRow>
                                 ))
                             ) : (

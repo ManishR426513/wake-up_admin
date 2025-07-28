@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Eye, MoreHorizontal, Filter } from 'lucide-react'
+import { Eye, MoreHorizontal, Filter, Check, X } from 'lucide-react'
 import {
     Popover,
     PopoverContent,
@@ -18,10 +18,13 @@ import {
 } from "@/components/ui/table";
 import { setReportFormatDate } from '@/helper/helper';
 import { authAxios } from '@/config/config';
-import { paginationInterface, withdrawalInterface } from '@/common/allInterface';
+import { modalInterface, paginationInterface, withdrawalInterface } from '@/common/allInterface';
 import { useAllContext } from '@/context/AllContext';
 import { toast } from 'sonner';
 import PaginationComponent from '@/common/PaginationComponent';
+import { Action } from '@radix-ui/react-alert-dialog';
+import ActionWithdrawal from '@/common/Modal/ActionWithdrawal';
+import { data } from 'react-router-dom';
 
 
 
@@ -31,10 +34,24 @@ const WithdrawalRequests = () => {
 
 
 
-    const [filterStatus, setFilterStatus] = useState<string>('ALL');
-    const [filterType, setFilterType] = useState<string>('ALL');
-    const [filterDirection, setFilterDirection] = useState<string>('ALL');
+    // const [filterStatus, setFilterStatus] = useState<string>('ALL');
+    // const [filterType, setFilterType] = useState<string>('ALL');
+    // const [filterDirection, setFilterDirection] = useState<string>('ALL');
 
+
+    const [modalState, setmodalState] = useState<modalInterface>({
+        isOpen: false,
+        type: "",
+        data: {},
+    })
+
+    const handleCloseModal = () => {
+        setmodalState({
+            isOpen: false,
+            type: "",
+            data: {},
+        })
+    }
     const [transactions, settransactions] = useState<withdrawalInterface[]>([
 
     ]);
@@ -90,6 +107,29 @@ const WithdrawalRequests = () => {
         getAllTranscations(newPage, pagination.limit);
     };
 
+    const handleAction = async (data: any) => {
+
+        if (modalState.type == "APPROVE") {
+            await authAxios()
+                .post(`/withdrawal/${modalState?.data._id}/approve`, data)
+                .then((response) => {
+                    toast.success(response.data.message);
+                    getAllTranscations()
+                }).catch((error) => {
+                    toast.error(error?.response?.data?.message);
+                })
+        } else {
+            await authAxios()
+                .post(`/withdrawal/${modalState?.data._id}/reject`,  data )
+                .then((response) => {
+                    toast.success(response.data.message);
+                    getAllTranscations()
+                }).catch((error) => {
+                    toast.error(error?.response?.data?.message);
+                })
+        }
+    }
+
     useEffect(() => {
         getAllTranscations()
     }, [])
@@ -108,7 +148,7 @@ const WithdrawalRequests = () => {
                         </p>
                     </div>
                 </div>
-                <div className="mb-6">
+                {/* <div className="mb-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div className="flex items-center gap-2">
                             <Filter className="h-4 w-4 text-muted-foreground" />
@@ -170,20 +210,18 @@ const WithdrawalRequests = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
                     <Table className="w-full border-collapse text-sm">
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-[100px]">Sno</TableHead>
-
                                 <TableHead>User</TableHead>
                                 <TableHead> Amount</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead> Method</TableHead>
                                 <TableHead>View Details</TableHead>
                                 <TableHead> Date</TableHead>
-
                                 <TableHead className="text-right"> Actions</TableHead>
 
                             </TableRow>
@@ -229,12 +267,7 @@ const WithdrawalRequests = () => {
                                             <Popover>
                                                 <PopoverTrigger asChild>
                                                     <Button
-                                                        // onClick={() =>
-                                                        //     setModalState((prev) => ({
-                                                        //         ...prev,
-                                                        //         currentCategory: item,
-                                                        //     }))
-                                                        // }
+
                                                         variant="ghost"
                                                         className="h-7 w-7 p-0 hover:bg-muted"
                                                     >
@@ -247,12 +280,37 @@ const WithdrawalRequests = () => {
                                                 >
                                                     <div className="flex flex-col space-y-1">
                                                         <button
-                                                            // onClick={() => navigation(`/challenge/${item.id}`)}
+
+                                                            onClick={() =>
+                                                                setmodalState((prev: any) => ({
+                                                                    ...prev,
+                                                                    isOpen: true,
+                                                                    type: "APPROVE",
+                                                                    data: item
+                                                                }))
+                                                            }
+
                                                             className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
                                                         >
-                                                            <Eye className="h-3.5 w-3.5" />
-                                                            <span>View</span>
+                                                            <Check className="h-3.5 w-3.5" />
+                                                            <span>Approve</span>
                                                         </button>
+                                                        <button
+                                                            onClick={() =>
+                                                                setmodalState((prev: any) => ({
+                                                                    ...prev,
+                                                                    isOpen: true,
+                                                                    type: "REJECT",
+                                                                    data: item
+                                                                }))
+                                                            }
+
+                                                            className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
+                                                        >
+                                                            <X className="h-3.5 w-3.5" />
+                                                            <span>Reject</span>
+                                                        </button>
+
 
                                                     </div>
                                                 </PopoverContent>
@@ -273,6 +331,9 @@ const WithdrawalRequests = () => {
                         </TableBody>
                     </Table>
                 </div>
+                {
+                    modalState.isOpen && <ActionWithdrawal isOpen={modalState?.isOpen} modalState={modalState} onClose={handleCloseModal} handleAction={handleAction} />
+                }
                 <PaginationComponent
                     currentPage={pagination.page}
                     totalPages={pagination.totalPages}
