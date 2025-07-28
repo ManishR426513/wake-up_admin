@@ -30,3 +30,7 @@ export const handleMedia = (data: string) => {
 export const handleLink=(data:string)=>{
  return data.includes("https://") ? data : `https://${data}`
 }
+
+export const handlePrice=(data:Number)=>{
+  return `${"€"+data}`
+}

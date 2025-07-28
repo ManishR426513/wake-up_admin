@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 import { setReportFormatDate } from '@/helper/helper';
 import { authAxios } from '@/config/config';
-import { paginationInterface, transactionInterface } from '@/common/allInterface';
+import { paginationInterface, withdrawalInterface } from '@/common/allInterface';
 import { useAllContext } from '@/context/AllContext';
 import { toast } from 'sonner';
 import PaginationComponent from '@/common/PaginationComponent';
@@ -35,7 +35,7 @@ const WithdrawalRequests = () => {
     const [filterType, setFilterType] = useState<string>('ALL');
     const [filterDirection, setFilterDirection] = useState<string>('ALL');
 
-    const [transactions, settransactions] = useState<transactionInterface[]>([
+    const [transactions, settransactions] = useState<withdrawalInterface[]>([
 
     ]);
 
@@ -95,12 +95,14 @@ const WithdrawalRequests = () => {
     }, [])
 
 
+
+    console.log("wirhad", transactions)
     return (
         <div >
             <Main>
                 <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
                     <div>
-                        <h2 className='text-2xl font-bold tracking-tight'>Transcations</h2>
+                        <h2 className='text-2xl font-bold tracking-tight'>Withdrawal</h2>
                         <p className='text-muted-foreground'>
                             Here&apos;s a list of your all financial transactions
                         </p>
@@ -175,12 +177,11 @@ const WithdrawalRequests = () => {
                             <TableRow>
                                 <TableHead className="w-[100px]">Sno</TableHead>
 
-                                <TableHead>Type</TableHead>
+                                <TableHead>User</TableHead>
                                 <TableHead> Amount</TableHead>
-                                <TableHead>Direction</TableHead>
-
-                                <TableHead> Provider</TableHead>
-                                <TableHead> Status</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead> Method</TableHead>
+                                <TableHead>View Details</TableHead>
                                 <TableHead> Date</TableHead>
 
                                 <TableHead className="text-right"> Actions</TableHead>
@@ -196,11 +197,30 @@ const WithdrawalRequests = () => {
                                         </TableCell>
 
 
-                                        <TableCell>  {item.transactionType}</TableCell>
+                                        <TableCell>
+                                            {item?.userId?.email}
+                                            <p>  {item?.userId?.fullname}</p>
+                                        </TableCell>
                                         <TableCell>  {item.amount}</TableCell>
-                                        <TableCell>  {item.direction}</TableCell>
-                                        <TableCell>  {item.provider}</TableCell>
                                         <TableCell>  {item.status}</TableCell>
+                                        <TableCell>  {item?.paymentMethod?.type}</TableCell>
+                                        <TableCell>
+                                            {item?.paymentMethod?.type === "PAYPAL" ? (
+                                                <>
+                                                    <div>Email: {item?.paymentMethod?.details?.paypalEmail}</div>
+                                                </>
+                                            ) : item?.paymentMethod?.type === "BANK_ACCOUNT" ? (
+                                                <>
+                                                    <div>Account Holder: {item?.paymentMethod?.details?.accountHolderName}</div>
+                                                    <div>Account Number: {item?.paymentMethod?.details?.accountNumber}</div>
+                                                    <div>Bank Name: {item?.paymentMethod?.details?.bankName}</div>
+                                                    <div>IFSC: {item?.paymentMethod?.details?.ifsc}</div>
+                                                </>
+                                            ) : (
+                                                "-"
+                                            )}
+                                        </TableCell>
+
                                         <TableCell>  {setReportFormatDate(item?.createdAt || '2025-07-03T15:05:16.957+00:00')}</TableCell>
 
 

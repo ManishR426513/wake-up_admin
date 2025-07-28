@@ -86,6 +86,37 @@ export interface transactionInterface {
   createdAt?:string
 }
 
+export interface withdrawalInterface{
+  _id: string;
+  paymentMethod: {
+    type: "PAYPAL" | "BANK_ACCOUNT" | string;
+    details:any,
+  };
+  fees: {
+    netAmount: number;
+    processingFee: number;
+    platformFee: number;
+    totalFees: number;
+  };
+  processing: {
+    attempts: number;
+  };
+  userId: {
+    _id: string;
+    fullname: string;
+    username: string;
+    email: string;
+    profilePic: string;
+  };
+  amount: number;
+  currency: string;
+  status: "PENDING" | "COMPLETED" | "FAILED" | string;
+  requestedAt: string; // ISO date string
+  createdAt: string;   // ISO date string
+  updatedAt: string;   // ISO date string
+  __v: number;
+}
+
 export interface reportInterface {
   _id: string;
   userId: {

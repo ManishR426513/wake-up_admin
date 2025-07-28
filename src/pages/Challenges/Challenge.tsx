@@ -21,7 +21,7 @@ import { challengeInterface, paginationInterface } from '@/common/allInterface';
 import { useAllContext } from '@/context/AllContext';
 import { authAxios } from '@/config/config';
 import { toast } from 'sonner';
-import { setReportFormatDate } from '@/helper/helper';
+import { handlePrice, setReportFormatDate } from '@/helper/helper';
 import PaginationComponent from '@/common/PaginationComponent';
 //import { setReportFormatDate } from '@/helper/helper';
 const Challenge = () => {
@@ -176,7 +176,7 @@ const Challenge = () => {
                                             </div>
                                         </TableCell>
                                         <TableCell>{item?.category?.name}</TableCell>
-                                        <TableCell>${item.price}</TableCell>
+                                        <TableCell>{handlePrice(item.price)}</TableCell>
                                         <TableCell>{setReportFormatDate(item.duration)}</TableCell>
                                         <TableCell>{item?.stats?.participantsCount}</TableCell>
                                         <TableCell>{item?.stats?.totalRevenue}</TableCell>

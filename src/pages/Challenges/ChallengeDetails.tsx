@@ -19,6 +19,8 @@ import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
 import { Main } from '@/components/main';
 import { authAxios } from '@/config/config';
 import { toast } from 'sonner';
+import { handleThumbnail } from '@/helper/helper';
+import { MediaViewer } from '@/common/MediaViewer';
 
 interface ParticipantInterface {
     _id: string;
@@ -99,7 +101,7 @@ const ChallengeDetails = () => {
         isEditMode: false,
         currentParticipant: null,
     });
-    
+
     const [challengeData, setChallengeData] = useState<ChallengeDetailsInterface | null>(null);
     const [participants, setParticipants] = useState<ParticipantInterface[]>([]);
     const [analytics, setAnalytics] = useState<{
@@ -112,7 +114,14 @@ const ChallengeDetails = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     const navigation = useNavigate()
-    const {id} = useParams()
+    const { id } = useParams()
+    const [viewMedia, setviewMedia] = useState<{
+        open: boolean;
+        media: any[]; // Replace `any` with a proper media type if available
+    }>({
+        open: false,
+        media: [],
+    });
 
     const handleOpenDeleteModal = (item: ParticipantInterface): void => {
         setModalState({
@@ -122,7 +131,7 @@ const ChallengeDetails = () => {
             currentParticipant: item,
         });
     };
-    
+
     const handleCloseModal = (): void => {
         setModalState({
             isOpen: false,
@@ -131,7 +140,7 @@ const ChallengeDetails = () => {
             currentParticipant: null,
         });
     };
-    
+
     const handleDelete = async (): Promise<void> => {
         try {
             // Uncomment and implement the delete API call
@@ -140,7 +149,7 @@ const ChallengeDetails = () => {
             // );
             // await getAllChallenges();
             // toast.success(response.data.message);
-            
+
             // For now, just close the modal
             handleCloseModal();
             toast.success("Participant deleted successfully");
@@ -173,7 +182,7 @@ const ChallengeDetails = () => {
             setLoading(true);
             const response = await authAxios().get(`/challenge/${id}`);
             console.log("Fetched challenge data:", response.data);
-            
+
             if (response.data.success && response.data.data) {
                 setChallengeData(response.data.data.challenge);
                 setParticipants(response.data.data.participants || []);
@@ -192,12 +201,7 @@ const ChallengeDetails = () => {
 
     const handleDeleteChallenge = async () => {
         try {
-            // Uncomment and implement the delete challenge API call
-            // const response = await authAxios().delete(`/challenge/${id}`);
-            // toast.success(response.data.message);
-            // navigation('/challenges'); // Navigate back to challenges list
-            
-            // For now, just show a success message
+          
             toast.success("Challenge deleted successfully");
         } catch (error: any) {
             console.error("Error deleting challenge:", error);
@@ -228,10 +232,10 @@ const ChallengeDetails = () => {
                         </p>
                     </div>
                 </div>
-                
+
                 <div className="mb-6 flex flex-col md:flex-row items-center gap-6 bg-muted/40 rounded-lg p-5 shadow border border-border">
                     <img
-                    src='https://plus.unsplash.com/premium_photo-1752624906994-d94727d34c9b?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                        src='https://plus.unsplash.com/premium_photo-1752624906994-d94727d34c9b?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
                         // src={!challengeData?.userId?.profilePic 
                         //     ? `https://your-base-url/${challengeData.userId.profilePic}` 
                         //     : 'https://plus.unsplash.com/premium_photo-1752155109947-539988d49e5d?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
@@ -276,12 +280,12 @@ const ChallengeDetails = () => {
                                 <TableHead>Participant</TableHead>
                                 <TableHead>Username</TableHead>
                                 <TableHead>Email</TableHead>
-                                <TableHead>Feed Title</TableHead>
+                                <TableHead>Media</TableHead>
                                 <TableHead>Likes</TableHead>
                                 <TableHead>Views</TableHead>
                                 <TableHead>Comments</TableHead>
                                 <TableHead>Created Date</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                                {/* <TableHead className="text-right">Actions</TableHead> */}
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -294,12 +298,27 @@ const ChallengeDetails = () => {
                                         <TableCell>{item.userId.fullname}</TableCell>
                                         <TableCell>{item.userId.username}</TableCell>
                                         <TableCell>{item.userId.email}</TableCell>
-                                        <TableCell>{item.feedId.title}</TableCell>
-                                        <TableCell>{item.feedId.likesCount}</TableCell>
-                                        <TableCell>{item.feedId.views}</TableCell>
-                                        <TableCell>{item.feedId.commentsCount}</TableCell>
+                                        {/* <TableCell>{item.feedId.title}</TableCell> */}
+                                        <TableCell
+                                            onClick={() =>
+                                                setviewMedia((prev) => ({
+                                                    ...prev,
+                                                    media: item?.feedId.media,
+                                                    open: !viewMedia.open,
+                                                }))
+                                            }
+                                        >
+                                            <img
+                                                src={handleThumbnail(item?.feedId?.thumbnail)}
+                                                width={50}
+                                                height={50}
+                                            />{" "}
+                                        </TableCell>
+                                        <TableCell>{item?.feedId?.likesCount}</TableCell>
+                                        <TableCell>{item?.feedId?.views}</TableCell>
+                                        <TableCell>{item?.feedId?.commentsCount}</TableCell>
                                         <TableCell>{formatDate(item.createdAt)}</TableCell>
-                                        <TableCell className="text-right">
+                                        {/* <TableCell className="text-right">
                                             <Popover>
                                                 <PopoverTrigger asChild>
                                                     <Button
@@ -337,7 +356,7 @@ const ChallengeDetails = () => {
                                                     </div>
                                                 </PopoverContent>
                                             </Popover>
-                                        </TableCell>
+                                        </TableCell> */}
                                     </TableRow>
                                 ))
                             ) : (
@@ -353,6 +372,9 @@ const ChallengeDetails = () => {
                         </TableBody>
                     </Table>
                 </div>
+                {viewMedia.open && (
+                    <MediaViewer viewMedia={viewMedia} setviewMedia={setviewMedia} />
+                )}
 
                 {modalState.isDeleteMode && (
                     <DeleteConfirmationModal

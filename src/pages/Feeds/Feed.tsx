@@ -27,6 +27,7 @@ import DeleteConfirmationModal from "@/common/Modal/DeleteConfirmationModal";
 
 const Feed = () => {
   const { setloading } = useAllContext();
+  
   const [modalState, setmodalState] = useState<
   // {
   //   isOpen: boolean;
