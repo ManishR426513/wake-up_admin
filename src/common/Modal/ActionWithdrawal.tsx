@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 
-interface ModalState {
-    type: "APPROVE" | "REJECT";
-    data?: any;
-}
+// interface ModalState {
+//     type: "APPROVE" | "REJECT";
+//     data?: any;
+// }
 
 interface WithdrawalModalProps {
     isOpen: boolean;
-    modalState: ModalState;
+    modalState: any;
     onClose: () => void;
     handleAction: (payload: { adminNotes?: string; referenceNumber?: string; rejectReason?: string }) => Promise<void>;
 }

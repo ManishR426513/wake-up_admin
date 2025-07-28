@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Eye, MoreHorizontal, Filter, Check, X } from 'lucide-react'
+import {  MoreHorizontal,  Check, X } from 'lucide-react'
 import {
     Popover,
     PopoverContent,
@@ -22,9 +22,7 @@ import { modalInterface, paginationInterface, withdrawalInterface } from '@/comm
 import { useAllContext } from '@/context/AllContext';
 import { toast } from 'sonner';
 import PaginationComponent from '@/common/PaginationComponent';
-import { Action } from '@radix-ui/react-alert-dialog';
 import ActionWithdrawal from '@/common/Modal/ActionWithdrawal';
-import { data } from 'react-router-dom';
 
 
 
@@ -331,9 +329,15 @@ const WithdrawalRequests = () => {
                         </TableBody>
                     </Table>
                 </div>
-                {
-                    modalState.isOpen && <ActionWithdrawal isOpen={modalState?.isOpen} modalState={modalState} onClose={handleCloseModal} handleAction={handleAction} />
-                }
+                {modalState.isOpen && (
+    <ActionWithdrawal
+        isOpen={modalState.isOpen}
+        modalState={modalState}
+        onClose={handleCloseModal}
+        handleAction={handleAction}
+    />
+)}
+
                 <PaginationComponent
                     currentPage={pagination.page}
                     totalPages={pagination.totalPages}

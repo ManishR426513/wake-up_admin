@@ -235,10 +235,11 @@ export interface feedInterface{
   __v: number;
 }
 
-export interface modalInterface{
-    isOpen?: false,
-    isDeleteMode?: false,
-    isEditMode?: false,
-    data?:any,
-    type?:string
+export interface modalInterface {
+    isOpen: boolean;           // true when modal is open
+    isDeleteMode?: boolean;    // optional delete mode
+    isEditMode?: boolean;      // optional edit mode
+    data?: any;                // holds the data for modal
+    type?: string | null;      // APPROVE | REJECT | etc.
 }
+

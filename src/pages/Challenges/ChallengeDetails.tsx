@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Eye, MoreHorizontal, Trash } from 'lucide-react'
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { Button } from '@/components/ui/Button';
 import {
     Table,
@@ -14,8 +9,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useNavigate, useParams } from 'react-router-dom';
-import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
+import {  useParams } from 'react-router-dom';
+//import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
 import { Main } from '@/components/main';
 import { authAxios } from '@/config/config';
 import { toast } from 'sonner';
@@ -90,17 +85,17 @@ interface ChallengeDetailsInterface {
 }
 
 const ChallengeDetails = () => {
-    const [modalState, setModalState] = useState<{
-        isOpen: boolean;
-        isEditMode: boolean;
-        isDeleteMode: boolean;
-        currentParticipant: ParticipantInterface | null;
-    }>({
-        isOpen: false,
-        isDeleteMode: false,
-        isEditMode: false,
-        currentParticipant: null,
-    });
+    // const [modalState, setModalState] = useState<{
+    //     isOpen: boolean;
+    //     isEditMode: boolean;
+    //     isDeleteMode: boolean;
+    //     currentParticipant: ParticipantInterface | null;
+    // }>({
+    //     isOpen: false,
+    //     isDeleteMode: false,
+    //     isEditMode: false,
+    //     currentParticipant: null,
+    // });
 
     const [challengeData, setChallengeData] = useState<ChallengeDetailsInterface | null>(null);
     const [participants, setParticipants] = useState<ParticipantInterface[]>([]);
@@ -113,7 +108,6 @@ const ChallengeDetails = () => {
     const [revenue, setRevenue] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(true);
 
-    const navigation = useNavigate()
     const { id } = useParams()
     const [viewMedia, setviewMedia] = useState<{
         open: boolean;
@@ -123,41 +117,47 @@ const ChallengeDetails = () => {
         media: [],
     });
 
-    const handleOpenDeleteModal = (item: ParticipantInterface): void => {
-        setModalState({
-            isOpen: false,
-            isEditMode: false,
-            isDeleteMode: true,
-            currentParticipant: item,
-        });
-    };
+    // const handleOpenDeleteModal = (item: ParticipantInterface): void => {
+    //     setModalState({
+    //         isOpen: false,
+    //         isEditMode: false,
+    //         isDeleteMode: true,
+    //         currentParticipant: item,
+    //     });
+    // };
 
-    const handleCloseModal = (): void => {
-        setModalState({
-            isOpen: false,
-            isEditMode: false,
-            isDeleteMode: false,
-            currentParticipant: null,
-        });
-    };
+    // const handleCloseModal = (): void => {
+    //     setModalState({
+    //         isOpen: false,
+    //         isEditMode: false,
+    //         isDeleteMode: false,
+    //         currentParticipant: null,
+    //     });
+    // };
 
-    const handleDelete = async (): Promise<void> => {
-        try {
-            // Uncomment and implement the delete API call
-            // const response = await authAxios().delete(
-            //     `/participant/${modalState?.currentParticipant?._id}`
-            // );
-            // await getAllChallenges();
-            // toast.success(response.data.message);
+    // const handleDelete = async (): Promise<void> => {
+    //     try {
+    //         setModalState({
+    //             isOpen: false,
+    //             isEditMode: false,
+    //             isDeleteMode: false,
+    //             currentParticipant: null,
+    //         })
+    //         // Uncomment and implement the delete API call
+    //         // const response = await authAxios().delete(
+    //         //     `/participant/${modalState?.currentParticipant?._id}`
+    //         // );
+    //         // await getAllChallenges();
+    //         // toast.success(response.data.message);
 
-            // For now, just close the modal
-            handleCloseModal();
-            toast.success("Participant deleted successfully");
-        } catch (error) {
-            console.error("Error deleting participant:", error);
-            toast.error("Failed to delete participant");
-        }
-    };
+    //         // For now, just close the modal
+    //        // handleCloseModal();
+    //         toast.success("Participant deleted successfully");
+    //     } catch (error) {
+    //         console.error("Error deleting participant:", error);
+    //         toast.error("Failed to delete participant");
+    //     }
+    // };
 
     const formatDate = (dateString: string): string => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -376,15 +376,15 @@ const ChallengeDetails = () => {
                     <MediaViewer viewMedia={viewMedia} setviewMedia={setviewMedia} />
                 )}
 
-                {modalState.isDeleteMode && (
+                {/* {modalState.isDeleteMode && (
                     <DeleteConfirmationModal
-                        isOpen={modalState.isDeleteMode}
-                        onClose={handleCloseModal}
-                        onConfirm={handleDelete}
+                      //  isOpen={modalState.isDeleteMode}
+                       // onClose={handleCloseModal}
+                        //onConfirm={handleDelete}
                         title="Remove Participant"
                         description={`Are you sure you want to remove "${modalState.currentParticipant?.userId.fullname}" from this challenge? This action cannot be undone.`}
                     />
-                )}
+                )} */}
             </Main>
         </div>
     )
