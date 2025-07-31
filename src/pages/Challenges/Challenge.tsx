@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Eye, MoreHorizontal, Trash } from 'lucide-react'
+import { Eye, MoreHorizontal } from 'lucide-react'
 import {
     Popover,
     PopoverContent,
@@ -56,14 +56,14 @@ const Challenge = () => {
 
 
 
-    const handleOpenDeleteModal = (item: challengeInterface): void => {
-        setModalState({
-            isOpen: false,
-            isEditMode: false,
-            isDeleteMode: true,
-            currentChallenege: item,
-        });
-    };
+    // const handleOpenDeleteModal = (item: challengeInterface): void => {
+    //     setModalState({
+    //         isOpen: false,
+    //         isEditMode: false,
+    //         isDeleteMode: true,
+    //         currentChallenege: item,
+    //     });
+    // };
     const handleCloseModal = (): void => {
         setModalState({
             isOpen: false,
@@ -212,13 +212,13 @@ const Challenge = () => {
                                                             <Eye className="h-3.5 w-3.5" />
                                                             <span>View</span>
                                                         </button>
-                                                        <button
+                                                        {/* <button
                                                             className="flex items-center space-x-2 px-2 py-1 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
                                                             onClick={() => handleOpenDeleteModal(item)}
                                                         >
                                                             <Trash className="h-3.5 w-3.5" />
                                                             <span>Delete</span>
-                                                        </button>
+                                                        </button> */}
                                                     </div>
                                                 </PopoverContent>
                                             </Popover>

@@ -202,12 +202,25 @@ const ChallengeDetails = () => {
     const handleDeleteChallenge = async () => {
         try {
           
-            toast.success("Challenge deleted successfully");
+          const response = await authAxios().delete(`/challenge/${id}`);
+            
+            toast.success(response.data.message);
         } catch (error: any) {
             console.error("Error deleting challenge:", error);
             toast.error(error?.response?.data?.message || "Failed to delete challenge.");
         }
     };
+
+    const handleForceCompleteChallenge = async () => {
+        try {
+            const response = await authAxios().post(`/challenge/${id}/force-complete`);
+            console.log("rea",response)
+           toast.success(response.data.message);
+        } catch (error: any) {
+            console.error("Error completing challenge:", error);
+            toast.error(error?.response?.data?.message || "Failed to complete challenge.");
+        }
+    }
 
     if (loading) {
         return (
@@ -264,6 +277,11 @@ const ChallengeDetails = () => {
                                 <span>Revenue: ${revenue}</span>
                             </div>
                         )}
+                    </div>
+                     <div className="mt-4 md:mt-0 md:ml-auto">
+                        <Button className='bg-green-800 text-white' onClick={handleForceCompleteChallenge}>
+                             Complete  Challenge
+                        </Button>
                     </div>
                     <div className="mt-4 md:mt-0 md:ml-auto">
                         <Button variant="destructive" onClick={handleDeleteChallenge}>
