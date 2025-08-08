@@ -1,165 +1,67 @@
-import { LoginForm } from "@/common/Login";
-import { BrowserRouter as Router, Route, Routes } from "react-router";
+import { BrowserRouter as Router, Routes, Route } from "react-router";
 import PrivateRoute from "./PrivateRoute";
+
+// Public pages
+import { LoginForm } from "@/common/Login";
 import PageNotFound from "@/common/PageNotFound";
-import UserList from "@/pages/Users/UserList";
+
+// Private pages
 import Dashboard from "@/pages/dashboard";
-import Category from "@/pages/Category/Category";
-import Plans from "@/pages/Plans/Plans";
-import Chats from "@/pages/chats";
-import ChallengePrice from "@/pages/PriceRange/ChallengePrice";
-import Report from "@/pages/Report/Report";
-import DetailedReport from "@/pages/Report/DetailedReport";
-import ShopPrice from "@/pages/PriceRange/ShopPrice";
 import WakeupTimer from "@/pages/WakeupMessage";
 import Challenge from "@/pages/Challenges/Challenge";
 import ChallengeDetails from "@/pages/Challenges/ChallengeDetails";
-import Transactions from "@/pages/Transactions/Transactions";
-import Shop from "@/pages/Shop/Shop";
-import WithdrawalRequests from "@/pages/Transactions/Withdrawal";
 import Feed from "@/pages/Feeds/Feed";
-// import Report from "@/pages/Report";
+import UserList from "@/pages/Users/UserList";
+import Chats from "@/pages/chats";
+import Plans from "@/pages/Plans/Plans";
+import Category from "@/pages/Category/Category";
+import ChallengePrice from "@/pages/PriceRange/ChallengePrice";
+import ShopPrice from "@/pages/PriceRange/ShopPrice";
+import Report from "@/pages/Report/Report";
+import DetailedReport from "@/pages/Report/DetailedReport";
+import Transactions from "@/pages/Transactions/Transactions";
+import WithdrawalRequests from "@/pages/Transactions/Withdrawal";
+import Shop from "@/pages/Shop/Shop";
+import Teacher from "@/pages/Teacher/Teacher";
+
+const privateRoutes = [
+  { path: "/", element: <Dashboard /> },
+  { path: "/time", element: <WakeupTimer /> },
+  { path: "/challenge", element: <Challenge /> },
+  { path: "/feed", element: <Feed /> },
+  { path: "/challenge/:id", element: <ChallengeDetails /> },
+  { path: "/users", element: <UserList /> },
+  { path: "/chat", element: <Chats /> },
+  { path: "/plan", element: <Plans /> },
+  { path: "/category", element: <Category /> },
+  { path: "/challenge-price", element: <ChallengePrice /> },
+  { path: "/shop-price", element: <ShopPrice /> },
+  { path: "/report", element: <Report /> },
+  { path: "/report/:id", element: <DetailedReport /> },
+  { path: "/transactions", element: <Transactions /> },
+  { path: "/withdrawal", element: <WithdrawalRequests /> },
+  { path: "/shop", element: <Shop /> },
+  { path: "/teacher", element: <Teacher /> },
+];
 
 export default function Routing() {
   return (
     <Router>
       <Routes>
+        {/* Public Routes */}
         <Route path="/login" element={<LoginForm />} />
+
+        {/* Private Routes */}
+        {privateRoutes.map(({ path, element }) => (
+          <Route
+            key={path}
+            path={path}
+            element={<PrivateRoute>{element}</PrivateRoute>}
+          />
+        ))}
+
+        {/* 404 Page */}
         <Route path="*" element={<PageNotFound />} />
-        <Route
-          path="/"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/time"
-          element={
-            <PrivateRoute>
-              <WakeupTimer />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/challenge"
-          element={
-            <PrivateRoute>
-              <Challenge />
-            </PrivateRoute>
-          }
-        />
-         <Route
-          path="/feed"
-          element={
-            <PrivateRoute>
-              <Feed />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/challenge/:id"
-          element={
-            <PrivateRoute>
-              <ChallengeDetails />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/users"
-          element={
-            <PrivateRoute>
-              <UserList />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/chat"
-          element={
-            <PrivateRoute>
-              <Chats />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/plan"
-          element={
-            <PrivateRoute>
-              <Plans />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/category"
-          element={
-            <PrivateRoute>
-              <Category />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/challenge-price"
-          element={
-            <PrivateRoute>
-              <ChallengePrice />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/shop-price"
-          element={
-            <PrivateRoute>
-              <ShopPrice />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/report"
-          element={
-            <PrivateRoute>
-              <Report />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/transactions"
-          element={
-            <PrivateRoute>
-              <Transactions />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/report/:id"
-          element={
-            <PrivateRoute>
-              <DetailedReport />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/withdrawal"
-          element={
-            <PrivateRoute>
-              <WithdrawalRequests />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/shop"
-          element={
-            <PrivateRoute>
-              <Shop />
-            </PrivateRoute>
-          }
-        />
-
-        {/* <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} /> */}
       </Routes>
     </Router>
   );

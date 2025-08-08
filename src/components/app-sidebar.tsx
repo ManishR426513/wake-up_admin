@@ -86,6 +86,15 @@ const data = {
       ],
     },
     {
+      title: "Teacher",
+      url: "#",
+      icon: ShoppingCart,
+      items: [
+        { title: "Teacher", url: "/teacher" },
+        // { title: "Range", url: "/shop-price" },
+      ],
+    },
+    {
       title: "Transactions",
       url: "#",
       icon: CreditCard, // Updated from ShoppingCart
