@@ -23,6 +23,9 @@ import Transactions from "@/pages/Transactions/Transactions";
 import WithdrawalRequests from "@/pages/Transactions/Withdrawal";
 import Shop from "@/pages/Shop/Shop";
 import Teacher from "@/pages/Teacher/Teacher";
+import TeacherPrice from "@/pages/PriceRange/TeacherPrice";
+import Sport from "@/pages/Sports/Sport";
+import SportPrice from "@/pages/PriceRange/SportPrice";
 
 const privateRoutes = [
   { path: "/", element: <Dashboard /> },
@@ -36,12 +39,15 @@ const privateRoutes = [
   { path: "/category", element: <Category /> },
   { path: "/challenge-price", element: <ChallengePrice /> },
   { path: "/shop-price", element: <ShopPrice /> },
+  { path: "/teacher-price", element: <TeacherPrice /> },
   { path: "/report", element: <Report /> },
   { path: "/report/:id", element: <DetailedReport /> },
   { path: "/transactions", element: <Transactions /> },
   { path: "/withdrawal", element: <WithdrawalRequests /> },
   { path: "/shop", element: <Shop /> },
   { path: "/teacher", element: <Teacher /> },
+  { path: "/sport", element: <Sport /> },
+  { path: "/sport-price", element: <SportPrice /> },
 ];
 
 export default function Routing() {
