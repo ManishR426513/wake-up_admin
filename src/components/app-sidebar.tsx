@@ -91,13 +91,22 @@ const data = {
       icon: ShoppingCart,
       items: [
         { title: "Teacher", url: "/teacher" },
-        // { title: "Range", url: "/shop-price" },
+        { title: "Range", url: "/teacher-price" },
+      ],
+    },
+    {
+      title: "Sport",
+      url: "#",
+      icon: Swords,
+      items: [
+        { title: "Sport", url: "/sport" },
+        { title: "Range", url: "/sport-price" },
       ],
     },
     {
       title: "Transactions",
       url: "#",
-      icon: CreditCard, // Updated from ShoppingCart
+      icon: CreditCard,
       items: [
         { title: "Payments", url: "/transactions" },
         { title: "Withdrawal Request", url: "/withdrawal" },

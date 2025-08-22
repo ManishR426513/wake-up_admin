@@ -13,11 +13,39 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 // import { ProfileDropdown } from '@/components/profile-dropdown'
 // import { Search } from '@/components/search'
 // import { ThemeSwitch } from '@/components/theme-switch'
+import { useState, useEffect } from 'react'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 import { Main } from '@/components/main'
+import { useAuth } from '@/context/AuthContext'
+import { authAxios } from '@/config/config'
 
 export default function Dashboard() {
+  const { token } = useAuth();
+  console.log('token on analytics',token)
+  const [analytics, setAnalytics] = useState<any>(null);
+
+
+  useEffect(() => {
+  const getAnalytics = async () => {
+    try {
+      const response = await authAxios().get("/analytics");
+      setAnalytics(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getAnalytics();    
+
+  }, []);
+
+  console.log('analytics=>',analytics)
+
+
+
+
+
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -78,9 +106,9 @@ export default function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>$45,231.89</div>
+                  <div className='text-2xl font-bold'>{analytics?.revenue.total}</div>
                   <p className='text-xs text-muted-foreground'>
-                    +20.1% from last month
+                    +{analytics?.revenue.change}% from last month
                   </p>
                 </CardContent>
               </Card>
@@ -105,9 +133,9 @@ export default function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+2350</div>
+                  <div className='text-2xl font-bold'>{analytics?.subscriptions.count}</div>
                   <p className='text-xs text-muted-foreground'>
-                    +180.1% from last month
+                    +{analytics?.subscriptions.change}% from last month
                   </p>
                 </CardContent>
               </Card>

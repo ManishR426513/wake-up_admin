@@ -187,6 +187,43 @@ export interface shopInterface{
   isDeleted: boolean;
 }
 
+export interface sportInterface{
+  _id: string;
+  userId: {
+    _id: string;
+    username: string;
+    profilePic: string;
+  };
+ media: any[];
+
+  thumbnail: string;
+  feedType: "SPORT";
+  likesCount: number;
+  commentsCount: number;
+  sharesCount: number;
+  views: number;
+  isActive: boolean;
+  sport: {
+    _id: string;
+    title: string;
+    userId: string;
+    description: string;
+    link: string;
+    price: number | null;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  isDeleted: boolean;
+
+}
+
+
+
+
 export interface teacherInterface{
    _id: string;
   userId: {
@@ -275,4 +312,6 @@ export interface modalInterface {
     data?: any;                // holds the data for modal
     type?: string | null;      // APPROVE | REJECT | etc.
 }
+
+
 
