@@ -104,6 +104,14 @@ const data = {
       ],
     },
     {
+      title: "Master Class",
+      url: "#",
+      icon: Briefcase,
+      items: [
+        { title: "Master Class", url: "/master-class" },
+      ],
+    },
+    {
       title: "Transactions",
       url: "#",
       icon: CreditCard,

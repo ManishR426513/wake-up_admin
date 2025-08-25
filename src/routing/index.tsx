@@ -26,6 +26,7 @@ import Teacher from "@/pages/Teacher/Teacher";
 import TeacherPrice from "@/pages/PriceRange/TeacherPrice";
 import Sport from "@/pages/Sports/Sport";
 import SportPrice from "@/pages/PriceRange/SportPrice";
+import MasterClass from "@/pages/MasterClass/MasterClass";
 
 const privateRoutes = [
   { path: "/", element: <Dashboard /> },
@@ -48,6 +49,7 @@ const privateRoutes = [
   { path: "/teacher", element: <Teacher /> },
   { path: "/sport", element: <Sport /> },
   { path: "/sport-price", element: <SportPrice /> },
+  { path: "/master-class", element: <MasterClass /> },
 ];
 
 export default function Routing() {
