@@ -248,7 +248,7 @@ const Shop = () => {
                     <TableCell>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <span className="cursor-help">{truncateWords(item?.shop?.description || '', 5)}</span>
+                          <span className="cursor-default">{truncateWords(item?.shop?.description || '', 5)}</span>
                         </TooltipTrigger>
                         {item?.shop?.description && item.shop.description.trim().split(/\s+/).length > 5 && (
                           <TooltipContent sideOffset={6}>

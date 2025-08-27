@@ -215,7 +215,7 @@ const MasterClass = () => {
                     <TableCell>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <span className="cursor-help">
+                          <span className="cursor-default">
                             {truncateWords(item.description || '', 5)}
                           </span>
                         </TooltipTrigger>
