@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { MoreHorizontal, Filter, Trash2, EyeIcon, Plus } from 'lucide-react'
+import { MoreHorizontal, Trash2, EyeIcon } from 'lucide-react'
 import {
   Popover,
   PopoverContent,
@@ -70,7 +70,7 @@ const MasterClass = () => {
     data: null,
   });
 
-  const [filterStatus, setFilterStatus] = useState<string>('');
+  // const [filterStatus, setFilterStatus] = useState<string>('');
   const [viewMedia, setViewMedia] = useState<{
     open: boolean;
     media: Array<{
@@ -102,7 +102,7 @@ const MasterClass = () => {
     try {
       const response = await authAxios().get(`/master-class`, {
         params: {
-          isDeleted: filterStatus,
+          // isDeleted: filterStatus,
           page: page,
           limit: limit
         }
@@ -153,7 +153,7 @@ const MasterClass = () => {
 
   useEffect(() => {
     getAllMasterClasses();
-  }, [filterStatus]);
+  }, []);
 
   return (
     <Main>
