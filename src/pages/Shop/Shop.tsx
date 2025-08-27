@@ -24,6 +24,7 @@ import { toast } from 'sonner';
 import PaginationComponent from '@/common/PaginationComponent';
 import { MediaViewer } from '@/common/MediaViewer';
 import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 
 
@@ -137,6 +138,13 @@ const Shop = () => {
     getAllShops()
   }, [filterStatus])
 
+  const truncateWords = (text: string, maxWords: number) => {
+    if (!text) return ''
+    const words = text.trim().split(/\s+/)
+    if (words.length <= maxWords) return text
+    return words.slice(0, maxWords).join(' ') + '…'
+  }
+
 
   return (
     <div >
@@ -237,7 +245,18 @@ const Shop = () => {
                       {index + 1}
                     </TableCell>
                     <TableCell>  {item?.shop?.title}</TableCell>
-                    <TableCell>  {item?.shop?.description}</TableCell>
+                    <TableCell>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help">{truncateWords(item?.shop?.description || '', 5)}</span>
+                        </TooltipTrigger>
+                        {item?.shop?.description && item.shop.description.trim().split(/\s+/).length > 5 && (
+                          <TooltipContent sideOffset={6}>
+                            <span className="max-w-[420px] whitespace-pre-wrap break-words block">{item.shop.description}</span>
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
+                    </TableCell>
                     <TableCell onClick={() => window.open(handleLink(item?.shop?.link), '_blank')}>
                       <EyeIcon />
                     </TableCell>

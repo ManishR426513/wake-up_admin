@@ -24,7 +24,16 @@ import { toast } from 'sonner';
 import PaginationComponent from '@/common/PaginationComponent';
 import { MediaViewer } from '@/common/MediaViewer';
 import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
+
+
+const truncateWords = (text: string, maxWords: number) => {
+  if (!text) return ''
+  const words = text.trim().split(/\s+/)
+  if (words.length <= maxWords) return text
+  return words.slice(0, maxWords).join(' ') + '…'
+}
 
 
 
@@ -204,7 +213,18 @@ const Teacher = () => {
                       {index + 1}
                     </TableCell>
                     <TableCell>  {item?.teacher?.title}</TableCell>
-                    <TableCell>  {item?.teacher?.description}</TableCell>
+                    <TableCell>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help">{truncateWords(item?.teacher?.description || '', 5)}</span>
+                        </TooltipTrigger>
+                        {item?.teacher?.description && item.teacher.description.trim().split(/\s+/).length > 5 && (
+                          <TooltipContent sideOffset={6}>
+                            <span className="max-w-[420px] whitespace-pre-wrap break-words block">{item.teacher.description}</span>
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
+                    </TableCell>
                     <TableCell onClick={() => window.open(handleLink(item?.teacher?.link), '_blank')}>
                       <EyeIcon />
                     </TableCell>

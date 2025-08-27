@@ -59,6 +59,7 @@ import PaginationComponent from '@/common/PaginationComponent';
 import { MediaViewer } from '@/common/MediaViewer';
 import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
 import { useNavigate } from 'react-router-dom';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const MasterClass = () => {
   const { setloading } = useAllContext();
@@ -155,6 +156,13 @@ const MasterClass = () => {
     getAllMasterClasses();
   }, []);
 
+  const truncateWords = (text: string, maxWords: number) => {
+    if (!text) return '';
+    const words = text.trim().split(/\s+/);
+    if (words.length <= maxWords) return text;
+    return words.slice(0, maxWords).join(' ') + '…';
+  };
+
   return (
     <Main>
       <div className="flex items-center justify-between mb-6">
@@ -204,7 +212,22 @@ const MasterClass = () => {
                   <TableRow key={item._id}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.title}</TableCell>
-                    <TableCell>{item.description}</TableCell>
+                    <TableCell>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help">
+                            {truncateWords(item.description || '', 5)}
+                          </span>
+                        </TooltipTrigger>
+                        {item.description && item.description.trim().split(/\s+/).length > 5 && (
+                          <TooltipContent sideOffset={6}>
+                            <span className="max-w-[420px] whitespace-pre-wrap break-words block">
+                              {item.description}
+                            </span>
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
+                    </TableCell>
                     <TableCell>{item.link}</TableCell>
                     <TableCell>
                       {item.thumbnail ? (
