@@ -159,16 +159,16 @@ const MasterClass = () => {
     <Main>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Master Classes</h1>
-        <Button onClick={() => navigate('/master-class/add')}>
+        {/* <Button onClick={() => navigate('/master-class/add')}>
           <Plus className="w-4 h-4 mr-2" />
           Add Master Class
-        </Button>
+        </Button> */}
       </div>
 
-      <div className="bg-white rounded-lg shadow">
+      <div className="bg-white rounded-lg">
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center space-x-4">
-            <div className="relative">
+            {/* <div className="relative">
               <select
                 className="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 value={filterStatus}
@@ -179,7 +179,7 @@ const MasterClass = () => {
                 <option value="true">Inactive</option>
               </select>
               <Filter className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
-            </div>
+            </div> */}
           </div>
         </div>
 
