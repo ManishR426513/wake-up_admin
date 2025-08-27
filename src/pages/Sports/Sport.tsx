@@ -223,7 +223,7 @@ const Sport = () => {
                 <TableHead>link</TableHead>
 
                 <TableHead> Media</TableHead>
-                {/* <TableHead> Active</TableHead> */}
+                <TableHead>Type</TableHead>
                 <TableHead> Date</TableHead>
 
                 <TableHead className="text-right"> Actions</TableHead>
@@ -249,13 +249,17 @@ const Sport = () => {
                         media: item.media,
                         open: !viewMedia.open
                       }))}
-                    ><img src={handleThumbnail(item?.thumbnail)} width={50} height={50} />   </TableCell>
+                    ><img src={handleThumbnail(item?.thumbnail)} width={50} height={50} />   
+                    </TableCell>
                     {/* <TableCell>  {item.isActive ? 'True' : 'False'}</TableCell> */}
+                    <TableCell>  {item?.contentType}</TableCell>
                     <TableCell>  {setReportFormatDate(item?.createdAt)}</TableCell>
 
 
 
-                    <TableCell className="text-right">
+                    {
+                    item?.contentType=="PUBLIC" && 
+                     <TableCell className="text-right">
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
@@ -310,12 +314,11 @@ const Sport = () => {
                                 <span>Delete</span>
                               </button>
                             )}
-
                           </div>
-
                         </PopoverContent>
                       </Popover>
                     </TableCell>
+                   }
                   </TableRow>
                 ))
               ) : (

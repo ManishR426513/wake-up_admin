@@ -195,7 +195,7 @@ export interface sportInterface{
     profilePic: string;
   };
  media: any[];
-
+contentType:string,
   thumbnail: string;
   feedType: "SPORT";
   likesCount: number;
@@ -232,7 +232,7 @@ export interface teacherInterface{
     profilePic: string;
   };
  media: any[];
-
+contentType:string,
   thumbnail: string;
   feedType: "TEACHER";
   likesCount: number;
