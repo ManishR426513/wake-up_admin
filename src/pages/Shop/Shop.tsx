@@ -222,7 +222,7 @@ const Shop = () => {
                 <TableHead>link</TableHead>
 
                 <TableHead> Media</TableHead>
-                {/* <TableHead> Active</TableHead> */}
+                <TableHead>Type</TableHead>
                 <TableHead> Date</TableHead>
 
                 <TableHead className="text-right"> Actions</TableHead>
@@ -250,11 +250,12 @@ const Shop = () => {
                       }))}
                     ><img src={handleThumbnail(item?.thumbnail)} width={50} height={50} />   </TableCell>
                     {/* <TableCell>  {item.isActive ? 'True' : 'False'}</TableCell> */}
+                    <TableCell> {item?.contentType}</TableCell>
                     <TableCell>  {setReportFormatDate(item?.createdAt)}</TableCell>
 
 
-
-                    <TableCell className="text-right">
+                   {
+                    item?.contentType=="PUBLIC"&&  <TableCell className="text-right">
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
@@ -309,12 +310,13 @@ const Shop = () => {
                                 <span>Delete</span>
                               </button>
                             )}
-
                           </div>
-
                         </PopoverContent>
                       </Popover>
                     </TableCell>
+                   }
+                   
+
                   </TableRow>
                 ))
               ) : (
@@ -350,7 +352,7 @@ const Shop = () => {
             onConfirm={handleDelete}
             title={`${modalState?.data?.isDeleted ? "Recover" : "Delete"} Shop`}
 
-            description={`Are you sure you want to delete ${modalState.data?.shop?.title}? This action cannot be undone.`}
+            description={`Are you sure you want to delete ${modalState.data?.shop?.title}? `}
             recover={modalState?.data?.isDeleted}
           />
         )}

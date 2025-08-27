@@ -162,7 +162,7 @@ export interface shopInterface{
     profilePic: string;
   };
  media: any[];
-
+contentType:string,
   thumbnail: string;
   feedType: "SHOP";
   likesCount: number;

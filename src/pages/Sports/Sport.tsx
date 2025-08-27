@@ -351,7 +351,7 @@ const Sport = () => {
             onConfirm={handleDelete}
             title={`${modalState?.data?.isDeleted ? "Recover" : "Delete"} Sport`}
 
-            description={`Are you sure you want to delete ${modalState.data?.sport?.title}? This action cannot be undone.`}
+            description={`Are you sure you want to delete ${modalState.data?.sport?.title}? `}
             recover={modalState?.data?.isDeleted}
           />
         )}

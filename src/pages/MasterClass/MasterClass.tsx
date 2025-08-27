@@ -319,7 +319,7 @@ const MasterClass = () => {
             }
           }}
           title="Delete Master Class"
-          description="Are you sure you want to delete this master class? This action cannot be undone."
+          description="Are you sure you want to delete this master class? "
         />
       )}
     </Main>

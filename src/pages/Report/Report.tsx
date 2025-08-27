@@ -257,7 +257,7 @@ const Report = () => {
                         onClose={handleCloseModal}
                         onConfirm={handleDelete}
                         title="Delete Category"
-                        description={`Are you sure you want to delete "${modalState.currentData?.reportType}"? This action cannot be undone.`}
+                        description={`Are you sure you want to delete "${modalState.currentData?.reportType}"? `}
                     />
                 )}
             </Main>

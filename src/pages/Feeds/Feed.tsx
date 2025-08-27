@@ -332,13 +332,11 @@ const Feed = () => {
         )}
         {modalState.isDeleteMode && (
           <DeleteConfirmationModal
-
             isOpen={modalState.isDeleteMode}
             onClose={handleCloseModal}
             onConfirm={handleDelete}
             title={`${modalState?.data?.isDeleted ? "Recover" : "Delete"} Feed`}
-
-            description={`Are you sure you want to delete ${modalState.data?.title}? This action cannot be undone.`}
+            description={`Are you sure you want to delete ${modalState.data?.title}? `}
             recover={modalState?.data?.isDeleted}
           />
         )}

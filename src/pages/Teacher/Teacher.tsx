@@ -316,7 +316,7 @@ const Teacher = () => {
             onConfirm={handleDelete}
             title={`${modalState?.data?.isDeleted ? "Recover" : "Delete"} Teacher`}
 
-            description={`Are you sure you want to delete ${modalState.data?.teacher?.title}? This action cannot be undone.`}
+            description={`Are you sure you want to delete ${modalState.data?.teacher?.title}? `}
             recover={modalState?.data?.isDeleted}
           />
         )}

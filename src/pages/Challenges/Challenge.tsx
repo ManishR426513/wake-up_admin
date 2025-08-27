@@ -254,7 +254,7 @@ const Challenge = () => {
                         onClose={handleCloseModal}
                         onConfirm={handleDelete}
                         title="Delete Category"
-                        description={`Are you sure you want to delete "${modalState.currentChallenege?.title}"? This action cannot be undone.`}
+                        description={`Are you sure you want to delete "${modalState.currentChallenege?.title}"? `}
                     />
                 )}
             </Main>

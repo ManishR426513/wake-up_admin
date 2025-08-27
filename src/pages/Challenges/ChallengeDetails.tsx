@@ -400,7 +400,7 @@ const ChallengeDetails = () => {
                        // onClose={handleCloseModal}
                         //onConfirm={handleDelete}
                         title="Remove Participant"
-                        description={`Are you sure you want to remove "${modalState.currentParticipant?.userId.fullname}" from this challenge? This action cannot be undone.`}
+                        description={`Are you sure you want to remove "${modalState.currentParticipant?.userId.fullname}" from this challenge? `}
                     />
                 )} */}
             </Main>

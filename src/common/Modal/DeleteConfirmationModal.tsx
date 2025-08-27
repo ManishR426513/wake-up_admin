@@ -26,7 +26,7 @@ const DeleteConfirmationModal: FC<DeleteConfirmationModalProps> = ({
  
   onConfirm,
   title = "Are you absolutely sure?",
-  description = "This action cannot be undone. This will permanently delete the item and remove your data from our servers.",
+  description = " This will permanently delete the item and remove your data from our servers.",
    recover,
 }) => {
   return (
