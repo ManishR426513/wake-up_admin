@@ -83,14 +83,18 @@ const Plans: React.FC = () => {
   };
 
   const handleAction = (data?: dataContentInterface) => {
+    console.log("data",data)
     const payLoad = {
       ...data,
       price: Number(data?.price),
       currency: "EURO",
-      planType: data?.planName?.toLocaleUpperCase(),
+      planType:data?.planName=="Master Class"?"MASTER_CLASS":  data?.planName?.toLocaleUpperCase(),
       benefits: data?.benefits
 
     };
+
+
+    
 
     setloading(true);
 
