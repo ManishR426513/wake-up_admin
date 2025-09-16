@@ -108,7 +108,7 @@ const Category: FC = () => {
     if (!modalState.currentCategory?._id) return;
 
     try {
-      const payload = { name: categoryName };
+      const payload = { name: categoryName.toLocaleLowerCase().trim() };
       const response = await authAxios().put(
         `/category/${modalState.currentCategory._id}`,
         payload
@@ -123,7 +123,7 @@ const Category: FC = () => {
 
   const handleAdd = async (categoryName: string): Promise<void> => {
     try {
-      const payload = { name: categoryName };
+      const payload = { name: categoryName.toLocaleLowerCase().trim() };
       const response = await authAxios().post("/category", payload);
       await getCategories();
       handleCloseModal();
@@ -186,8 +186,8 @@ const Category: FC = () => {
                     <TableCell className="px-4 py-3 font-medium">
                       {index + 1}
                     </TableCell>
-                    <TableCell>  {item.name}</TableCell>
-                    <TableCell>{setReportFormatDate(item.createdAt)}</TableCell>
+                     <TableCell className="capitalize">{item.name}</TableCell>
+                     <TableCell>{setReportFormatDate(item.createdAt)}</TableCell>
                     <TableCell className="text-right">
                       <Popover>
                         <PopoverTrigger asChild>

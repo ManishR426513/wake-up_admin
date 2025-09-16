@@ -64,8 +64,9 @@ const AddCategoryModal: FC<AddCategoryModalProps> = ({
               id="categoryName"
               name="categoryName"
               value={categoryName}
+            
               placeholder="Enter category name"
-              className="col-span-3"
+              className="col-span-3 capitalize"
               onChange={(e) => setCategoryName(e.target.value)}
             />
           </div>
