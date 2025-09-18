@@ -54,6 +54,7 @@ const data = {
         { title: "Users", url: "/users" },
         { title: "Category", url: "/category" },
         { title: "Plans", url: "/plan" },
+        { title: "Limit", url: "/limit" },
         { title: "Wakeup Message", url: "/time" },
         { title: "Report", url: "/report" },
       ],

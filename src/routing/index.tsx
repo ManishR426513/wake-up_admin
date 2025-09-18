@@ -27,6 +27,7 @@ import TeacherPrice from "@/pages/PriceRange/TeacherPrice";
 import Sport from "@/pages/Sports/Sport";
 import SportPrice from "@/pages/PriceRange/SportPrice";
 import MasterClass from "@/pages/MasterClass/MasterClass";
+import Limit from "@/pages/Home/Limit";
 
 const privateRoutes = [
   { path: "/", element: <Dashboard /> },
@@ -37,6 +38,7 @@ const privateRoutes = [
   { path: "/users", element: <UserList /> },
   { path: "/chat", element: <Chats /> },
   { path: "/plan", element: <Plans /> },
+  { path: "/limit", element: <Limit /> },
   { path: "/category", element: <Category /> },
   { path: "/challenge-price", element: <ChallengePrice /> },
   { path: "/shop-price", element: <ShopPrice /> },

@@ -108,7 +108,7 @@ const Category: FC = () => {
     if (!modalState.currentCategory?._id) return;
 
     try {
-      const payload = { name: categoryName.toLocaleLowerCase().trim() };
+      const payload = { name: categoryName.trim() };
       const response = await authAxios().put(
         `/category/${modalState.currentCategory._id}`,
         payload
@@ -123,7 +123,7 @@ const Category: FC = () => {
 
   const handleAdd = async (categoryName: string): Promise<void> => {
     try {
-      const payload = { name: categoryName.toLocaleLowerCase().trim() };
+      const payload = { name: categoryName.trim() };
       const response = await authAxios().post("/category", payload);
       await getCategories();
       handleCloseModal();
