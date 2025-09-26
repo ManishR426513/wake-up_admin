@@ -222,6 +222,56 @@ contentType:string,
 }
 
 
+export  interface masterClassInterface {
+  _id: string;
+  userId: {
+    _id: string;
+    fullname: string;
+    username: string;
+    profilePic: string;
+  };
+  title: string;
+  media: {
+    url: string;
+    mediaType: "IMAGE" | "VIDEO" | "AUDIO" | string; // extend if needed
+    mimetype: string;
+    _id: string;
+  }[];
+  thumbnail: string;
+  feedType: "MASTER_CLASS" | "SPORT" | "SHOP" | string; // extend if needed
+  contentType: "PUBLIC" | "PRIVATE" | string;
+  category: string;
+  likesCount: number;
+  commentsCount: number;
+  sharesCount: number;
+  views: number;
+  isActive: boolean;
+  isDeleted: boolean;
+  isBoosted: boolean;
+  boostDetails: null | Record<string, any>; // adjust if you have boost details structure
+  masterClass: {
+    _id: string;
+    userId: string;
+    title: string;
+    description: string;
+    dateTime: string; // ISO Date
+    duration: number;
+    price: number;
+    minUsers: number;
+    averageRating: number;
+    status: "UPCOMING" | "ONGOING" | "COMPLETED" | string;
+    zegoRoomId: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+    feedId: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  id: string;
+  noOfParticipants: number;
+}
 
 
 export interface teacherInterface{

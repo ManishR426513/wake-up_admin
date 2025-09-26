@@ -6,7 +6,6 @@ import {
   Command,
   Building,
   Briefcase,
-  CreditCard,
   Newspaper,
 } from "lucide-react"
 
@@ -68,15 +67,15 @@ const data = {
        
       ],
     },
-    {
-      title: "Challenge",
-      url: "#",
-      icon: Swords,
-      items: [
-        { title: "Participants", url: "/challenge" },
-        { title: "Range", url: "/challenge-price" },
-      ],
-    },
+    // {
+    //   title: "Challenge",
+    //   url: "#",
+    //   icon: Swords,
+    //   items: [
+    //     { title: "Participants", url: "/challenge" },
+    //     { title: "Range", url: "/challenge-price" },
+    //   ],
+    // },
     {
       title: "Shop",
       url: "#",
@@ -112,15 +111,15 @@ const data = {
         { title: "Master Class", url: "/master-class" },
       ],
     },
-    {
-      title: "Transactions",
-      url: "#",
-      icon: CreditCard,
-      items: [
-        { title: "Payments", url: "/transactions" },
-        { title: "Withdrawal Request", url: "/withdrawal" },
-      ],
-    },
+    // {
+    //   title: "Transactions",
+    //   url: "#",
+    //   icon: CreditCard,
+    //   items: [
+    //     { title: "Payments", url: "/transactions" },
+    //     { title: "Withdrawal Request", url: "/withdrawal" },
+    //   ],
+    // },
   ],
 }
 

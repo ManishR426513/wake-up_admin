@@ -1,12 +1,5 @@
-import { useEffect, useState } from 'react'
-import { MoreHorizontal, Trash2, EyeIcon } from 'lucide-react'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from '@/components/ui/Button';
-import { Main } from '@/components/main';
+import { useEffect, useState } from "react";
+import { Main } from "@/components/main";
 import {
   Table,
   TableBody,
@@ -15,77 +8,31 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { handleThumbnail, setReportFormatDate } from '@/helper/helper';
-import { authAxios } from '@/config/config';
-import { modalInterface, paginationInterface } from '@/common/allInterface';
-
-interface MasterClassItem {
-    _id: string;
-    userId: string;
-    title: string;
-    description: string;
-    dateTime: string;
-    duration: number;
-    price: number;
-    minUsers: number;
-    status: string;
-    zegoRoomId: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
-    link?: string;
-    thumbnail?: string;
-}
-
-interface MasterClassInterface {
-    boostDetails: null;
-    category: string;
-    commentsCount: number;
-    contentType: string;
-    createdAt: string;
-    feedType: string;
-    id: string;
-    isActive: boolean;
-    isBoosted: boolean;
-    isDeleted: boolean;
-    likesCount: number;
-    updatedAt: string;
-    __v: number;
-    masterClass: MasterClassItem;
-}
-import { useAllContext } from '@/context/AllContext';
-import { toast } from 'sonner';
-import PaginationComponent from '@/common/PaginationComponent';
-import { MediaViewer } from '@/common/MediaViewer';
-import DeleteConfirmationModal from '@/common/Modal/DeleteConfirmationModal';
-import { useNavigate } from 'react-router-dom';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { handleThumbnail, setReportFormatDate } from "@/helper/helper";
+import { authAxios } from "@/config/config";
+import {
+  paginationInterface,
+  masterClassInterface,
+} from "@/common/allInterface";
+import { useAllContext } from "@/context/AllContext";
+import { toast } from "sonner";
+import PaginationComponent from "@/common/PaginationComponent";
+import { MediaViewer } from "@/common/MediaViewer";
+import { Star } from 'lucide-react'
 
 const MasterClass = () => {
   const { setloading } = useAllContext();
-  const navigate = useNavigate();
 
-  const [modalState, setModalState] = useState<modalInterface>({
-    isOpen: false,
-    isDeleteMode: false,
-    data: null,
-  });
-
-  // const [filterStatus, setFilterStatus] = useState<string>('');
-  const [viewMedia, setViewMedia] = useState<{
+  const [viewMedia, setviewMedia] = useState<{
     open: boolean;
-    media: Array<{
-      url: string;
-      mediaType: 'IMAGE' | 'VIDEO';
-      mimetype: string;
-      _id: string;
-    }>;
+    media: any[];
   }>({
     open: false,
     media: [],
   });
 
-  const [masterClasses, setMasterClasses] = useState<MasterClassItem[]>([]);
+  const [masterClass, setmasterClass] = useState<masterClassInterface[]>([]);
+
   const [pagination, setPagination] = useState<paginationInterface>({
     totalDocs: 0,
     limit: 10,
@@ -98,209 +45,125 @@ const MasterClass = () => {
     nextPage: null,
   });
 
-  const getAllMasterClasses = async (page: number = 1, limit: number = 10): Promise<void> => {
+  const getAllmasterClasss = async (
+    page: number = 1,
+    limit: number = 10
+  ): Promise<void> => {
     setloading(true);
     try {
       const response = await authAxios().get(`/master-class`, {
         params: {
-          // isDeleted: filterStatus,
           page: page,
-          limit: limit
-        }
+          limit: limit,
+        },
       });
-      const items = response.data.data.docs as MasterClassInterface[];
-      console.log("items===>", items)
-      const masterClassItems = items.map(item => item.masterClass);
-      setMasterClasses(masterClassItems);
+      const data = response.data.data;
+      setmasterClass(data.docs);
+
       setPagination({
-        totalDocs: response.data.data.totalDocs,
-        limit: response.data.data.limit,
-        totalPages: response.data.data.totalPages,
-        page: response.data.data.page,
-        pagingCounter: response.data.data.pagingCounter,
-        hasPrevPage: response.data.data.hasPrevPage,
-        hasNextPage: response.data.data.hasNextPage,
-        prevPage: response.data.data.prevPage,
-        nextPage: response.data.data.nextPage,
+        totalDocs: data.totalDocs,
+        limit: data.limit,
+        totalPages: data.totalPages,
+        page: data.page,
+        pagingCounter: data.pagingCounter,
+        hasPrevPage: data.hasPrevPage,
+        hasNextPage: data.hasNextPage,
+        prevPage: data.prevPage,
+        nextPage: data.nextPage,
       });
-    } catch (error) {
-      console.error('Error fetching master classes:', error);
-      toast.error('Failed to fetch master classes');
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message);
     } finally {
       setloading(false);
     }
   };
 
-  console.log("masterClasses==>", masterClasses);
-
-  const handleDeleteMasterClass = async (id: string) => {
-    setloading(true);
-    try {
-      await authAxios().delete(`/master-class/${id}`);
-      toast.success('Master class deleted successfully');
-      getAllMasterClasses(pagination.page, pagination.limit);
-      setModalState(prev => ({ ...prev, isOpen: false, isDeleteMode: false, data: null }));
-    } catch (error) {
-      console.error('Error deleting master class:', error);
-      toast.error('Failed to delete master class');
-    } finally {
-      setloading(false);
-    }
-  };
-
-  const handlePageChange = (page: number) => {
-    getAllMasterClasses(page, pagination.limit);
+  const handlePageChange = (newPage: number) => {
+    getAllmasterClasss(newPage, pagination.limit);
   };
 
   useEffect(() => {
-    getAllMasterClasses();
+    getAllmasterClasss();
   }, []);
 
-  const truncateWords = (text: string, maxWords: number) => {
-    if (!text) return '';
-    const words = text.trim().split(/\s+/);
-    if (words.length <= maxWords) return text;
-    return words.slice(0, maxWords).join(' ') + '…';
-  };
-
   return (
-    <Main>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Master Classes</h1>
-        {/* <Button onClick={() => navigate('/master-class/add')}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Master Class
-        </Button> */}
-      </div>
-
-      <div className="bg-white rounded-lg">
-        <div className="flex items-center justify-between p-4 border-b">
-          <div className="flex items-center space-x-4">
-            {/* <div className="relative">
-              <select
-                className="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-              >
-                <option value="">All Status</option>
-                <option value="false">Active</option>
-                <option value="true">Inactive</option>
-              </select>
-              <Filter className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
-            </div> */}
+    <div>
+      <Main>
+        <div className="mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Master Classs</h2>
+            <p className="text-muted-foreground">
+              Here&apos;s a list of your all masterClasss
+            </p>
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <Table>
+        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
+          <Table className="w-full border-collapse text-sm">
             <TableHeader>
               <TableRow>
-                {/* <TableHead>Thumbnail</TableHead> */}
-                <TableHead>S.No.</TableHead>
+                <TableHead className="w-[100px]">Sno</TableHead>
                 <TableHead>Title</TableHead>
                 <TableHead>Description</TableHead>
-                <TableHead>Link</TableHead>
-                {/* <TableHead>Duration</TableHead> */}
+                <TableHead>Duration</TableHead>
                 <TableHead>Media</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>Start Date</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead>Rating</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {masterClasses.length > 0 ? (
-                masterClasses.map((item,index) => (
+              {masterClass && masterClass.length > 0 ? (
+                masterClass.map((item, index) => (
                   <TableRow key={item._id}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.title}</TableCell>
-                    <TableCell>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="cursor-default">
-                            {truncateWords(item.description || '', 5)}
-                          </span>
-                        </TooltipTrigger>
-                        {item.description && item.description.trim().split(/\s+/).length > 5 && (
-                          <TooltipContent sideOffset={6}>
-                            <span className="max-w-[420px] whitespace-pre-wrap break-words block">
-                              {item.description}
-                            </span>
-                          </TooltipContent>
-                        )}
-                      </Tooltip>
+                    <TableCell className="px-4 py-3 font-medium">
+                      {index + 1}
                     </TableCell>
-                    <TableCell>{item.link}</TableCell>
-                    <TableCell>
-                      {item.thumbnail ? (
-                        <div className="w-16 h-16 rounded-md overflow-hidden">
-                          <img
-                            src={handleThumbnail(item.thumbnail)}
-                            alt={item.title || 'Master class thumbnail'}
-                            className="w-full h-full object-cover cursor-pointer"
-                            onClick={() =>
-                              setViewMedia({
-                                open: true,
-                                media: [{
-                                  url: handleThumbnail(item.thumbnail || ''),
-                                  mediaType: 'IMAGE',
-                                  mimetype: 'image/jpeg',
-                                  _id: item._id
-                                }],
-                              })
-                            }
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-16 h-16 rounded-md bg-gray-100 flex items-center justify-center text-gray-400">
-                          No Image
-                        </div>
-                      )}
+                    <TableCell>{item?.title}</TableCell>
+                    <TableCell>{item?.masterClass?.description}</TableCell>
+                    <TableCell>{item?.masterClass?.duration} minutes</TableCell>
+                    <TableCell
+                      onClick={() =>
+                        setviewMedia((prev) => ({
+                          ...prev,
+                          media: item.media,
+                          open: !viewMedia.open,
+                        }))
+                      }
+                    >
+                      <img
+                        src={handleThumbnail(item?.thumbnail)}
+                        width={50}
+                        height={50}
+                      />
                     </TableCell>
-                    <TableCell>{item.createdAt ? setReportFormatDate(item.createdAt) : 'N/A'}</TableCell>
                     <TableCell>
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() =>
-                            navigate(`/master-class/edit/${item._id}`)
-                          }
-                        >
-                          <EyeIcon className="w-4 h-4" />
-                        </Button>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="w-4 h-4" />
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-40 p-2">
-                            <div className="flex flex-col">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="justify-start"
-                                onClick={() =>
-                                  setModalState({
-                                    isOpen: true,
-                                    isDeleteMode: true,
-                                    data: item,
-                                  })
-                                }
-                              >
-                                <Trash2 className="w-4 h-4 mr-2 text-red-500" />
-                                Delete
-                              </Button>
-                            </div>
-                          </PopoverContent>
-                        </Popover>
-                      </div>
+                      {setReportFormatDate(item?.masterClass?.dateTime)}
                     </TableCell>
+                    <TableCell>{item?.masterClass?.status}</TableCell>
+                    <TableCell>{item?.masterClass?.price}</TableCell>
+                    <TableCell>
+  {item?.masterClass?.averageRating > 0 ? (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+      {item.masterClass.averageRating}
+      <Star className="h-4 w-4 " />
+    </span>
+  ) : (
+    '-'
+  )}
+</TableCell>
+
+
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8">
-                    No master classes found
+                  <TableCell
+                    colSpan={9}
+                    className="px-4 py-3 text-center text-gray-500"
+                  >
+                    No Results
                   </TableCell>
                 </TableRow>
               )}
@@ -308,44 +171,21 @@ const MasterClass = () => {
           </Table>
         </div>
 
-        {pagination.totalPages > 1 && (
-          <div className="px-6 py-4 border-t">
-            <PaginationComponent
-              currentPage={pagination.page}
-              totalPages={pagination.totalPages}
-              onPageChange={handlePageChange}
-              hasNextPage={pagination.hasNextPage}
-              hasPrevPage={pagination.hasPrevPage}
-            />
-          </div>
+        {viewMedia.open && (
+          <MediaViewer viewMedia={viewMedia} setviewMedia={setviewMedia} />
         )}
-      </div>
 
-      <MediaViewer
-        viewMedia={viewMedia}
-        setviewMedia={setViewMedia}
-      />
-
-      {modalState.isOpen && modalState.isDeleteMode && (
-        <DeleteConfirmationModal
-          isOpen={true}
-          onClose={() =>
-            setModalState({
-              isOpen: false,
-              isDeleteMode: false,
-              data: null,
-            })
-          }
-          onConfirm={() => {
-            if (modalState.data) {
-              handleDeleteMasterClass(modalState.data._id);
-            }
-          }}
-          title="Delete Master Class"
-          description="Are you sure you want to delete this master class? "
+        <PaginationComponent
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          hasNextPage={pagination.hasNextPage}
+          hasPrevPage={pagination.hasPrevPage}
+          onPageChange={handlePageChange}
+          totalDocs={pagination.totalDocs}
+          limit={pagination.limit}
         />
-      )}
-    </Main>
+      </Main>
+    </div>
   );
 };
 
