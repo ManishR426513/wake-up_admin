@@ -1,10 +1,10 @@
-import { Link, useNavigate } from 'react-router'
+import {  useNavigate } from 'react-router'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/Button'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
+ // DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -32,7 +32,7 @@ export function ProfileDropdown() {
         <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
           <Avatar className='h-8 w-8'>
             <AvatarImage src='/avatars/01.png' alt='@shadcn' />
-            <AvatarFallback>SN</AvatarFallback>
+            <AvatarFallback>AD</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
@@ -45,7 +45,7 @@ export function ProfileDropdown() {
             </p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        {/* <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Link to='/settings'>
@@ -66,7 +66,7 @@ export function ProfileDropdown() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>New Team</DropdownMenuItem>
-        </DropdownMenuGroup>
+        </DropdownMenuGroup> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout} >
           Log out
