@@ -67,15 +67,15 @@ const data = {
        
       ],
     },
-    // {
-    //   title: "Challenge",
-    //   url: "#",
-    //   icon: Swords,
-    //   items: [
-    //     { title: "Participants", url: "/challenge" },
-    //     { title: "Range", url: "/challenge-price" },
-    //   ],
-    // },
+    {
+      title: "Challenge",
+      url: "#",
+      icon: Swords,
+      items: [
+        { title: "Participants", url: "/challenge" },
+        { title: "Range", url: "/challenge-price" },
+      ],
+    },
     {
       title: "Shop",
       url: "#",

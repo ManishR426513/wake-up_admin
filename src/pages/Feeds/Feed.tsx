@@ -77,7 +77,7 @@ const Feed = () => {
           feedType: "FEED",
           page: page,
           limit: limit,
-          isDeleted:filterStatus
+          isActive:filterStatus
         },
       });
       const data = response.data.data;
