@@ -15,6 +15,7 @@ export interface dataContentInterface {
   planName?: string;
   planDescription?: string;
   price?: number | string;
+  impression?: number | string;
   benefits?: string[];
 }
 
@@ -49,6 +50,7 @@ const AddPlansModal: React.FC<AddPlansModalProps> = ({
     planName: "",
     planDescription: "",
     price: "",
+    impression:"",
     benefits: [""],
   });
 
@@ -72,6 +74,37 @@ const AddPlansModal: React.FC<AddPlansModalProps> = ({
       [name]: name === "price" ? (value ? Number(value) : "") : value,
     }));
   };
+
+  const handleNumberChange=(e: React.ChangeEvent<HTMLInputElement>)=>{
+    const { name, value } = e.target;
+
+  // keep only digits 0-9
+  const digitsOnly = value.replace(/\D/g, "");
+
+  setdata((prev) => ({
+    ...prev,
+    [name]: digitsOnly,
+  }));
+  }
+
+  const handlePriceChange=(e: React.ChangeEvent<HTMLInputElement>)=>{
+    const { name, value } = e.target;
+
+  // keep only digits 0-9
+  const validValue = value
+    .replace(/[^0-9.]/g, "")        // remove non-numeric and non-dot
+    .replace(/(\..*?)\..*/g, "$1")  // allow only one dot
+    .replace(/^0+(\d)/, "$1")       // remove leading zeros before digits
+    .replace(/^(\d+\.\d{0,2}).*/, "$1"); // limit to two digits after decimal
+
+
+  setdata((prev) => ({
+    ...prev,
+    [name]: validValue,
+  }));
+  }
+
+
 
   const handleFeatureChange = (index: number, value: string) => {
     setdata((prev) => ({
@@ -103,14 +136,17 @@ console.log("showca",showModel.data);
       setdata({
         planName: showModel.data.planName || "",
         planDescription: showModel.data.planDescription || "",
-        price: showModel.data.price || 0,
+        price: showModel.data.price ,
+        impression: showModel.data.impression ,
         benefits: Array.isArray(showModel.data.benefits) ? showModel.data.benefits : [""]
+
       });
     } else {
       setdata({
         planName: "",
         planDescription: "",
         price: "",
+        impression: "",
         benefits: [""],
       });
     }
@@ -206,10 +242,26 @@ console.log("showca",showModel.data);
                   value={data?.price}
                   name="price"
                   required
-                  type="number"
+                  type="text"
+                  disabled
                   min={1}
-                  onChange={handleChange}
+                  onChange={handlePriceChange}
                   id="price"
+                  className="col-span-3"
+                />
+              </div>
+               <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="price" className="text-right">
+                  Impression
+                </Label>
+                <Input
+                  value={data?.impression}
+                  name="impression"
+                  required
+                  type="text"
+                  
+                  onChange={handleNumberChange}
+                  id="impression"
                   className="col-span-3"
                 />
               </div>

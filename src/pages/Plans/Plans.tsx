@@ -32,6 +32,7 @@ export interface PlanInterface {
   planDescription: string;
   planType: string;
   price: string;
+  impression: string;
   isActive: boolean;
   currency: string;
   createdAt: string;
@@ -89,8 +90,8 @@ const Plans: React.FC = () => {
       price: Number(data?.price),
       currency: "EURO",
       planType:data?.planName=="Master Class"?"MASTER_CLASS":  data?.planName?.toLocaleUpperCase(),
-      benefits: data?.benefits
-
+      benefits: data?.benefits,
+      impression: data?.impression,
     };
 
 
