@@ -28,6 +28,7 @@ import Sport from "@/pages/Sports/Sport";
 import SportPrice from "@/pages/PriceRange/SportPrice";
 import MasterClass from "@/pages/MasterClass/MasterClass";
 import Limit from "@/pages/Home/Limit";
+import ImpressionPlan from "@/pages/Impression/ImpressionPlan";
 
 const privateRoutes = [
   { path: "/", element: <Dashboard /> },
@@ -40,6 +41,7 @@ const privateRoutes = [
   { path: "/plan", element: <Plans /> },
   { path: "/limit", element: <Limit /> },
   { path: "/category", element: <Category /> },
+  { path: "/impression", element: <ImpressionPlan /> },
   { path: "/challenge-price", element: <ChallengePrice /> },
   { path: "/shop-price", element: <ShopPrice /> },
   { path: "/teacher-price", element: <TeacherPrice /> },

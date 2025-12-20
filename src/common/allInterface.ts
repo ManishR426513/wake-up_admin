@@ -363,5 +363,32 @@ export interface modalInterface {
     type?: string | null;      // APPROVE | REJECT | etc.
 }
 
+export interface PlanInterface {
+  _id: string;
+  title: string;
+  features: string[];
+  impression: number;
+  price: number;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface PlanFormData {
+  title: string;
+  features: string[];
+  impression: number;
+  price: number;
+  active: boolean;
+}
+
+
+export interface ModelInterface {
+  show: boolean;
+  data: PlanInterface | null;
+  deletemodel: boolean;
+}
+
 
 

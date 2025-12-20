@@ -163,7 +163,7 @@ const Plans: React.FC = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {plans.length > 0 ? (
+              {plans&&plans?.length > 0 ? (
                 plans.map((item, index) => (
                   <TableRow key={item._id}>
                     <TableCell className="px-4 py-3 font-medium">
